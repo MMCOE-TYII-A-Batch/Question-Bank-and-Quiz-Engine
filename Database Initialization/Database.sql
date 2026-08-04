@@ -51,6 +51,7 @@ foreign key (unit_id) references unit(unit_id)
 
 create table question(
 question_id int primary key ,
+question text,
 topic_id int not null,
 author_id int not null,
 mod_id int,
