@@ -19,7 +19,7 @@ Moderator / Reviewer	Approve, reject, or return questions before they enter the 
 Exam Designer	Assemble approved questions into scheduled quizzes
 Quiz Taker	Attempt timed quizzes and view results
 
-Pages in this repo
+Pages in this repository
 File	Description
 admin-dashboard.html	Admin panel — create/edit/activate/deactivate/delete users, filter by role & status, and a per-user activity timeline. Includes an in-session Audit Log view (mirrors the AUDIT_LOG table: log_id, user_id, action, timestamp).
 
