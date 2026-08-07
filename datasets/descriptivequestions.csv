@@ -1,0 +1,867 @@
+Question,Subject,Topic,Unit,BTL,Author ,Marks,,,
+Analyze and evaluate the role of a Database Administrator (DBA). Justify why the DBA is critical in large-scale organizational environments.,Database Management Systems,Database Administrator (DBA) Role,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Apply the concept of a data model and demonstrate how various types of data models can be used.,Database Management Systems,Data Models Concept & Types,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze the various components used in designing an Entity-Relationship (E-R) model. Classify the different categories of attributes and illustrate each with their appropriate notations used in E-R diagrams.,Database Management Systems,E-R Model Components & Attribute Categories,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Design an ER model for Online Bookstore with following details: Books are published by many publications, Books are written by Authors, warehouse keeps trade of stocks of the books, Customer adds his/her books in the shopping basket.",Database Management Systems,E-R Diagram Design: Online Bookstore,1,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Draw the overall database management system structure and describe the components of query processor.,Database Management Systems,DBMS Architecture & Query Processor,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Compare the traditional file processing system with a database management system (DBMS). Discuss at least five major drawbacks of the file system with suitable examples.,Database Management Systems,File System vs. DBMS Drawbacks,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Demonstrate the use of a DBMS in a real-world scenario to highlight its advantages over traditional file systems.,Database Management Systems,DBMS Advantages in Real-World Scenarios,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Apply the concepts of instance and schema to a database system and differentiate them using suitable examples.,Database Management Systems,Instance vs. Schema,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Demonstrate the use of different database schema types, and illustrate the role of the conceptual schema in organizing and representing database structure.",Database Management Systems,Database Schema Types & Conceptual Schema,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Summarize conceptual schema.,Database Management Systems,Conceptual Schema,1,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Classify components of storage manager.,Database Management Systems,Storage Manager Components,1,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+How to make use of the storage manager.,Database Management Systems,Storage Manager Usage,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+List the data structures implemented by the storage manager.,Database Management Systems,Storage Manager Data Structures,1,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Discuss about a data dictionary with examples.,Database Management Systems,Data Dictionary Concept,1,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+"Draw an ER diagram for the banking system. Assume the banking requirements are as given below:
+• The bank is organized into branches. Each branch is located in a particular city.
+• The bank offers two types of accounts: saving and current. Accounts can be held by more than one customer and a customer can have more than one account.
+• A loan originates at a particular branch and can be held by one or more customers.
+Identify the relationship among the entities along with the mapping cardinalities, keys in the E.R. diagram. Construct appropriate tables for E-R diagrams designed with above requirements.",Database Management Systems,E-R Diagram & Relational Mapping: Banking System,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze the concept of attributes in the Entity–Relationship (ER) model and categorize the different types of attributes with examples.,Database Management Systems,Attribute Categorization in ER Model,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Examine the concept of relationships in ER modeling and analyze various cardinality constraints using suitable examples.,Database Management Systems,Relationships & Cardinality Constraints,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Differentiate between an entity set and a relationship set with Example.,Database Management Systems,Entity Set vs. Relationship Set,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Illustrate the terms: i) Entity type  ii) Referential integrity.,Database Management Systems,Entity Type & Referential Integrity,1,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Draw the overall structure of a Database Management System and explain the functions of each component.,Database Management Systems,Overall Structure of DBMS,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze the different views of data in a DBMS with example.,Database Management Systems,Data Abstraction & Views of Data,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze the different database languages used in a DBMS with example.,Database Management Systems,"Database Languages (DDL, DML, DCL, TCL)",1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Compare and explain Data Definition Language (DDL) and Data Manipulation Language (DML) with suitable examples, highlighting their importance in effective database management.",Database Management Systems,DDL vs. DML Comparison,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Investigate the architecture and internal structure of a database system and explain the role of each component.,Database Management Systems,Database Architecture & Internal Structure,1,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+"Examine the concepts of Entity, Attribute, and Relationship in the context of the Entity-Relationship (ER) model.",Database Management Systems,"Entity, Attribute, and Relationship Fundamentals",1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Categorize the different types of attributes and illustrate each category with examples to demonstrate their role in effective database design.,Database Management Systems,Attribute Types & Practical Examples,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Draw an ER diagram for a Student-Course database and explain the design process involved.,Database Management Systems,E-R Diagram: Student-Course Database,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Demonstrate the process of converting an ER/EER diagram into relational tables, and explain the different types of constraints used in the ER model.",Database Management Systems,ER to Relational Table Mapping & Constraints,1,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Explain the purpose and significance of database systems in modern applications and justify their use over traditional file-based systems with an appropriate example.,Database Management Systems,Significance of Database Systems,1,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+"Examine the three-schema architecture of a DBMS and explain how the external, conceptual, and internal schemas interact to provide data abstraction, data independence, and efficient database management.",Database Management Systems,Three-Schema Architecture & Data Independence,1,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Define relational database query?,Database Management Systems,Relational Database Query Definition,2,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+"Consider relational schema:
+Employee(Empno, Ename, DeptNo, salary)
+Department(DeptNo, Dname)
+Write SQL queries for:
+1) List employee names of Computer Department
+2) Find average salary of each department
+3) Find department name of employee 'Amit'",Database Management Systems,"SQL Queries (Selection, Group By, Join)",2,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Examine the role of integrity constraints in a DBMS and analyze the different types of integrity constraints using suitable examples.,Database Management Systems,Integrity Constraints in DBMS,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Apply aggregate functions in SQL to summarize and analyze data, illustrating their usage with appropriate examples.",Database Management Systems,SQL Aggregate Functions,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Demonstrate the use of the rename operation in relational algebra with suitable examples.,Database Management Systems,Relational Algebra: Rename Operation,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Classify Cursors in PL/SQL. State lifecycle of cursor with proper syntax.,Database Management Systems,PL/SQL Cursor Classification & Lifecycle,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Demonstrate INNER JOIN and OUTER JOIN in SQL. Write well defined syntax with sample example.,Database Management Systems,SQL Inner & Outer Joins,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Summarize the concept of triggers in a DBMS and explain their syntax and purpose with an example.,Database Management Systems,Database Triggers,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Consider the following schemas:
+Emp(Emp_no, Emp_name, Dept_no)
+Dept(Dept_no, Dept_name)
+Address(Dept_name, Dept_location)
+Write SQL queries for the following:
+i) Display the location of the department where employee ‘Ram’ is working.
+ii) Create a view to store total no of employees working in each department in ascending order.
+iii) Find the name of the department in which no employee is working.
+iv) Find out the salaries of the department wise where salaries of the employees are greater than 50,000.",Database Management Systems,Complex SQL Queries & View Creation,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Differentiate between tuple relational calculus and domain relational calculus with examples.,Database Management Systems,Tuple Relational Calculus vs. Domain Relational Calculus,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Explain the importance of a primary key in a relational database.,Database Management Systems,Primary Key Importance,2,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Examine the set operations supported by SQL and analyze the use of UNION and INTERSECT operations with suitable examples.,Database Management Systems,"SQL Set Operations (UNION, INTERSECT)",2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Consider the tables:
+EmployeeDetails(EmpID, FullName, MangrID, DoJ)
+EmployeeSalary(Empid, Project, Salary)
+Write SQL queries for:
+Q1. Fetch the count of employees working in project 'P1'.
+Q2. Fetch employee names having salary greater than or equal to 5000 and less than or equal to 10000.
+Q3. Fetch employee names and salary records. Return employee details even if the salary record is not present for the employee.
+Q4. Fetch common records between two tables.",Database Management Systems,"SQL Joins, Aggregation, and Set Operations",2,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Apply the PL/SQL language to develop database programs that integrate SQL statements with procedural constructs.,Database Management Systems,PL/SQL Integration & Procedural Logic,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Examine the characteristics of PL/SQL and explain how they enhance database programming efficiency and performance.,Database Management Systems,PL/SQL Characteristics & Benefits,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Differentiate between SQL and PL/SQL by categorizing their features, execution model, and use cases.",Database Management Systems,SQL vs. PL/SQL Comparison,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Demonstrate the use of %TYPE and %ROWTYPE data types in PL/SQL programs with suitable examples.,Database Management Systems,PL/SQL Attributes: %TYPE and %ROWTYPE,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Classify the different types of cursors in PL/SQL and elaborate the functioning of any one cursor type with an example.,Database Management Systems,PL/SQL Cursor Types & Implementation,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Illustrate the functioning of COMMIT, ROLLBACK, and SAVEPOINT statements using appropriate SQL/PL/SQL examples.",Database Management Systems,"TCL Commands (COMMIT, ROLLBACK, SAVEPOINT)",2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Design a PL/SQL script to display the following series of numbers: 99, 96, 93 ...... 9, 6, 3.",Database Management Systems,PL/SQL Loop Program: Number Series,2,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+List different SQL data types with examples.,Database Management Systems,SQL Data Types,2,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Define stored procedures and functions in PL/SQL and explain their purpose in database applications.,Database Management Systems,Stored Procedures & Functions,2,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Examine the different types of JOINs in SQL and explain their usage with examples.,Database Management Systems,SQL Join Types,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Analyze SQL set operations and set membership operators, explaining their role in query processing with examples.",Database Management Systems,"Set Membership Operators (IN, NOT IN, EXISTS)",2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Write SQL queries using aggregate functions and the GROUP BY clause to summarize and analyze data.,Database Management Systems,SQL Aggregate Functions with GROUP BY,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Construct SQL queries using nested subqueries to retrieve complex data relationships.,Database Management Systems,Nested SQL Subqueries,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Design and create a view and an index for a given database application to improve data abstraction and performance.,Database Management Systems,Views & Indexes Creation,2,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Write SQL statements to create and use sequences for automatic generation of unique values.,Database Management Systems,SQL Sequences,2,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Compare stored procedures and functions in PL/SQL with respect to parameters, return values, and usage.",Database Management Systems,Procedures vs. Functions in PL/SQL,2,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+List the different SQL commands and classify them based on their functionality.,Database Management Systems,Classification of SQL Commands,2,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Summarize lossless-join decomposition.,Database Management Systems,Lossless-Join Decomposition,3,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+List the disadvantages of relational database system.,Database Management Systems,Disadvantages of Relational Databases,3,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Show First Normal Form (1NF) with example.,Database Management Systems,First Normal Form (1NF),3,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+How to use functional dependencies in database design.,Database Management Systems,Functional Dependencies Concept & Usage,3,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Examine trivial dependency with an example.,Database Management Systems,Trivial Functional Dependency,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+List out the desirable properties of decomposition.,Database Management Systems,Desirable Properties of Relational Decomposition,3,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+"Define Third Normal Form (3NF). Consider a relation student(rollno, game, fee_structure). Convert it into 3NF.",Database Management Systems,3NF Definition & Normalization Problem,3,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Explain Boyce-Codd Normal Form (BCNF) in detail.,Database Management Systems,Boyce-Codd Normal Form (BCNF),3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Given a relation R(X, Y, Z) and Functional Dependency set FD = { X -> Y, Y -> Z }, determine whether R is in 3NF? If not, convert it into 3NF.",Database Management Systems,3NF Testing & Decomposition Problem,3,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Explain the concept of schema refinement in database design.,Database Management Systems,Schema Refinement,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Discuss Domain-Key Normal Form (DKNF).,Database Management Systems,Domain-Key Normal Form (DKNF),3,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Define Armstrong's axioms for Functional Dependencies.,Database Management Systems,Armstrong's Axioms,3,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Explain about multi-valued dependencies and Fourth Normal Form (4NF).,Database Management Systems,Multi-valued Dependencies & 4NF,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Relate referential integrity constraints to relational database consistency.,Database Management Systems,Referential Integrity Constraints,3,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Illustrate dependency preserving decomposition.,Database Management Systems,Dependency Preserving Decomposition,3,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Explain Canonical cover and Extraneous Attributes with examples.,Database Management Systems,Canonical Cover & Extraneous Attributes,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Explain the concept of Denormalization.,Database Management Systems,Denormalization Concept & Trade-offs,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+List out Codd's Relational Database rules.,Database Management Systems,Codd's 12 Rules,3,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+How superkey is different from candidate key?,Database Management Systems,Superkey vs. Candidate Key,3,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"With suitable example normalize database step-by-step through 1NF, 2NF, and 3NF.",Database Management Systems,"Step-by-step Normalization (1NF, 2NF, 3NF)",3,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Differentiate between domain integrity and referential integrity with appropriate examples.,Database Management Systems,Domain Integrity vs. Referential Integrity,3,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Illustrate enterprise constraints and justify their role in maintaining database consistency.,Database Management Systems,Enterprise / Business Rules Constraints,3,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Given a relation, determine the functional dependencies and analyze their impact on data redundancy.",Database Management Systems,Functional Dependencies & Redundancy Analysis,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze a given relational schema and decompose it into Second Normal Form (2NF).,Database Management Systems,2NF Decomposition Problem,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Demonstrate the process of converting a relation into Third Normal Form (3NF) with a suitable example.,Database Management Systems,3NF Normalization Process,3,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Evaluate whether a given relation satisfies Boyce–Codd Normal Form (BCNF) and justify your answer.,Database Management Systems,BCNF Evaluation & Justification,3,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+"Assess the applications of grammar in programming languages, compiler design, and database query processing.",Database Management Systems,Grammar Applications in Query Processing,3,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Explain the concept of a right-linear grammar and construct one for a given regular language.,Database Management Systems,Right-Linear Grammar Concept,3,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze the relationship between right-linear grammars and finite automata.,Database Management Systems,Right-Linear Grammars & Finite Automata,3,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Design and optimize a relational database schema for a University Management System, considering integrity constraints and normalization.",Database Management Systems,Schema Design: University Management System,3,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+List the ACID properties. What is the usefulness of each property?,Database Management Systems,ACID Properties of Transactions,4,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Define serializability. Identify necessity of serializability in transaction processing.,Database Management Systems,Serializability Necessity,4,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+What benefits does rigorous concurrency control in transaction processing provide?,Database Management Systems,Rigorous Concurrency Control,4,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Differentiate between serial schedule & conflict serializable schedule with example.,Database Management Systems,Serial vs. Conflict Serializable Schedule,4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Explain two phase locking (2PL) protocol for maintaining serializability.,Database Management Systems,Two-Phase Locking (2PL) Protocol,4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Describe Transaction processing. Give an example of the same.,Database Management Systems,Transaction Processing Fundamentals,4,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+"Consider the following schedule for transactions T1, T2, and T3:
+
+T1: Read(X), Write(X)
+T2: Read(Y), Write(Y), Read(X), Write(X)
+T3: Read(Y), Write(X)
+
+Complete Schedule Operations Order:
+T2: Read(X)
+T2: Read(Y)
+T1: Read(Y)
+T1: Write(Y)
+T3: Write(X)
+T2: Write(X)
+T3: Read(X)
+T3: Write(X)
+
+Determine which one of the schedules below is the correct conflict equivalent serial schedule:
+A. T1 -> T3 -> T2
+B. T2 -> T1 -> T3
+C. T2 -> T3 -> T1
+D. T3 -> T1 -> T2",Database Management Systems,Schedule Conflict Serializability Identification,4,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Apply Thomas' Write Rule for allowing greater concurrency in timestamp-based protocol.,Database Management Systems,Thomas' Write Rule,4,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Sketch the state diagram for a transaction and describe it in brief.,Database Management Systems,Transaction State Diagram,4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Suppose a transaction Ti issues a read command on data item Q. Explain how timestamp-based protocol analyzes whether to allow the operation to be executed or not.,Database Management Systems,Timestamp-Based Concurrency Control Read Rule,4,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Illustrate cascadeless schedule and cascading rollback.,Database Management Systems,Cascadeless Schedule vs. Cascading Rollback,4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Categorize various types of Locks in detail.,Database Management Systems,"Lock Types (Shared, Exclusive, Intent)",4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Justify why deadlocks should be prevented in DBMS by elaborating deadlock prevention algorithms.,Database Management Systems,"Deadlock Prevention Algorithms (Wait-Die, Wound-Wait)",4,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Determine whether the following schedule is view serializable or not. Justify your answer. Also explain the concept of view equivalent schedules considering the example:
+
+Schedule:
+T1: read(A), A:=A-50, write(A)
+T2: read(A), temp:=A*0.1, A:=A-temp, write(A)
+T1: read(B), B:=B+50, write(B)
+T2: read(B), B:=B+temp, write(B)",Database Management Systems,View Serializability Determination,4,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+"Consider the given schedule below and design a conflict equivalent serial schedule for it:
+
+Schedule:
+T1: read(A), A:=A-50, write(A)
+T1: read(B), B:=B-10, write(B)
+T2: read(B), B:=B+50, write(B)
+T2: read(A), A:=A+10, write(A)",Database Management Systems,Conflict Equivalent Schedule Construction,4,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Discuss the procedure to test serializability using a precedence (serialization) graph.,Database Management Systems,Testing Serializability via Precedence Graph,4,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Describe the immediate update recovery technique in both single and multiuser environments.,Database Management Systems,Immediate Update Database Recovery,4,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Explain timestamp-ordering concurrency control protocol in detail.,Database Management Systems,Timestamp-Ordering Protocol,4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Briefly explain one deadlock detection algorithm (e.g., Wait-For Graph).",Database Management Systems,Deadlock Detection Algorithm,4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+What is a system log? What is the purpose of the system log in system recovery?,Database Management Systems,System Log & Recovery Purpose,4,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Identify two problems caused by poor concurrency control (e.g., Dirty Read, Lost Update).",Database Management Systems,Concurrency Control Anomalies,4,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Illustrate different types of schedules and distinguish between recoverable and non-recoverable schedules.,Database Management Systems,Recoverable vs. Non-Recoverable Schedules,4,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Describe the locking-based scheduler and explain how two-phase locking ensures serializability.,Database Management Systems,Lock-Based Scheduler & Serializability,4,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze the working of Multi-Version Concurrency Control (MVCC) and evaluate its advantages in high-concurrency systems.,Database Management Systems,Multi-Version Concurrency Control (MVCC),4,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+"Examine different database recovery techniques (Deferred Update, Immediate Update, Shadow Paging) and justify their role in maintaining atomicity and durability.",Database Management Systems,Database Recovery Techniques & Atomicity/Durability,4,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Explain the optimistic concurrency control technique and assess its suitability for read-heavy databases.,Database Management Systems,Optimistic Concurrency Control (Validation-Based),4,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Analyze the concurrency issues that may arise when multiple users simultaneously add and update products in an online shopping cart.,Database Management Systems,Concurrency Issues in E-Commerce Cart,4,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Design a transaction management strategy using ACID properties to ensure consistency during product purchase operations.,Database Management Systems,ACID Transaction Strategy for E-Commerce,4,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Evaluate the effectiveness of multiversion concurrency control in handling simultaneous cart updates and checkouts.,Database Management Systems,MVCC for Online Checkouts,4,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Propose a recovery mechanism to handle system crashes during payment processing and justify how it ensures reliability.,Database Management Systems,System Crash Recovery for Payment Processing,4,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Compare NoSQL & RDBMS.,Database Management Systems,NoSQL vs. RDBMS Comparison,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Summarize NoSQL database systems.,Database Management Systems,NoSQL Overview,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+State the features of NoSQL databases.,Database Management Systems,NoSQL Features,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Categorize the different kinds of NoSQL data stores.,Database Management Systems,NoSQL Data Store Categories,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Describe CAP theorem? How is it applicable to NoSQL systems?,Database Management Systems,CAP Theorem in NoSQL,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+What is MapReduce?,Database Management Systems,MapReduce Concept,5,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Illustrate a simple example of the working of MapReduce.,Database Management Systems,MapReduce Example & Workflow,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Explain how to set mappers and reducers for Hadoop jobs.,Database Management Systems,Hadoop Mappers & Reducers,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Illustrate NoSQL databases and classify types of NoSQL databases.,Database Management Systems,Classification of NoSQL Databases,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Choose and explain what kind of NoSQL database MongoDB is.,Database Management Systems,MongoDB Architecture Type,5,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Analyze the most important features of MongoDB.,Database Management Systems,MongoDB Key Features,5,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Compare MongoDB with SQL databases.,Database Management Systems,MongoDB vs. SQL Databases,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+How can you achieve primary key-foreign key relationships in MongoDB?,Database Management Systems,Relationships & References in MongoDB,5,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+What are the core components of Hadoop?,Database Management Systems,"Hadoop Core Components (HDFS, YARN, MapReduce)",5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Show role and functions of a NameNode in Hadoop.,Database Management Systems,Hadoop NameNode Role,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Discuss the key features of HDFS (Hadoop Distributed File System).,Database Management Systems,HDFS Key Features,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+What is a DataNode in Hadoop?,Database Management Systems,Hadoop DataNode Concept,5,1,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+"Explain BASE properties (Basically Available, Soft state, Eventual consistency) in detail.",Database Management Systems,BASE Properties in NoSQL,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+What is throughput? Justify how HDFS provides good throughput.,Database Management Systems,HDFS Throughput Mechanism,5,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Can you change the block size of HDFS files? Explain.,Database Management Systems,HDFS Block Size Configuration,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Identify the differences between structured and unstructured data.,Database Management Systems,Structured vs. Unstructured Data,5,2,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,2,,,
+Differentiate between ACID and BASE properties with appropriate use cases.,Database Management Systems,ACID vs. BASE Comparison,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Describe the architecture and use cases of key-value and document-oriented NoSQL databases.,Database Management Systems,Key-Value & Document NoSQL Architecture,5,3,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Compare graph databases and wide-column stores in terms of data modeling and applications.,Database Management Systems,Graph vs. Wide-Column Stores,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+Analyze the role of indexing in MongoDB and evaluate its impact on query performance.,Database Management Systems,MongoDB Indexing & Performance,5,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+"Analyze the data characteristics (posts, comments, likes, multimedia) of a social media platform and classify the data types involved.",Database Management Systems,Social Media Data Characteristics Classification,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Evaluate the suitability of different NoSQL database types (key-value, document, graph, wide-column) for a social media platform.",Database Management Systems,NoSQL Selection for Social Media Platform,5,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+"Design a NoSQL-based database architecture for handling user profiles, feeds, and relationships in a social media application.",Database Management Systems,NoSQL Database Architecture Design,5,6,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Examine the structure and applications of XML databases and mobile databases.,Database Management Systems,XML Databases & Mobile Databases,5,4,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,5,,,
+"Justify the selection of MongoDB for implementing a social media platform by mapping its features to scalability, availability, and performance requirements.",Database Management Systems,MongoDB Justification for Social Media Platform,5,5,Dr. K.S. Thakre/ MS. K.B.Satpute/Ms. S.H. Kuche,10,,,
+Explain in detail about various language evaluation criteria and the characteristics that affect them,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Explain the process of compilation.,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Explain about various programming domains.,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+What are the factors that influence the basic design of programming languages?,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Explain in detail about various language implementation methods.,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Explain the Language categories.,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Explain Good Programming Language Characteristics,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Define a programming language and explain its importance in software development.,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Define Term ‘Binding’ with suitable example in particular Language,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Explain different concepts of programming language quality with programming Language,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+What are the key reasons for studying programming languages?,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Explain the roles of programming languages in creating different types of software applications.,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Analyze the impact of programming paradigms on the evolution of programming languages.,Principle of Programming Languages,Fundamentals of Programming,1,4,Ms. Jagruti Wagh,5,,,
+"What is a programming paradigm, and why is it essential to understand in software development?",Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+How does the logic and rule-based paradigm differ from procedural and object-oriented paradigms?,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Compare and contrast procedural and object-oriented programming in terms of code organization and modularity.,Principle of Programming Languages,Fundamentals of Programming,1,4,Ms. Jagruti Wagh,5,,,
+Analyze the impact of immutability on the predictability and reliability of functional programming.,Principle of Programming Languages,Fundamentals of Programming,1,4,Ms. Jagruti Wagh,5,,,
+Compare the strengths and weaknesses of each programming paradigm.,Principle of Programming Languages,Fundamentals of Programming,1,4,Ms. Jagruti Wagh,5,,,
+Create a set of guidelines for choosing the most suitable programming paradigm for a given project.,Principle of Programming Languages,Fundamentals of Programming,1,6,Ms. Jagruti Wagh,10,,,
+How does the logic and rule-based paradigm differ from procedural and object-oriented paradigms?,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Evaluate the role of programming languages in emerging technologies such as AI and IoT.,Principle of Programming Languages,Fundamentals of Programming,1,5,Ms. Jagruti Wagh,10,,,
+List the first generation to fourth generation programming languages with examples.,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Explain how the limitations of early programming languages led to the development of modern programming paradigms,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Compare procedural programming languages with object-oriented languages in terms of historical development.,Principle of Programming Languages,Fundamentals of Programming,1,4,Ms. Jagruti Wagh,5,,,
+Define binding in programming and list its types.,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Explain the difference between early binding and late binding.,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Evaluate the advantages and disadvantages of dynamic binding in object-oriented programming.,Principle of Programming Languages,Fundamentals of Programming,1,5,Ms. Jagruti Wagh,10,,,
+Define a programming environment and list its major components.,Principle of Programming Languages,Fundamentals of Programming,1,1,Ms. Jagruti Wagh,2,,,
+Explain how knowledge of programming history helps a programmer choose the right language for a project.,Principle of Programming Languages,Fundamentals of Programming,1,3,Ms. Jagruti Wagh,5,,,
+Explain the main advantage of procedural programming.,Principle of Programming Languages,Fundamentals of Programming,1,2,Ms. Jagruti Wagh,2,,,
+Define the following constructs in Java 1. Method overloading,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,2,Ms. Jagruti Wagh,2,,,
+What are strings in Java ? Explain following operations of class string in java with example. 1. compareTo() 2. substring(),Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,4,Ms. Jagruti Wagh,5,,,
+Explain Java's Role in internet. Demonstrate the following features of Java 1. Secure 2. Architectural Neutral 3. Distributed,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+What is use of Constructors? What are types of constructors in Java ? Give example of each type,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+Explain the concepts and state the difference between them Method Overloading and Overriding,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+What is the use of static variables and methods in Java? Give example of static declaration? What are the restriction on static method,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+What are objects and classes in Java ? Explain how to create class and object in Java program with an example,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,2,Ms. Jagruti Wagh,2,,,
+Demonstrate the concept of garbage collection in java with the help of an example.,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,5,Ms. Jagruti Wagh,10,,,
+Define finalize() method in Java with a suitable example,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,1,Ms. Jagruti Wagh,2,,,
+Define and explain use of 'this' keyword in java,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,1,Ms. Jagruti Wagh,2,,,
+What is Data abstraction and Encapsulation,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,2,Ms. Jagruti Wagh,2,,,
+Implement the concept of parameterized constructor in Java,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,6,Ms. Jagruti Wagh,10,,,
+What is Array? How to declare array in JAVA,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,2,Ms. Jagruti Wagh,2,,,
+Illustrate with examples: static and final. Static Method,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,5,Ms. Jagruti Wagh,10,,,
+Write a JAVA program using switch case statement to perform addition and subtraction of given two numbers and print the result,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,6,Ms. Jagruti Wagh,10,,,
+Write a Java program that uses a one-dimensional array to store and display a list of student names.,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,6,Ms. Jagruti Wagh,10,,,
+Explain the significance of the finalize() method in Java.,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,2,Ms. Jagruti Wagh,2,,,
+"Develop a class with a constructor and two methods, one that returns a value and another that doesn't.",Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,6,Ms. Jagruti Wagh,10,,,
+Explain argument passing with an example,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,6,Ms. Jagruti Wagh,10,,,
+Create an example showcasing the use of variable-length arguments in a Java method.,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,6,Ms. Jagruti Wagh,10,,,
+What is the use of this keyword?,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,2,Ms. Jagruti Wagh,2,,,
+What are strings in JAVA? Explain following operations of class string in java with example 1. To find length of string 2. To search a substring,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+"Explain why JAVA is secured, portable & dynamic? Which of the concept of JAVA is ensured this",Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+"Show with example use of constructor and overloading default, parameterized and copy constructor",Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+Demonstrate method overloading through a program in Java how method overloading is used to add two integers and three integers respectively.,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,5,Ms. Jagruti Wagh,10,,,
+"Write a program in Java using switch-case statement to perform addition, subtraction, Multiplication and Division of given two numbers and print the result.",Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,5,Ms. Jagruti Wagh,10,,,
+Explain in brief below keywords with example in Java. i) Final ii) Static iii) This,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+Define String in Java programming. Explain the following operations of class string in Java with example. 1. To find the length of a string. 2. To compare two strings 3. Extraction of character from a string,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,5,Ms. Jagruti Wagh,10,,,
+Explain the Garbage Collection concept in Java Programming with code example.,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,3,Ms. Jagruti Wagh,5,,,
+Create an example showcasing the use of variable-length arguments in a Java method.,Principle of Programming Languages,JAVA as Object Oriented Programming Languages,2,6,Ms. Jagruti Wagh,10,,,
+Explain the concept of inheritance in Java. Discuss member access and different types of inheritance with suitable examples,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Illustrate the use of superclass references in Java programs.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Demonstrate the use of the super keyword in accessing superclass constructors and methods,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Explain multilevel inheritance in Java with a suitable example program,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Illustrate how Java achieves multiple inheritance using interfaces,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Illustrate the constructor call sequence in an inheritance hierarchy using a Java program.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Explain method overriding and its significance in Java programming,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Demonstrate runtime polymorphism using dynamic method dispatch in Java.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Explain abstract classes in Java and compare them with concrete classes,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Describe the importance of the Object class and explain its commonly used methods,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Write a Java program to illustrate method overriding using bank interest calculation,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Write a Java program to create an abstract class Shape and calculate areas of different shapes.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Elaborate Method overriding and dynamic method dispatch in Java,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Elaborate the significance of keyword super in Java with suitable examples,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Write a JAVA program using switch case statement to perform addition and subtraction of given two numbers and print the result,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,6,Ms. Jagruti Wagh,10,,,
+Write a Java program that uses a one-dimensional array to store and display a list of student names.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,6,Ms. Jagruti Wagh,10,,,
+Explain the relationship between packages and access protection in Java.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+"Develop a class with a constructor and two methods, one that returns a value and another that doesn't.",Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,6,Ms. Jagruti Wagh,10,,,
+Differentiate between Abstract class and Interface,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Construct a Java program that creates a user-defined package and accesses it from another class.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Analyze the role of interfaces in achieving abstraction and loose coupling.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,4,Ms. Jagruti Wagh,5,,,
+Illustrate nested interfaces in Java with a suitable example.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Describe the characteristics of variables declared in interfaces.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Explain the applications of interfaces in developing Java programs.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Construct a program to illustrate multilevel inheritance and display inherited properties.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,2,Ms. Jagruti Wagh,2,,,
+Describe the benefits of inheritance and the various forms of inheritance in Java.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Develop a Java program to demonstrate single inheritance using student and result classes.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Implement a Java program to illustrate multilevel inheritance for employee salary calculation,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,3,Ms. Jagruti Wagh,5,,,
+Compare inheritance and interfaces in Java with suitable examples.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,4,Ms. Jagruti Wagh,5,,,
+Compare packages and interfaces in Java. Justify their roles by designing a suitable example program to calculate student marks.,Principle of Programming Languages,"Inheritances, Packages and Interfaces",3,4,Ms. Jagruti Wagh,5,,,
+What are types of exceptions ? Explain any 3 built in exception with example,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Write a program to read user name from console and display some message for that user using streams.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,4,Ms. Jagruti Wagh,5,,,
+List the methods of Printwriter class with example,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+State the difference between character and byte stream in Java. Give any two input and output classes for character streams and byte stream,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Compare the throw() and throws(),Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+What is the meaning of a package in Java ? Explain with a suitable example,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+Explain Interface concept in Java with suitable example,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+List hierarchy of exception classes,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+How do you create your own exception class? Discuss with a program.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+List Java’s Built-in Exception? Write the importance of finally block.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+Define the following 1. Streams 2. Byte streams 3) Character Streams 4)Predefined stream,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,1,Ms. Jagruti Wagh,2,,,
+Write a Java program to read data from a text file using FileInputStream and display its contents on the console,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Develop a Java program to copy the contents of one file into another using byte stream classes,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Describe an exception and types of exception with the help of example,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,4,Ms. Jagruti Wagh,5,,,
+State the difference between character and byte stream in Java. Give any two input and output classes for character streams and byte stream,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,4,Ms. Jagruti Wagh,5,,,
+Write a program that contains one method that will throw an IllegalAccessException and use proper exception handles so that the exception should be printed.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Write a program to handle divide-by-zero exceptions.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Develop a program to read data from a text file.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+What are uncaught exceptions? Explain any built in exception with example,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+"Define (state) use of try(), catch(), throw (), throws and finally methods",Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,1,Ms. Jagruti Wagh,2,,,
+Implement a program to append data into an existing file.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Write a program to copy contents from one file to another.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+"Develop a program to count the number of words, lines, and characters in a file.",Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+How do you create a text file and write data in file using JAVA programming?,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+"Explain the process of opening, reading, writing, and closing a file.",Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+Describe different file access modes with examples.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+Explain random access file handling.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Discuss the advantages of file handling in data management.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,2,Ms. Jagruti Wagh,2,,,
+Explain serialization and deserialization concepts.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,3,Ms. Jagruti Wagh,5,,,
+Differentiate between sequential and direct file access methods.,Principle of Programming Languages,"Exception Handling, Managing I/O and File Handling",4,4,Ms. Jagruti Wagh,5,,,
+Explain why Concurrency and Synchronization is important?describe how java supports it?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,2,Ms. Jagruti Wagh,2,,,
+Differentiate between process and thread?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,4,Ms. Jagruti Wagh,5,,,
+Explain Thread Priorities and what does Preemptive Multitasking mean?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,2,Ms. Jagruti Wagh,2,,,
+Explain the ways of Creating thread ?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,2,Ms. Jagruti Wagh,2,,,
+Implement Extending Thread class?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,6,Ms. Jagruti Wagh,10,,,
+Differentiate isAlive and Join() with Example?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,4,Ms. Jagruti Wagh,5,,,
+Explain what would happen if the main thread joins to new Thread and New thread joins to Main Thread?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,2,Ms. Jagruti Wagh,2,,,
+Explain the life cycle of Thread?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,4,Ms. Jagruti Wagh,5,,,
+State the term thread Synchronization?,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,4,Ms. Jagruti Wagh,5,,,
+"differences between List, Set, and Map in Java.",Principle of Programming Languages,Collections and Multi-threading in JAVA,5,2,Ms. Jagruti Wagh,2,,,
+"Provide an example of a situation where List, Set, and Map in Java would be most appropriately used.",Principle of Programming Languages,Collections and Multi-threading in JAVA,5,4,Ms. Jagruti Wagh,5,,,
+Discuss how the behavior would change if a LinkedHashSet was used instead.,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,4,Ms. Jagruti Wagh,5,,,
+what happens when the ArrayList is converted to a HashSet.,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,2,Ms. Jagruti Wagh,2,,,
+"Analyze which collection is better suited for a scenario based on considering time complexity of basic operations (insertion, deletion, traversal) for Array list and Hash Set",Principle of Programming Languages,Collections and Multi-threading in JAVA,5,4,Ms. Jagruti Wagh,5,,,
+Differentiate between ArrayList and LinkedList in Java.,Principle of Programming Languages,Collections and Multi-threading in JAVA,5,2,Ms. Jagruti Wagh,2,,,
+Describe the various umbrella activities that are applied throughout a software project.,Software Engineering,Software Development Lifecycle & Umbrella Activities,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Software Engineering.,Software Engineering,Software Engineering Fundamentals,1,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+"Explain how software engineering is structured as a layered technology, detailing its different layers and their roles in the software development process.",Software Engineering,Software Engineering as a Layered Technology,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Define software life cycle and types of lifecycle models.,Software Engineering,Software Lifecycle Models,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+List the differences between Plan-driven and Agile development.,Software Engineering,Plan-Driven vs. Agile Development,1,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+List and explain the activities in software framework.,Software Engineering,Software Process Framework Activities,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Prototyping model.,Software Engineering,Prototyping Model,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the advantages of prototyping models?,Software Engineering,Prototyping Model Advantages,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the key elements of the Iterative Process Model and describe its advantages and disadvantages.,Software Engineering,Iterative Process Model,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Illustrate drawbacks of waterfall models.,Software Engineering,Waterfall Model Limitations,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is meant by rapid prototyping? Explain how you incorporate such a scheme in software project management?,Software Engineering,Rapid Prototyping,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the phases of Adaptive Software Development.,Software Engineering,Adaptive Software Development (ASD),1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Illustrate the development of a Web-based Shopping Portal using the Incremental Development Model.,Software Engineering,Incremental Development Model,1,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+What is the difference between verification and validation?,Software Engineering,Verification vs. Validation,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Describe the Unified process.,Software Engineering,Unified Process Framework,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the phases encompassed in the RAD model?,Software Engineering,Rapid Application Development (RAD) Model,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+"Explain the Scrum Framework. Define the roles of the Scrum Master, Product Owner, and Development Team.",Software Engineering,Scrum Framework & Roles,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the elements of the waterfall process model? List its merits & demerits.,Software Engineering,Waterfall Process Model,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain with a neat diagram incremental model and state its disadvantages.,Software Engineering,Incremental Process Model,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+"Which software process model should be used for given project scenarios (Office automation, Flight control, Online book store)? Justify your answer.",Software Engineering,Process Model Selection for Real-world Projects,1,4,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Compare Plan driven and agile approach in Software Process Models.,Software Engineering,Plan-Driven vs. Agile Process Models,1,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Compare the process between Agile and Evolutionary models.,Software Engineering,Agile vs. Evolutionary Process Models,1,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+What is extreme programming? Explain the Extreme programming process.,Software Engineering,Extreme Programming (XP) Process,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain how Feature Driven Development (FDD) works in agile methodology.,Software Engineering,Feature Driven Development (FDD),1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+"Discuss the importance of Process, Methods, and Tools in the software engineering hierarchy.",Software Engineering,"Process, Methods, and Tools Hierarchy",1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is agility? List any three principles of agility.,Software Engineering,Agile Principles & Agility,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the Nature of Software by discussing its unique characteristics.,Software Engineering,Software Characteristics & Nature,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Discuss the role of the customer/stakeholder in an Agile environment.,Software Engineering,Customer Role in Agile Development,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the concept of a 'Sprint' and how the Product Backlog differs from the Sprint Backlog.,Software Engineering,Sprint Concept & Backlog Management,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+"Case Study Approach: Given a project with rapidly changing requirements and a tight deadline, which process model would you choose and why?",Software Engineering,Agile Process Selection Case Study,1,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Write short note on: 1. Waterfall Model 2. Spiral Model 3. Prototype Model 4. V Model 5. Incremental Model.,Software Engineering,Software Process Models Comparison,1,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+List all the tasks in requirement engineering. Explain it in brief.,Software Engineering,Requirement Engineering Tasks,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+"Explain requirement engineering, describe its process, and discuss the challenges in requirement elicitation.",Software Engineering,Requirement Engineering Process & Elicitation Challenges,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Distinguish between functional and nonfunctional requirements.,Software Engineering,Functional vs. Non-Functional Requirements,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Design use case diagram for user interaction with ATM system.,Software Engineering,Use Case Diagram: ATM System,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+"Design a Use Case Diagram for a University Enrollment System, illustrating the interactions between actors and various use cases.",Software Engineering,Use Case Diagram: University Enrollment,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Explain four desirable characteristics of a good software requirement specification document.,Software Engineering,Characteristics of SRS Document,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Distinguish requirement negotiation and validation. State its technique purpose of Requirements Validation.,Software Engineering,Requirement Negotiation vs. Validation,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is requirement engineering? State its process and explain the requirement elicitation problem.,Software Engineering,Requirement Elicitation Problems,2,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Apply requirement engineering activities to identify both functional and non-functional requirements for a College ERP system.,Software Engineering,Requirements Elicitation: College ERP,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Model the workflow of a Train Reservation System using an Activity Diagram.,Software Engineering,Activity Diagram: Train Reservation System,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain requirement Elicitation Process.,Software Engineering,Requirement Elicitation Process,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+List down requirement Elicitation Techniques.,Software Engineering,Requirement Elicitation Techniques,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Illustrate the components of an SRS for a computerized library system.,Software Engineering,SRS Structure: Library Management System,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+List down Software Requirements Characteristics.,Software Engineering,Software Requirements Characteristics,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the importance of Requirement engineering.,Software Engineering,Importance of Requirement Engineering,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Software Requirement Specification (SRS).,Software Engineering,Software Requirement Specification (SRS),2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain about various categories of non functional requirements & their importance.,Software Engineering,Categories of Non-Functional Requirements,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the phases of the unified process and how it supports incremental and iterative development.,Software Engineering,Unified Process Incremental Development,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain in brief the collaborative requirement gathering activity.,Software Engineering,Collaborative Requirement Gathering,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain various functional and nonfunctional requirements for the Bank ATM System using requirements engineering processes.,Software Engineering,ATM System Requirements Analysis,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+List at least five stakeholders for an automated University examination system.,Software Engineering,Stakeholder Identification,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Define QFD (Quality Function Deployment). Explain the types of requirements defined by QFD.,Software Engineering,Quality Function Deployment (QFD),2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the components of a use case diagram? Explain usage of it with examples.,Software Engineering,Use Case Diagram Components,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain about the building the requirements model.,Software Engineering,Building Requirements Model,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+State the purpose of a Software Requirements Specification (SRS) document in the software development life cycle.,Software Engineering,Purpose of SRS Document,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Describe the difference between Requirement Negotiation and Requirement Validation.,Software Engineering,Requirement Negotiation vs. Validation,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Summarize the goal of Scenario-based Modeling in capturing user interactions.,Software Engineering,Scenario-Based Modeling,2,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Sketch a Data Flow Diagram (DFD) for a basic library management system to show the movement of information.,Software Engineering,Data Flow Diagram (DFD): Library System,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+"Prepare a simple Use Case Description for a 'User Login' feature, including the primary actor, preconditions, and main flow.",Software Engineering,Use Case Description: User Login,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Distinguish between Class-based modeling and Object-oriented modeling approaches.,Software Engineering,Class-Based vs. Object-Oriented Modeling,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Compare and contrast Flow-oriented modeling with Scenario-based modeling. Which is better for real-time systems?,Software Engineering,Flow-Oriented vs. Scenario-Based Modeling,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Explain four desirable characteristics of good software requirement specification document.,Software Engineering,SRS Quality Characteristics,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Describe Standard Structure of an SRS.,Software Engineering,Standard SRS Structure,2,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+What are the different processes in project time management?,Software Engineering,Project Time Management,3,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is project decomposition? What are the work tasks for communication process using process decomposition?,Software Engineering,Project Process Decomposition,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the FP based estimation technique.,Software Engineering,Function Point (FP) Estimation,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain earned value analysis in project scheduling.,Software Engineering,Earned Value Analysis (EVA),3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is the need of project estimation? What are the steps while cost estimation of software?,Software Engineering,Software Cost Estimation Steps,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is a timeline chart? Explain a timeline chart with a suitable example.,Software Engineering,Timeline Chart & Project Scheduling,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Draw neat diagram of design model with design class characteristics with examples.,Software Engineering,Design Model & Design Classes,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain design classes in detail of design concepts.,Software Engineering,Design Classes Concept,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+List and explain component level design steps in detail.,Software Engineering,Component Level Design Steps,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain various factors considered while forming software teams.,Software Engineering,Software Team Structure & Formation,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+"Compare all three Estimation techniques (FP based, COCOMO II, LOC based).",Software Engineering,Comparison of Software Estimation Techniques,3,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+With a suitable example explain FP based Technique.,Software Engineering,Function Point Analysis Example,3,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Write a short note on the various estimation techniques.,Software Engineering,Software Estimation Overview,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is the COCOMO II model? Analyze different project estimation models and evaluate their effectiveness.,Software Engineering,COCOMO II Estimation Model,3,4,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+With a suitable example explain LOC based technique.,Software Engineering,Lines of Code (LOC) Estimation,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is software configuration management (SCM)?,Software Engineering,Software Configuration Management (SCM) Overview,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+How LOC and FP are used during project Estimation? Explain both Estimation techniques with suitable example.,Software Engineering,LOC vs. FP Estimation Methods,3,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Write about software change strategies.,Software Engineering,Software Change Strategies,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Prepare a project schedule using a Gantt chart for Inventory management System.,Software Engineering,Gantt Chart Project Schedule,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain how Function Point Analysis (FPA) is used for project estimation.,Software Engineering,Function Point Analysis (FPA) Application,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Function Point Analysis (FPA) used for software estimation.,Software Engineering,Function Point Computation,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Describe different software estimation techniques used in project management.,Software Engineering,Project Management Estimation Techniques,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain size estimation and effort estimation in software projects.,Software Engineering,Size & Effort Estimation,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Discuss the factors affecting software project estimation.,Software Engineering,Factors Affecting Software Estimation,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain various project estimation techniques with suitable examples.,Software Engineering,Estimation Techniques & Examples,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Illustrate estimation techniques for an ATM Banking System.,Software Engineering,ATM Banking System Estimation Case,3,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Discuss factors affecting software project estimation.,Software Engineering,Project Estimation Challenges,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Discuss with suitable diagram three major categories of software project resources.,Software Engineering,Software Project Resource Categories,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Define the importance of Project estimation. Compare lines of code (LOC) and Function Point (FP) based estimation of software.,Software Engineering,LOC vs. FP Comparison,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Define Project Scheduling. What is a task network in project scheduling? Explain with an example.,Software Engineering,Project Scheduling & Task Networks,3,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the elements of a design model?,Software Engineering,Elements of Design Model,4,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Define design process.,Software Engineering,Software Design Process Definition,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+List the principles of a software design.,Software Engineering,Software Design Principles,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+What is the benefit of modular design?,Software Engineering,Modular Design Benefits,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is a cohesive module?,Software Engineering,Module Cohesion,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the concept of design patterns with suitable examples.,Software Engineering,Software Design Patterns,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+What is coupling? What are the various types of coupling?,Software Engineering,Module Coupling Types,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Differentiate between architectural style and architectural pattern.,Software Engineering,Architectural Style vs. Pattern,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is an architectural style?,Software Engineering,Architectural Styles Concept,4,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+List the principles of a software design.,Software Engineering,Design Principles Summary,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the various models produced by the software design process?,Software Engineering,Software Design Models,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the quality parameters considered for effective modular design?,Software Engineering,Quality Parameters for Modular Design,4,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are types of architectural styles?,Software Engineering,Types of Architectural Styles,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain in detail about data modeling.,Software Engineering,Data Modeling Concept,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Define Cardinality and Modality.,Software Engineering,Cardinality and Modality,4,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain in detail the design concepts.,Software Engineering,Core Software Design Concepts,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain User interface design process.,Software Engineering,User Interface (UI) Design Process,4,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the concept of RMMM in software project management.,Software Engineering,"RMMM (Risk Mitigation, Monitoring, & Management) Concept",4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Describe the components of an RMMM plan with suitable examples.,Software Engineering,Components of RMMM Plan,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain risk mitigation strategies used in software development projects.,Software Engineering,Risk Mitigation Strategies,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Develop an RMMM plan for an Online Examination System.,Software Engineering,RMMM Plan: Online Examination System,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+"Prepare a Risk Mitigation, Monitoring, and Management plan for a Hospital Management System.",Software Engineering,RMMM Plan: Hospital Management System,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Analyze possible risks in a Banking Management System and suggest mitigation strategies.,Software Engineering,Risk Analysis: Banking Management System,4,4,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+"Identify technical, schedule, and people-related risks in a Hotel Reservation System and prepare an RMMM plan.",Software Engineering,RMMM Plan: Hotel Reservation System,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Describe the role of Git in Software Configuration Management.,Software Engineering,Role of Git in SCM,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Illustrate how branching and merging are performed in Git using a real-world example.,Software Engineering,Git Branching and Merging Workflow,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Design a Use Case Model for an Online Shopping System.,Software Engineering,Use Case Model: Online Shopping System,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Illustrate message flow in a Railway Reservation System using a Sequence Diagram.,Software Engineering,Sequence Diagram: Railway Reservation System,4,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+"Describe notations, relations used in Class diagram. Give examples for each.",Software Engineering,Class Diagram Notations and Relationships,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Create a Collaboration Diagram for a Banking Application.,Software Engineering,Collaboration Diagram: Banking Application,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain component diagrams in UML.,Software Engineering,UML Component Diagrams,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Describe risk checklist in risk Identification.,Software Engineering,Risk Checklist in Risk Identification,4,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Test Characteristics.,Software Engineering,Software Testing Characteristics,5,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Write down two Unit Testing Techniques.,Software Engineering,Unit Testing Techniques,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Why to perform white box testing?,Software Engineering,White Box Testing Purpose,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+How is Cyclomatic Complexity calculated?,Software Engineering,Cyclomatic Complexity Calculation,5,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Regression Testing.,Software Engineering,Regression Testing Concept,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Define software testing? Explain with an example.,Software Engineering,Software Testing Definition,5,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the common approaches in debugging?,Software Engineering,Debugging Approaches,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the approaches in integration testing. Also explain Top down and Bottom-up approaches used commonly.,Software Engineering,Integration Testing Approaches (Top-Down & Bottom-Up),5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What are the debugging tactics?,Software Engineering,Debugging Tactics,5,1,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Draw the flow graph for finding a maximum of three numbers and derive the test cases using cyclomatic complexity.,Software Engineering,Flow Graph & Cyclomatic Complexity Test Cases,5,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Explain equivalence partitioning testing.,Software Engineering,Equivalence Partitioning Testing,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Differentiate between alpha and beta testing.,Software Engineering,Alpha vs. Beta Testing,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is GUI testing? Explain in detail.,Software Engineering,GUI Testing,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Differentiate between verification & validation in detail.,Software Engineering,Verification vs. Validation Comparison,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+How Top-down and Bottom-Up integration is achieved?,Software Engineering,Top-Down and Bottom-Up Integration Implementation,5,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+What do you understand by System Testing? What are the different kinds of system testing that are usually performed on large software testing.,Software Engineering,System Testing Types,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Compare centralized and distributed version control systems.,Software Engineering,Centralized vs. Distributed Version Control,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Prepare a simple SCM plan for a Student Management System.,Software Engineering,SCM Plan: Student Management System,5,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+What is the SCM repository? Describe the role of Git in Software Configuration Management.,Software Engineering,SCM Repository & Role of Git,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Illustrate system testing for a health monitoring system.,Software Engineering,System Testing: Health Monitoring System,5,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Explain how Beta Testing helps improve customer satisfaction.,Software Engineering,Beta Testing & Customer Satisfaction,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Alpha Testing and Beta Testing with suitable examples.,Software Engineering,Alpha Testing vs. Beta Testing Examples,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Why are Alpha and Beta testing important in software quality assurance?,Software Engineering,Alpha & Beta Testing in Quality Assurance,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Apply Alpha and Beta Testing techniques for a Mobile Banking Application.,Software Engineering,Alpha & Beta Testing: Mobile Banking,5,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Explain Unit Testing with suitable examples.,Software Engineering,Unit Testing Concepts & Examples,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Discuss black-box and white-box techniques used in Unit Testing.,Software Engineering,Black-Box vs. White-Box Unit Testing,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Develop Unit Test Cases for an ATM withdrawal module.,Software Engineering,Unit Test Cases: ATM Withdrawal,5,3,Dr. Geetha Chillarge/ Vandana Rupnar,5,,,
+Compare Unit Testing and Validation Testing.,Software Engineering,Unit Testing vs. Validation Testing,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Analyze the advantages and limitations of Unit Testing.,Software Engineering,Advantages & Limitations of Unit Testing,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Discuss the importance of Verification and Validation in software quality assurance.,Software Engineering,Verification & Validation in Quality Assurance,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Describe functional and non-functional testing.,Software Engineering,Functional vs. Non-Functional Testing,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the Regression Testing process in software engineering.,Software Engineering,Regression Testing Process,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain the importance of the change control mechanism.,Software Engineering,Change Control Mechanism in SCM,5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+Explain Boundary value analysis in black box testing.,Software Engineering,Boundary Value Analysis (BVA),5,2,Dr. Geetha Chillarge/ Vandana Rupnar,2,,,
+What is data science? Write components of data science.,Data Science and Machine Learning,Introduction to Data Science & Components,1,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Explain process of data science and write its application.,Data Science and Machine Learning,Data Science Process & Applications,1,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+What is big data? What are the various sources of BigData? What are the various big data structures?,Data Science and Machine Learning,Big Data Overview & Sources,1,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+How can big data be categorized using 5 Vs? Explain each of them in detail.,Data Science and Machine Learning,5 Vs of Big Data,1,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Illustrate the Data Analytics Life Cycle in Big Data and demonstrate the role of each stage by applying it to a practical data analytics scenario.,Data Science and Machine Learning,Data Analytics Life Cycle,1,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+What are the key roles that lead to a successful analytics project in Big Data Ecosystem?,Data Science and Machine Learning,Roles in Big Data Ecosystem,1,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Compare and contrast between Business intelligence and data science.,Data Science and Machine Learning,Business Intelligence vs Data Science,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Differentiate between primary and secondary data collection.,Data Science and Machine Learning,Data Collection Methods,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Discuss in brief primary data collection methods.,Data Science and Machine Learning,Primary Data Collection Methods,1,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Differentiate between structured and unstructured data.,Data Science and Machine Learning,Data Types: Structured vs Unstructured,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Given two objects represented by tuples (22, 1, 42, 10) and (20, 0, 36, 8):
+(a) Compute the Euclidean distance between the two objects.
+(b) Compute the Manhattan distance between the two objects.",Data Science and Machine Learning,Distance Measures (Euclidean & Manhattan),1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Briefly outline how to compute the dissimilarity between objects described by the following types of variables:
+(a) Numerical (interval-scaled) variables
+(b) Asymmetric binary variables
+(c) Categorical variables
+(d) Ratio-scaled variables
+(e) Nonmetric vector objects",Data Science and Machine Learning,Dissimilarity Measures for Variable Types,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Given the following measurements for the variable age: 18; 22; 25; 42; 28; 43; 33; 35; 56; 28; standardize the variable by the following:
+(a) Compute the mean absolute deviation of age.
+(b) Compute the z-score for the first four measurements.",Data Science and Machine Learning,Data Standardization & Z-Score,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Given two objects represented by the tuples (1, 1, 0, 0) and (0, 1, 1, 0): calculate cosine similarity.",Data Science and Machine Learning,Cosine Similarity,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Given two objects represented by the tuples (22, 1, 42, 10) and (20, 0, 36, 8):
+(a) Compute the Euclidean distance between the two objects.
+(b) Compute the Manhattan distance between the two objects.
+(c) Compute the Minkowski distance between the two objects, using p = 3.",Data Science and Machine Learning,Minkowski & Distance Metrics,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"For given numeric data, x = (1.4, 1.6) as a query, rank the database points based on proximity:
+| Point | A1 | A2 |
+|---|---|---|
+| X1 | 1.5 | 1.7 |
+| X2 | 2.6 | 1.9 |
+| X3 | 1.6 | 1.8 |
+| X4 | 1.2 | 1.5 |
+| X5 | 1.5 | 1.0 |",Data Science and Machine Learning,Proximity Ranking,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Calculate mixed type dissimilarity for the given objects:
+| Obj_ID | Nominal | Ratio_Scaled |
+|---|---|---|
+| 1 | Code-A | 445 |
+| 2 | Code-B | 22 |
+| 3 | Code-A | 164 |",Data Science and Machine Learning,Mixed Type Dissimilarity,1,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Suppose that x and y are the first two term frequency vectors: x = (5, 0, 3, 0) and y = (3, 0, 2, 0). How similar are x and y?",Data Science and Machine Learning,Term Frequency Vector Similarity,1,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Explain following with example:
+1. Minkowski distance
+2. Euclidean distance",Data Science and Machine Learning,Distance Metrics,1,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Explain proximity measures for binary attributes.,Data Science and Machine Learning,Proximity Measures for Binary Attributes,1,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Define the statistical terms and give their mathematical formulae:
+I. Mean
+II. Median
+III. Mode
+IV. Variance
+V. Standard deviation
+VI. Range
+VII. Mid-Range
+and calculate the same for the following data: [3, 5, 7, 3, 12, 5]",Data Science and Machine Learning,Descriptive Statistics Formulae & Calculations,2,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"What is covariance? Calculate the same for the following dataset:
+| Year | Company X Stock Value ($) | Company Y Stock Value ($) |
+|---|---|---|
+| 2015 | 1,245 | 100 |
+| 2016 | 1,415 | 123 |
+| 2017 | 1,312 | 129 |
+| 2018 | 1,427 | 143 |
+| 2019 | 1,510 | 150 |
+| 2020 | 1,590 | 197 |",Data Science and Machine Learning,Covariance Calculation,2,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Define: Mean, Median, Mode (Unimodal, Bimodal) with suitable data values.",Data Science and Machine Learning,Central Tendency Definitions,2,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"For the given data for Book Price (in dollars), apply Binning mean technique for smoothing the noise:
+15, 21, 21, 29, 34, 24, 4, 8, 9, 25, 26, 28.",Data Science and Machine Learning,Data Smoothing by Binning Means,2,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Suppose for the attribute income mean value is $54,000 and standard deviation is $16,000. Normalize income value $73,600 using Z-score normalization method.",Data Science and Machine Learning,Z-score Normalization Calculation,2,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Explain the methods of measuring central tendency of data with example.,Data Science and Machine Learning,Central Tendency Methods,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+What is the need for data pre-processing? Explain various data cleaning techniques.,Data Science and Machine Learning,Data Pre-processing & Data Cleaning,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+What is the need of data pre-processing? Explain various data reduction techniques.,Data Science and Machine Learning,Data Reduction Techniques,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Explain the methods of measuring dispersion of data with examples.,Data Science and Machine Learning,Measures of Dispersion,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"What is data normalization in data pre-processing? Explain following data normalization methods with example:
+i) Min-Max normalization
+ii) Decimal Scaling normalization",Data Science and Machine Learning,Data Normalization Methods,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Suppose that the data for analysis includes the attribute age. The age values for the data tuples are (in increasing order):
+13, 15, 16, 16, 19, 20, 20, 21, 22, 22, 25, 25, 25, 25, 30, 33, 33, 35, 35, 35, 35, 36, 40, 45, 46, 52, 70.
+i) What is mean of data?
+ii) What is mode of data?",Data Science and Machine Learning,Descriptive Statistics (Mean & Mode),2,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Discuss different techniques for noise removal in Data cleaning process.,Data Science and Machine Learning,Noise Removal Techniques,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+What is the need of data pre-processing? Explain various data transformation techniques.,Data Science and Machine Learning,Data Transformation Techniques,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Explain various data cleaning techniques with example.,Data Science and Machine Learning,Data Cleaning Techniques,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Use the methods below to normalize the following group of data: 20, 74, 30, 35, 40, 60, 80, 56.
+i) Min Max
+ii) Z-score normalization
+iii) Decimal Scaling Normalization",Data Science and Machine Learning,Data Normalization Methods Comparison,2,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Explain Z-score and Decimal scaling normalization technique with example.,Data Science and Machine Learning,Normalization Techniques,2,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+What is Classification in Machine Learning? Differentiate between Classification and Prediction.,Data Science and Machine Learning,Classification vs Prediction,3,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Explain the concept of Machine Learning and its significance in modern computing.,Data Science and Machine Learning,Machine Learning Concept & Significance,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Compare traditional programming with Machine Learning in terms of data, rules, and outputs.",Data Science and Machine Learning,Traditional Programming vs Machine Learning,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Differentiate between Artificial Intelligence, Machine Learning, and Data Science with suitable examples.",Data Science and Machine Learning,AI vs ML vs Data Science,3,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Describe the different types of Machine Learning and their characteristics.,Data Science and Machine Learning,Types of Machine Learning,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Explain supervised and unsupervised learning with appropriate real-world applications.,Data Science and Machine Learning,Supervised vs Unsupervised Learning Applications,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Differentiate supervised and unsupervised learning.,Data Science and Machine Learning,Supervised vs Unsupervised Comparison,3,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Given a problem of email spam detection, identify the appropriate type of Machine Learning and justify your choice.",Data Science and Machine Learning,ML Paradigm Selection: Spam Detection,3,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Determine whether a customer segmentation problem should use supervised or unsupervised learning, and explain why.",Data Science and Machine Learning,ML Paradigm Selection: Customer Segmentation,3,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Illustrate how Machine Learning can be applied to improve a traditional rule-based weather prediction system.,Data Science and Machine Learning,ML for Rule-based Systems,3,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Given a real-world application such as fraud detection or image recognition, identify the type of Machine Learning used and explain its role.",Data Science and Machine Learning,ML Applications & Role Analysis,3,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Explain Reinforcement Learning and its applications in autonomous systems.,Data Science and Machine Learning,Reinforcement Learning Overview,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Explain different Machine Learning models such as Geometric, Probabilistic, Logical, Tree-based, and Neural Network models.",Data Science and Machine Learning,Types of Machine Learning Models,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Describe Geometric Models used in Machine Learning.,Data Science and Machine Learning,Geometric Models,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+List any four Machine Learning applications used by Uber.,Data Science and Machine Learning,Uber ML Applications,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Discuss the advantages and limitations of Machine Learning.,Data Science and Machine Learning,Advantages & Limitations of ML,3,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Discuss the challenges faced while implementing Machine Learning systems.,Data Science and Machine Learning,ML Implementation Challenges,3,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Give two examples each of Supervised and Unsupervised Learning.,Data Science and Machine Learning,Supervised & Unsupervised Examples,3,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Describe various real-world applications of Machine Learning in healthcare, finance, and transportation.",Data Science and Machine Learning,Real-world ML Domain Applications,3,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+List any four applications of Artificial Intelligence.,Data Science and Machine Learning,AI Applications,3,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+What is regression analysis? Explain Linear regression with a suitable example along with its mathematical equation.,Data Science and Machine Learning,Linear Regression Analysis,4,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+What are the types of regularization? How regularization helps regression?,Data Science and Machine Learning,Regularization Techniques,4,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+How can loss function be optimized in regression? Or Explain gradient descent algorithm for regression.,Data Science and Machine Learning,Loss Function & Gradient Descent,4,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Differentiate overfitting and underfitting.,Data Science and Machine Learning,Overfitting vs Underfitting,4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Explain i) Bias ii) Variance iii) Bias-Variance Tradeoff.,Data Science and Machine Learning,Bias-Variance Tradeoff,4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Derive the following terms with respect to predictor:
+1. Absolute error
+2. Squared error
+3. Mean Absolute error",Data Science and Machine Learning,"Regression Error Metrics (MAE, Absolute/Squared Error)",4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Derive the following terms with respect to predictor:
+1. Mean Squared error
+2. Relative Absolute error
+3. Relative Squared error",Data Science and Machine Learning,"Regression Error Metrics (MSE, RAE, RSE)",4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Explain k-fold Cross Validation & Random Subsampling.,Data Science and Machine Learning,Model Evaluation & Cross Validation,4,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Discuss Holdout method and Random Sub Sampling methods.,Data Science and Machine Learning,Sampling & Holdout Methods,4,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Derive the following terms with respect to classifier:
+1. Precision
+2. Recall
+3. Accuracy",Data Science and Machine Learning,Classification Performance Metrics,4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Write a short note on decision trees with the help of a figure. Brief about the different algorithms for drawing decision trees.,Data Science and Machine Learning,Decision Trees & Algorithms,4,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Explain the terms: Entropy, Information Gain, Gain Ratio, Gini Index.",Data Science and Machine Learning,Decision Tree Splitting Metrics,4,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Explain the Naïve Bayes theorem. Enlist its advantages, disadvantages, and applications.",Data Science and Machine Learning,Naïve Bayes Theorem,4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+What is meant by Performance Metrics? Define a few for classification models.,Data Science and Machine Learning,Classification Performance Metrics,4,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"With the help of a diagram, explain what is a Confusion Matrix along with its key terms. Also explain ROC curve and AUC with a suitable diagram.",Data Science and Machine Learning,"Confusion Matrix, ROC & AUC",4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"What is ensemble learning? Explain in brief the following ensemble methods with examples:
+a. Bagging
+b. Boosting
+c. Random Forests",Data Science and Machine Learning,Ensemble Learning Methods,4,1,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Using the k-NN algorithm with k=3 and Euclidean distance, classify the new point P(3, 3) based on the dataset below:
+| Point | X1 | X2 | Class |
+|---|---|---|---|
+| A | 1 | 1 | Red |
+| B | 2 | 1 | Red |
+| C | 4 | 3 | Blue |
+| D | 5 | 4 | Blue |
+| E | 3 | 2 | Red |",Data Science and Machine Learning,k-Nearest Neighbors (k-NN) Classification,4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Solve the below given dataset using Naive Bayes algorithm to predict 'Play':
+| Day | Outlook | Play |
+|---|---|---|
+| 0 | Rainy | Yes |
+| 1 | Sunny | Yes |
+| 2 | Overcast | Yes |
+| 3 | Overcast | Yes |
+| 4 | Sunny | No |
+| 5 | Rainy | Yes |
+| 6 | Sunny | Yes |
+| 7 | Overcast | Yes |
+| 8 | Rainy | No |
+| 9 | Sunny | No |
+| 10 | Sunny | Yes |
+| 11 | Rainy | No |
+| 12 | Overcast | Yes |
+| 13 | Overcast | Yes |",Data Science and Machine Learning,Naïve Bayes Problem Solving,4,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Reinforcement learning is different from supervised learning? Justify the above statement.,Data Science and Machine Learning,Reinforcement vs Supervised Learning,5,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Explain in brief reinforcement learning.,Data Science and Machine Learning,Reinforcement Learning Overview,5,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+"Perform single linked and complete linked hierarchical clustering using similarity matrix given below and draw dendrogram:
+
+Similarity Matrix:
+| Point | P1 | P2 | P3 | P4 | P5 |
+|---|---|---|---|---|---|
+| P1 | 1.00 | 0.10 | 0.41 | 0.55 | 0.35 |
+| P2 | 0.10 | 1.00 | 0.64 | 0.47 | 0.98 |
+| P3 | 0.41 | 0.64 | 1.00 | 0.44 | 0.85 |
+| P4 | 0.55 | 0.47 | 0.44 | 1.00 | 0.76 |
+| P5 | 0.35 | 0.98 | 0.85 | 0.76 | 1.00 |",Data Science and Machine Learning,Hierarchical Clustering with Similarity Matrix,5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+Difference between single and complete clustering.,Data Science and Machine Learning,Single vs Complete Linkage Clustering,5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Explain following terms:
+i. Density based clustering
+ii. Agglomerative hierarchical clustering",Data Science and Machine Learning,DBSCAN & Agglomerative Clustering,5,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Explain K-means algorithm with suitable example.,Data Science and Machine Learning,K-Means Algorithm,5,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Difference between hierarchical and partition clustering.,Data Science and Machine Learning,Hierarchical vs Partitional Clustering,5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Given two objects represented by tuples (22, 1, 42, 10) and (20, 0, 36, 8):
+a. Compute the Euclidean distance between the two objects.
+b. Compute the Manhattan distance between the two objects.",Data Science and Machine Learning,Distance Measures (Euclidean & Manhattan),5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+What are the requirements of clustering in data mining?,Data Science and Machine Learning,Clustering Requirements in Data Mining,5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+What is clustering? How it is different than supervised classification? In what situations clustering can be useful?,Data Science and Machine Learning,Clustering vs Supervised Classification,5,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Consider the following points: P1(0.40, 0.53), P2(0.22, 0.38), P3(0.35, 0.32), P4(0.26, 0.19), P5(0.08, 0.41), and P6(0.45, 0.30). Perform single linked hierarchical clustering and draw dendrogram.",Data Science and Machine Learning,Single Linkage Hierarchical Clustering,5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Consider the following points: P1(0.40, 0.53), P2(0.22, 0.38), P3(0.35, 0.32), P4(0.26, 0.19), P5(0.08, 0.41), and P6(0.45, 0.30). Perform complete linked hierarchical clustering and draw dendrogram.",Data Science and Machine Learning,Complete Linkage Hierarchical Clustering,5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Suppose that the given task is to cluster points (with (x, y) representing location) into three clusters, where the points are: A1(2, 10), A2(2, 5), A3(8, 4), B1(5, 8), B2(7, 5), B3(6, 4), C1(1, 2), C2(4, 9). The distance function is Euclidean distance. Suppose initially we assign A1, B1, and C1 as the center of each cluster, respectively. Use the k-means algorithm to show only the three cluster centers after the first round of execution with steps.",Data Science and Machine Learning,K-Means First Round Center Computation,5,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"Compare K-Means and hierarchical clustering in terms of:
+- Number of clusters requirement
+- Computational cost
+- Interpretability of results",Data Science and Machine Learning,K-Means vs Hierarchical Clustering Comparison,5,4,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,
+"We have height and weight information. Using these two variables, create clusters using k-means algorithm for the following dataset:
+| Height | Weight |
+|---|---|
+| 185 | 72 |
+| 170 | 56 |
+| 168 | 60 |
+| 179 | 68 |
+| 182 | 72 |
+| 188 | 77 |
+| 180 | 71 |
+| 180 | 70 |
+| 183 | 84 |
+| 180 | 88 |
+| 180 | 67 |
+| 177 | 76 |",Data Science and Machine Learning,K-Means Clustering on Height-Weight Data,5,3,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,5,,,Ms. Aishwarya Mane
+Discuss the relationship between Reinforcement Learning and Function Optimization.,Data Science and Machine Learning,Reinforcement Learning & Function Optimization,5,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Explain DBSCAN algorithm with example.,Data Science and Machine Learning,DBSCAN Clustering Algorithm,5,2,Dr. Sankirti Shiravale/ Ms. Kirti Satpute,2,,,
+Define a set and provide an example.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+What is the difference between a finite and an infinite set?,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Define the union of two sets A and B.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+What is the intersection of two sets P and Q?,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+Define a proposition and give an example of a statement that is NOT a proposition.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+What is the negation of a proposition p?,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+"State the meaning of the logical connective ""and"" (∧).",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+What is a universal quantifier (∀)?,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+Define an existential quantifier (∃).,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+What is a multiset?,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,1,Ms. Aishwarya Mane,2,,,
+"Let A = {1, 2, 3, 4, 5} and B = {3, 5, 7, 9}. Find A ∪ B and A ∩ B.",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+"Explain the concept of an uncountably infinite set with an example (e.g., real numbers).",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Describe the Principle of Inclusion-Exclusion for two sets. Provide a simple scenario where it would be used.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+"Differentiate between a set and a multiset, giving an example to illustrate the distinction.",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Construct a truth table for the conditional proposition p → q.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+"Write the converse, inverse, and contrapositive of the conditional proposition ""If it is raining, then the ground is wet.""",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+Explain what a tautology is and provide a simple example.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Convert the proposition (p ∧ q) ∨ (¬p ∧ r) into its Disjunctive Normal Form (DNF).,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+What is a method of direct proof? Provide a simple example of proving a mathematical statement using this method.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Explain the base case and inductive step in the principle of Mathematical Induction.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+"Negate the quantified statement: ""Every student in the class passed the exam.""",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+"Explain the Cartesian product of two sets. If A = {a, b} and B = {1, 2, 3}, find A × B and B × A. Are they equal? Justify your answer.",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+Describe the Principle of Inclusion-Exclusion for three sets. Use a Venn diagram to visually represent the formula.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Differentiate between Countably Infinite and Uncountably Infinite sets. Provide a clear example for each and explain why they fall into their respective categories.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,4,Ms. Aishwarya Mane,5,,,
+"Construct a truth table for the logical expression (p ∧ q) → (¬r ∨ p). Determine if it is a tautology, contradiction, or contingency.",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+"Discuss the different types of logical connectives (conjunction, disjunction, negation, conditional, biconditional). Provide their symbols and truth tables.",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Explain the process of converting a given propositional expression into its Conjunctive Normal Form (CNF). Convert (p ∨ ¬q) → r into CNF.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+Describe the method of proof by contradiction. Prove that √2 is irrational using this method.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+Explain the principle of Mathematical Induction in detail. Use it to prove that the sum of the first n positive integers is n(n+1)/2.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+"Negate the quantified statement: ∀x ∃y (P(x,y) ∧ Q(y)). Explain the steps involved in the negation.",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+"A survey of 100 students showed that 60 liked Math, 50 liked Physics, and 30 liked both. How many students liked Math or Physics? How many liked neither? Use the Principle of Inclusion-Exclusion.",Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,3,Ms. Aishwarya Mane,5,,,
+Discuss the applications of sets in computer science and mathematics providing at least three distinct examples.,Mathematical Foundation for GenAI,Set Theory and Proposition Logic,1,2,Ms. Aishwarya Mane,2,,,
+Define a binary relation from set A to set B.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+What is a reflexive relation? Give a simple example.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+Define a symmetric relation.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+What is an antisymmetric relation?,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+When is a relation considered transitive?,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+State the Rule of Sum in counting.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+State the Rule of Product in counting.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+What is the difference between a permutation and a combination?,Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+Define an n-ary relation.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,1,Ms. Aishwarya Mane,2,,,
+What is the purpose of representing relations using matrices?,Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+"Let R be a relation on the set {1, 2, 3} given by R = {(1,1), (1,2), (2,1), (2,2), (3,3)}. Determine if R is reflexive, symmetric, and/or transitive. Justify your answer.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+"Explain the concept of ""closure of a relation."" Why are reflexive, symmetric, and transitive closures important?",Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+Describe how relations can be represented using directed graphs (digraphs). Illustrate with an example.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+What are the properties required for a relation to be an equivalence relation? Give a real-world example of an equivalence relation.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+Explain what a partial ordering is. Provide an example of a set and a relation that forms a partial ordering.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+In how many ways can a president and a vice-president be chosen from a group of 10 people? Explain which counting principle is used.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+A restaurant offers 5 different appetizers and 8 different main courses. In how many ways can a person choose one appetizer and one main course? State the counting principle used.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+"How many distinct permutations can be formed from the letters of the word ""MISSISSIPPI""?",Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+A committee of 3 students is to be chosen from a group of 7 students. In how many ways can this be done? Show your calculation.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+Explain the application of n-ary relations in database systems. Provide a simple conceptual example.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+"Given a set A = {a, b, c}, draw the digraph for the relation R = {(a,a), (a,b), (b,c)}.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+"Let A = {1, 2, 3, 4} and R be the relation on A defined by (a,b) ∈ R if a divides b. Write R as a set of ordered pairs. Then determine if R is reflexive, symmetric, antisymmetric, or transitive. Justify each property.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+"Explain the concept of ""equivalence classes"" derived from an equivalence relation. Provide an example of an equivalence relation on the set of integers and list some of its equivalence classes.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+"Describe the algorithms to compute the reflexive, symmetric, and transitive closures of a relation. Illustrate the transitive closure computation with a small example using Warshall's Algorithm (conceptual explanation sufficient).",Mathematical Foundation for GenAI,Relations and Counting Principles,2,4,Ms. Aishwarya Mane,5,,,
+A standard deck of 52 cards has 4 suits and 13 ranks. In how many ways can a 5-card poker hand be dealt that contains exactly 3 aces? Show your detailed calculation.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+Explain the difference between permutations with repetition and permutations without repetition. Provide a practical example for each.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+How many different bit strings of length 8 contain exactly three 1s? How many contain at least three 1s? Show your calculations.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+Discuss the properties of partial orderings. How do they differ from total orderings? Provide an example of a partial ordering that is not a total ordering.,Mathematical Foundation for GenAI,Relations and Counting Principles,2,4,Ms. Aishwarya Mane,5,,,
+"A student needs to choose 4 subjects from a list of 10, where 3 subjects are mandatory. In how many ways can the student choose the subjects? Explain your steps.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+"Explain the applications of relations in various fields such as computer science (e.g., databases, graph theory) and mathematics.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,2,Ms. Aishwarya Mane,2,,,
+"A cafeteria offers 3 choices for soup, 5 choices for main course, and 4 choices for dessert. If a customer must choose exactly one item from each category, how many different meal combinations are possible? If a customer can choose any number of items (including none) from each category, how many choices are possible? Use appropriate counting principles.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+"Define the properties of relations (reflexive, symmetric, antisymmetric, transitive) and draw a digraph for a relation that is: a) Reflexive and symmetric but not transitive. b) Transitive and antisymmetric but not reflexive.",Mathematical Foundation for GenAI,Relations and Counting Principles,2,3,Ms. Aishwarya Mane,5,,,
+How does a Hamiltonian path differ from an Eulerian path?,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+Explain the terms adjacency matrix and incidence matrix with example.,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Explain Edge connectivity and Vertex Connectivity with suitable examples.,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+What are the types of graphs in graph theory? Explain each type briefly and draw one example of each.,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+Distinguish between a path and a circuit.,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+What is an Euler path?,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+What is a Hamiltonian circuit?,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+Define a planar graph.,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+What is the main objective of Dijkstra's Algorithm?,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+Briefly state the Traveling Salesman Problem (TSP).,Mathematical Foundation for GenAI,Graph Theory,3,1,Ms. Aishwarya Mane,2,,,
+Define the following with an example: i) Simple Graph ii) Multigraph iii) Weighted Graph iv) Null Graph,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+What is an adjacency matrix representation of a graph? Illustrate with a small example.,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Define the following terms with suitable examples: i) Factor of graph ii) Weighted Graph iii) Bipartite graph,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Can a graph have an Euler path but not an Euler circuit? Explain why or why not.,Mathematical Foundation for GenAI,Graph Theory,3,4,Ms. Aishwarya Mane,5,,,
+What are the key differences between Hamiltonian paths/circuits and Euler paths/circuits?,Mathematical Foundation for GenAI,Graph Theory,3,4,Ms. Aishwarya Mane,5,,,
+List the steps involved in Dijkstra's Algorithm to find the shortest path from a single source.,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+"Explain the concept of ""factors of a graph."" Give an example of a 1-factor.",Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Draw a non-planar graph and briefly explain why it is non-planar.,Mathematical Foundation for GenAI,Graph Theory,3,3,Ms. Aishwarya Mane,5,,,
+What are the main challenges in solving the Traveling Salesman Problem for a large number of cities?,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+"Consider a graph with vertices A, B, C, D and edges (A,B), (B,C), (C,D), (D,A). Is this graph planar? Justify your answer.",Mathematical Foundation for GenAI,Graph Theory,3,3,Ms. Aishwarya Mane,5,,,
+"Explain how weighted graphs are used in real-world scenarios, providing two distinct examples.",Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Define and differentiate between directed graphs and undirected graphs. Provide an example for each.,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Use Dijkstra's algorithm to find the shortest path between 0 and 4 in Figure.,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Describe Euler's theorem for the existence of Euler circuits and paths. Provide an example of a graph with an Euler path but no Euler circuit and trace the path.,Mathematical Foundation for GenAI,Graph Theory,3,3,Ms. Aishwarya Mane,5,,,
+"Apply Dijkstra's Algorithm to find the shortest path from vertex A to all other vertices in the following weighted graph: Vertices: A, B, C, D, E. Edges: (A,B,4), (A,C,2), (B,E,3), (C,D,2), (D,E,5), (B,D,1). Show all steps.",Mathematical Foundation for GenAI,Graph Theory,3,3,Ms. Aishwarya Mane,5,,,
+Create a solution for Travelling salesman problem. Show circuit starting from one.,Mathematical Foundation for GenAI,Graph Theory,3,4,Ms. Aishwarya Mane,5,,,
+"Explain Kuratowski's Theorem as a criterion for planarity. Use a specific example (like K5 or K3,3) to illustrate why it's non-planar.",Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+"A simple planar graph (G) has 20 vertices and each vertex has degree 3. Using Euler's formula, determine the number of regions (faces) in (G). Show all steps.",Mathematical Foundation for GenAI,Graph Theory,3,4,Ms. Aishwarya Mane,5,,,
+"You are given a city map as a graph where intersections are vertices and roads are edges with travel times as weights. Explain how graph theory concepts would be applied to: a) find the quickest route between two points, and b) design a trash collection route that covers every street exactly once.",Mathematical Foundation for GenAI,Graph Theory,3,6,Ms. Aishwarya Mane,10,,,
+Define graph isomorphism. Determine whether two given simple graphs are isomorphic or not. Justify your answer.,Mathematical Foundation for GenAI,Graph Theory,3,4,Ms. Aishwarya Mane,5,,,
+"Explain what a ""tree"" is in graph theory. List at least three properties that characterize a tree. How is it related to a connected graph?",Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+Discuss the concept of graph coloring. What is the chromatic number of a graph and what are its practical applications?,Mathematical Foundation for GenAI,Graph Theory,3,2,Ms. Aishwarya Mane,2,,,
+What is the primary difference between qualitative and quantitative data?,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+Give an example of discrete data.,Mathematical Foundation for GenAI,Descriptive Statistics,4,1,Ms. Aishwarya Mane,2,,,
+Define continuous data with an example.,Mathematical Foundation for GenAI,Descriptive Statistics,4,1,Ms. Aishwarya Mane,2,,,
+What is simple random sampling?,Mathematical Foundation for GenAI,Descriptive Statistics,4,1,Ms. Aishwarya Mane,2,,,
+State one advantage of using stratified sampling.,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+Name two measures of central tendency.,Mathematical Foundation for GenAI,Descriptive Statistics,4,1,Ms. Aishwarya Mane,2,,,
+What is the range of a dataset?,Mathematical Foundation for GenAI,Descriptive Statistics,4,1,Ms. Aishwarya Mane,2,,,
+Define standard deviation.,Mathematical Foundation for GenAI,Descriptive Statistics,4,1,Ms. Aishwarya Mane,2,,,
+What does a positive skewness indicate about the distribution of data?,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+Briefly explain what kurtosis measures.,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+"Differentiate between discrete and continuous data, providing two examples for each.",Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+Explain two methods of data collection other than sampling.,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+Describe the process of simple random sampling. What are its limitations?,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+What are the characteristics of an ideal measure of central tendency?,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+Compare and contrast the mean and median as measures of central tendency.,Mathematical Foundation for GenAI,Descriptive Statistics,4,4,Ms. Aishwarya Mane,5,,,
+Explain the concept of measures of dispersion. Why are they important in descriptive statistics?,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+"Calculate the range and quartile deviation for the following dataset: 12, 15, 18, 20, 22, 25, 28.",Mathematical Foundation for GenAI,Descriptive Statistics,4,3,Ms. Aishwarya Mane,5,,,
+Explain why standard deviation is generally preferred over mean deviation as a measure of dispersion.,Mathematical Foundation for GenAI,Descriptive Statistics,4,4,Ms. Aishwarya Mane,5,,,
+What is the coefficient of variation? How is it useful?,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+Briefly explain the concepts of positive and negative skewness with the help of diagrams.,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+"Elaborate on the different types of data (qualitative vs. quantitative, discrete vs. continuous) with suitable examples for each category.",Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+"Discuss stratified sampling in detail, including its advantages and disadvantages. Provide a scenario where it would be particularly useful.",Mathematical Foundation for GenAI,Descriptive Statistics,4,4,Ms. Aishwarya Mane,5,,,
+"Explain the various measures of central tendency (mean, median, mode) and discuss their strengths and weaknesses in different data contexts.",Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+What are the characteristics of an ideal measure of dispersion? Discuss how standard deviation fulfills these characteristics.,Mathematical Foundation for GenAI,Descriptive Statistics,4,4,Ms. Aishwarya Mane,5,,,
+"Calculate the mean deviation and standard deviation for the following dataset: 5, 8, 10, 12, 15. Interpret your results.",Mathematical Foundation for GenAI,Descriptive Statistics,4,3,Ms. Aishwarya Mane,5,,,
+Explain the concepts of skewness and kurtosis. How do these measures provide additional insights into the shape of a data distribution beyond measures of central tendency and dispersion?,Mathematical Foundation for GenAI,Descriptive Statistics,4,2,Ms. Aishwarya Mane,2,,,
+"A teacher wants to analyze the performance of students in a mathematics test. The scores are 45, 52, 47, 55, 49, 60, 58, 54, 50, 53. Write a program to calculate the mean, median, and mode.",Mathematical Foundation for GenAI,Descriptive Statistics,4,4,Ms. Aishwarya Mane,5,,,
+"Discuss the importance of visualizing data for understanding its distribution. How do histograms and box plots complement the numerical measures of descriptive statistics (central tendency, dispersion, skewness, kurtosis)?",Mathematical Foundation for GenAI,Descriptive Statistics,4,4,Ms. Aishwarya Mane,5,,,
+"You are tasked with summarizing the salaries of employees in a company. Which measures of central tendency, dispersion, skewness, and kurtosis would you choose, and why?",Mathematical Foundation for GenAI,Descriptive Statistics,4,6,Ms. Aishwarya Mane,10,,,
+Explain the difference between absolute and relative measures of dispersion. Provide examples of each and discuss when each type would be more appropriate.,Mathematical Foundation for GenAI,Descriptive Statistics,4,4,Ms. Aishwarya Mane,5,,,
+What is a statistical hypothesis?,Mathematical Foundation for GenAI,Statistical Inference,5,1,Ms. Aishwarya Mane,2,,,
+Distinguish between a simple and a composite hypothesis.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+Define the null hypothesis (H0).,Mathematical Foundation for GenAI,Statistical Inference,5,1,Ms. Aishwarya Mane,2,,,
+What is an alternative hypothesis (H1)?,Mathematical Foundation for GenAI,Statistical Inference,5,1,Ms. Aishwarya Mane,2,,,
+Explain the concept of a critical region in hypothesis testing.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+What are the two types of errors in hypothesis testing?,Mathematical Foundation for GenAI,Statistical Inference,5,1,Ms. Aishwarya Mane,2,,,
+Define the level of significance (α).,Mathematical Foundation for GenAI,Statistical Inference,5,1,Ms. Aishwarya Mane,2,,,
+What is the power of a test?,Mathematical Foundation for GenAI,Statistical Inference,5,1,Ms. Aishwarya Mane,2,,,
+Give one example of a situation where a non-parametric test might be preferred over a parametric test.,Mathematical Foundation for GenAI,Statistical Inference,5,3,Ms. Aishwarya Mane,5,,,
+Explain the concept of a critical region in hypothesis testing.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+Explain the steps involved in testing a statistical hypothesis.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+"Differentiate between Type I and Type II errors, providing a brief example for each.",Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+How does the choice of the level of significance affect the probability of Type I and Type II errors?,Mathematical Foundation for GenAI,Statistical Inference,5,4,Ms. Aishwarya Mane,5,,,
+Discuss the relationship between the power of a test and the sample size.,Mathematical Foundation for GenAI,Statistical Inference,5,4,Ms. Aishwarya Mane,5,,,
+"What is the p-value in hypothesis testing, and how is it interpreted?",Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+List and briefly explain two advantages of non-parametric methods over parametric methods.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+List and briefly explain two disadvantages of non-parametric methods compared to parametric methods.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+"Explain the concept of a ""test statistic"" in the context of hypothesis testing.",Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+Briefly describe the core idea behind sequential analysis in hypothesis testing.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+Provide an example of a research question that would typically be addressed using a non-parametric test. Justify your answer.,Mathematical Foundation for GenAI,Statistical Inference,5,3,Ms. Aishwarya Mane,5,,,
+"Elaborate on the concepts of null and alternative hypotheses, and explain their role in formulating a statistical test.",Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+Discuss the trade-off between Type I and Type II errors. How can a researcher balance these errors?,Mathematical Foundation for GenAI,Statistical Inference,5,4,Ms. Aishwarya Mane,5,,,
+Define and explain the power of a statistical test in detail. What factors influence the power of a test?,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+A dietitian claims that the mean weight loss after following a certain diet is 5 kg. A sample of 25 people shows an average loss of 4.5 kg with a population standard deviation of 1.2 kg. Test the claim at α = 0.05.,Mathematical Foundation for GenAI,Statistical Inference,5,4,Ms. Aishwarya Mane,5,,,
+Describe the concept of a critical region and explain how it is determined in hypothesis testing. Illustrate with an example.,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+"Explain the general procedure for conducting a hypothesis test, from stating the hypotheses to drawing a conclusion.",Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+What are the key differences between one-tailed and two-tailed tests? Provide an example where a one-tailed test would be appropriate.,Mathematical Foundation for GenAI,Statistical Inference,5,4,Ms. Aishwarya Mane,5,,,
+A car manufacturer claims that the average mileage of a model is 18 km/l. A test of 36 cars gives a mean of 17.2 km/l and σ = 1.5 km/l. Test at α = 0.05 (z-test).,Mathematical Foundation for GenAI,Statistical Inference,5,4,Ms. Aishwarya Mane,5,,,
+A researcher claims that a new fertilizer increases crop yield beyond 50 kg per plant. A sample of 20 plants treated with the fertilizer shows an average of 52.5 kg with a standard deviation of 3 kg. Test at 5% significance (t-test one-tailed).,Mathematical Foundation for GenAI,Statistical Inference,5,2,Ms. Aishwarya Mane,2,,,
+A manufacturer claims that the mean lifetime of a certain type of battery is at least 1000 hours. A consumer agency tests a random sample of 36 batteries and finds the sample mean is 980 hours with a population standard deviation of 60 hours. Perform following tasks: State the null and alternative hypotheses,Mathematical Foundation for GenAI,Statistical Inference,5,6,Ms. Aishwarya Mane,10,,,
+A school claims the average IQ of its students is 110. A sample of 16 students shows a mean IQ of 106 and standard deviation 8. Test the claim at 5% significance.,Mathematical Foundation for GenAI,Statistical Inference,5,6,Ms. Aishwarya Mane,10,,,
