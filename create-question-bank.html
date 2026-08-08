@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Author — Create Question Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+:root{
+--maroon:#7A0C0C;
+--maroon-hover:#A31313;
+--maroon-dark:#4E0808;
+--gold:#D4AF37;
+--bg:#FBF8F5;
+--ink:#2B2320;
+--tint:#FDEEEE;
+--line:#E7DFDA;
+--muted:#8A7F78;
+--green:#2E6B2E;
+--green-bg:#EAF4EA;
+--amber:#8A6116;
+--amber-bg:#FBF1DE;
+--blue:#2A5A8A;
+--blue-bg:#EAF1F8;
+--radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--ink);
+-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:'Inter',sans-serif;}
+
+/* ---------- LAYOUT ---------- */
+.app{display:flex;min-height:100vh;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+width:250px;flex-shrink:0;
+background:linear-gradient(180deg, var(--maroon-dark), var(--maroon));
+color:#fff;display:flex;flex-direction:column;
+position:sticky;top:0;height:100vh;
+}
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:24px 22px;border-bottom:1px solid rgba(255,255,255,.12);}
+.crest-badge{
+width:38px;height:38px;border:2px solid var(--gold);border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-family:'Playfair Display',serif;font-weight:800;font-size:16px;color:var(--gold);flex-shrink:0;
+}
+.sidebar-brand-text{line-height:1.25;}
+.sidebar-brand-text .t1{font-size:12.5px;font-weight:700;letter-spacing:.02em;}
+.sidebar-brand-text .t2{font-size:10.5px;color:rgba(255,255,255,.6);font-family:'IBM Plex Mono',monospace;}
+.nav-group{padding:18px 14px;}
+.nav-label{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:8px 10px 8px;font-family:'IBM Plex Mono',monospace;}
+.nav-item{
+display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+font-size:13.5px;font-weight:500;color:rgba(255,255,255,.82);cursor:pointer;margin-bottom:2px;
+transition:background .15s ease, color .15s ease;
+}
+.nav-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);flex-shrink:0;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.14);color:#fff;font-weight:600;}
+.nav-item.active .dot{background:var(--gold);}
+.sidebar-footer{margin-top:auto;padding:16px 22px 22px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.5);font-family:'IBM Plex Mono',monospace;}
+
+/* ---------- MAIN ---------- */
+.main{flex:1;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;background:#fff;border-bottom:1px solid var(--line);}
+.page-title{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.avatar{
+width:36px;height:36px;border-radius:50%;background:var(--tint);color:var(--maroon);
+display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13.5px;border:1.5px solid var(--gold);
+}
+.content{padding:28px 32px 60px;}
+
+/* ---------- STAT CARDS ---------- */
+.stats-row{display:grid;grid-template-columns:repeat(4, 1fr);gap:18px;margin-bottom:28px;}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;}
+.stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--maroon);}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+.stat-label{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+/* ---------- STEPPER ---------- */
+.stepper{display:flex;align-items:center;gap:10px;margin-bottom:22px;font-size:13px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.stepper .crumb{cursor:pointer;padding:5px 10px;border-radius:6px;}
+.stepper .crumb.current{color:var(--maroon-hover);font-weight:600;background:var(--tint);}
+.stepper .sep{color:var(--line);}
+
+/* ---------- TYPE CARDS (step 1) ---------- */
+.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:760px;}
+.type-card{
+background:#fff;border:1.5px solid var(--line);border-radius:var(--radius);
+padding:28px 26px;cursor:pointer;transition:border-color .15s ease, box-shadow .15s ease, transform .1s ease;
+}
+.type-card:hover{border-color:var(--maroon);box-shadow:0 4px 14px rgba(122,12,12,.08);transform:translateY(-1px);}
+.type-card .icon{
+width:46px;height:46px;border-radius:10px;background:var(--tint);color:var(--maroon);
+display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;font-weight:700;
+font-family:'Playfair Display',serif;
+}
+.type-card h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:6px;}
+.type-card p{font-size:13px;color:var(--muted);line-height:1.5;}
+.type-card .tag-row{margin-top:14px;display:flex;gap:6px;flex-wrap:wrap;}
+.mini-tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:#FAF6F3;color:var(--muted);border:1px solid var(--line);}
+
+/* ---------- MODE TABS (step 2) ---------- */
+.mode-tabs{display:flex;gap:8px;margin-bottom:22px;border-bottom:1px solid var(--line);}
+.mode-tab{
+padding:11px 18px;font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;
+border-bottom:2px solid transparent;margin-bottom:-1px;
+}
+.mode-tab.active{color:var(--maroon-hover);border-bottom-color:var(--maroon);}
+.type-chip{
+display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;
+font-size:12px;font-weight:700;margin-bottom:18px;
+}
+.type-chip.mcq{background:var(--blue-bg);color:var(--blue);}
+.type-chip.desc{background:var(--amber-bg);color:var(--amber);}
+.type-chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.change-type{font-size:12px;color:var(--maroon-hover);text-decoration:underline;cursor:pointer;font-weight:600;margin-left:10px;}
+
+/* ---------- FORM CARD ---------- */
+.form-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:24px;}
+.form-card h4{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:18px;}
+.field-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.field{margin-bottom:16px;}
+.field.full{grid-column:1/-1;}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;}
+.field .req{color:var(--maroon-hover);}
+.field input, .field select, .field textarea{
+width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;
+font-size:13.5px;font-family:'Inter',sans-serif;background:#fff;color:var(--ink);
+}
+.field textarea{resize:vertical;min-height:70px;}
+.field input:focus, .field select:focus, .field textarea:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(122,12,12,.10);}
+.hint{font-size:11.5px;color:var(--muted);margin-top:5px;}
+
+.options-block{border:1px dashed var(--line);border-radius:8px;padding:16px;margin-bottom:16px;background:#FDFBF9;}
+.options-block-title{font-size:12.5px;font-weight:700;margin-bottom:12px;color:var(--maroon-hover);}
+.option-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.option-row:last-child{margin-bottom:0;}
+.option-row .opt-radio{flex-shrink:0;width:18px;height:18px;accent-color:var(--maroon);}
+.option-row .opt-label{width:22px;font-weight:700;font-size:13px;color:var(--muted);flex-shrink:0;}
+.option-row input[type="text"]{flex:1;}
+
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:6px;}
+.btn-primary{
+padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;
+font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s ease;
+}
+.btn-primary:hover{background:var(--maroon-hover);}
+.btn-primary:disabled{background:#C9B9B9;cursor:not-allowed;}
+.btn-secondary{
+padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;
+font-size:13.5px;font-weight:600;cursor:pointer;
+}
+.btn-secondary:hover{background:#FAF6F3;}
+.btn-ghost{
+padding:10px 14px;background:transparent;border:none;color:var(--maroon-hover);
+font-size:13px;font-weight:600;cursor:pointer;
+}
+
+/* ---------- CSV UPLOAD ---------- */
+.dropzone{
+border:2px dashed var(--line);border-radius:var(--radius);padding:40px 20px;text-align:center;
+background:#fff;cursor:pointer;transition:border-color .15s ease, background .15s ease;
+}
+.dropzone.dragover{border-color:var(--maroon);background:var(--tint);}
+.dropzone .arch-mini{width:50px;height:74px;border:2.5px solid var(--line);border-bottom:none;border-radius:50px 50px 0 0;margin:0 auto 16px;}
+.dropzone h4{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.dropzone p{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.csv-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.csv-toolbar .fields-note{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.file-chip{
+display:inline-flex;align-items:center;gap:8px;background:var(--tint);color:var(--maroon-hover);
+padding:6px 12px;border-radius:20px;font-size:12.5px;font-weight:600;margin-top:14px;
+}
+
+.csv-errors{background:var(--amber-bg);border:1px solid #EFD9A6;border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:12.5px;color:var(--amber);}
+.csv-errors ul{margin:6px 0 0 18px;}
+
+/* ---------- TABLE (staged batch) ---------- */
+.table-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{
+text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+font-weight:600;padding:13px 16px;background:#FAF6F3;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+tbody td{padding:13px 16px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:top;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FDFBF9;}
+.q-text{max-width:260px;line-height:1.4;}
+.type-pill{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.type-pill.mcq{background:var(--blue-bg);color:var(--blue);}
+.type-pill.desc{background:var(--amber-bg);color:var(--amber);}
+.row-actions{display:flex;gap:8px;}
+.icon-btn{
+width:28px;height:28px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer;
+font-size:12.5px;display:flex;align-items:center;justify-content:center;color:var(--ink);
+transition:background .15s ease, border-color .15s ease;
+}
+.icon-btn:hover{border-color:var(--maroon);background:var(--tint);}
+.icon-btn.danger:hover{border-color:#B23A3A;background:#FBEAEA;color:#B23A3A;}
+.correct-tag{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--green-bg);color:var(--green);padding:2px 7px;border-radius:5px;display:inline-block;margin-top:4px;}
+
+.batch-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
+.batch-header h4{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;}
+.batch-header .count{font-size:12.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted);}
+.empty-state .arch-mini{width:60px;height:90px;border:2.5px solid var(--line);border-bottom:none;border-radius:60px 60px 0 0;margin:0 auto 18px;}
+
+.toast{
+position:fixed;bottom:26px;right:26px;background:var(--ink);color:#fff;padding:13px 20px;border-radius:8px;
+font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;align-items:center;gap:10px;
+opacity:0;transform:translateY(10px);transition:opacity .2s ease, transform .2s ease;pointer-events:none;z-index:80;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .nav-item:focus-visible, .type-card:focus-visible{
+outline:3px solid var(--gold);outline-offset:1px;
+}
+
+@media (max-width:960px){
+.sidebar{position:fixed;transform:translateX(-100%);transition:transform .2s ease;z-index:60;}
+.stats-row{grid-template-columns:repeat(2,1fr);}
+.type-grid{grid-template-columns:1fr;}
+.field-grid{grid-template-columns:1fr;}
+.content{padding:20px 16px 50px;}
+.topbar{padding:16px 18px;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<a href="author.html" class="sidebar-brand">
+<div class="crest-badge">M</div>
+<div class="sidebar-brand-text">
+<div class="t1">Quiz Engine</div>
+<div class="t2">MMCOE · AUTHOR</div>
+</div>
+</a>
+<div class="nav-group">
+<div class="nav-label">Overview</div>
+<a href="author.html" class="nav-item"><span class="dot"></span>Dashboard</a>
+</div>
+<div class="nav-group">
+<div class="nav-label">Question Bank</div>
+<a href="create-question-bank.html" class="nav-item active"><span class="dot"></span>Create Question Bank</a>
+<a href="author.html#submissions" class="nav-item"><span class="dot"></span>My Submissions</a>
+<a href="author.html#submissions" class="nav-item"><span class="dot"></span>Returned for Edits</a>
+</div>
+<div class="nav-group">
+<div class="nav-label">Insights</div>
+<a href="#" class="nav-item" onclick="alert('Viewing author activity metrics');return false;"><span class="dot"></span>My Activity</a>
+</div>
+<div class="nav-group" style="margin-top:auto;">
+<div id="adminLinkContainer"></div>
+<div class="nav-item" onclick="logout()"><span class="dot" style="background:var(--gold);"></span>Sign Out</div>
+</div>
+<div class="sidebar-footer">v1.0 · Frontend demo</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<div class="topbar">
+<div>
+<div class="page-title" id="pageTitle">Create Question Bank</div>
+<div class="page-sub" id="pageSub">Add questions manually or import a CSV, then send them for moderation.</div>
+</div>
+<div class="topbar-right">
+<div id="topbarAdminBtn"></div>
+<div class="avatar" id="userAvatar">RA</div>
+</div>
+</div>
+
+<div class="content">
+
+<!-- STATS -->
+<div class="stats-row">
+<div class="stat-card"><div class="stat-num" id="statBatch">0</div><div class="stat-label">Questions in this batch</div></div>
+<div class="stat-card"><div class="stat-num" id="statMcq">0</div><div class="stat-label">MCQ</div></div>
+<div class="stat-card"><div class="stat-num" id="statDesc">0</div><div class="stat-label">Descriptive</div></div>
+<div class="stat-card"><div class="stat-num" id="statSubjects">0</div><div class="stat-label">Subjects covered</div></div>
+</div>
+
+<!-- STEPPER -->
+<div class="stepper">
+<span class="crumb" id="crumbType" onclick="goToStep(1)">1 · Question type</span>
+<span class="sep">›</span>
+<span class="crumb" id="crumbMode" onclick="goToStep(2)">2 · Add questions</span>
+</div>
+
+<!-- ===== STEP 1: TYPE SELECTION ===== -->
+<div id="step1">
+<div class="type-grid">
+<div class="type-card" tabindex="0" onclick="chooseType('mcq')">
+<div class="icon">A/B</div>
+<h3>Multiple Choice (MCQ)</h3>
+<p>Questions with four options where the author marks a single correct answer. Best for quick, auto-gradable checks.</p>
+<div class="tag-row"><span class="mini-tag">Auto-graded</span><span class="mini-tag">4 options</span></div>
+</div>
+<div class="type-card" tabindex="0" onclick="chooseType('descriptive')">
+<div class="icon">¶</div>
+<h3>Descriptive</h3>
+<p>Open-ended short answer or essay questions that a moderator or instructor grades manually against a rubric.</p>
+<div class="tag-row"><span class="mini-tag">Manually graded</span><span class="mini-tag">Rubric-based</span></div>
+</div>
+</div>
+</div>
+
+<!-- ===== STEP 2: MODE (manual / csv) ===== -->
+<div id="step2" style="display:none;">
+<div>
+<span class="type-chip" id="typeChip"></span>
+<span class="change-type" onclick="goToStep(1)">Change type</span>
+</div>
+
+<div class="mode-tabs">
+<div class="mode-tab active" id="tabManual" onclick="switchMode('manual')">Add manually</div>
+<div class="mode-tab" id="tabCsv" onclick="switchMode('csv')">Upload CSV</div>
+</div>
+
+<!-- MANUAL FORM -->
+<div id="manualPane">
+<div class="form-card">
+<h4>Question details</h4>
+<form id="qForm">
+<div class="field-grid">
+<div class="field">
+<label for="fSubject">Subject name <span class="req">*</span></label>
+<input type="text" id="fSubject" placeholder="e.g. Data Structures" required>
+</div>
+<div class="field">
+<label for="fUnit">Unit <span class="req">*</span></label>
+<input type="text" id="fUnit" placeholder="e.g. Unit 3" required>
+</div>
+<div class="field">
+<label for="fTopic">Topic name <span class="req">*</span></label>
+<input type="text" id="fTopic" placeholder="e.g. Binary Trees" required>
+</div>
+</div>
+
+<div class="field full">
+<label for="fQuestion">Question <span class="req">*</span></label>
+<textarea id="fQuestion" placeholder="Type the question text..." required></textarea>
+</div>
+
+<div id="mcqOptionsBlock" class="options-block" style="display:none;">
+<div class="options-block-title">Options — select the radio button next to the correct answer</div>
+<div class="option-row">
+<input type="radio" name="correctOpt" value="A" class="opt-radio" id="rA">
+<span class="opt-label">A</span>
+<input type="text" id="optA" placeholder="Option A">
+</div>
+<div class="option-row">
+<input type="radio" name="correctOpt" value="B" class="opt-radio" id="rB">
+<span class="opt-label">B</span>
+<input type="text" id="optB" placeholder="Option B">
+</div>
+<div class="option-row">
+<input type="radio" name="correctOpt" value="C" class="opt-radio" id="rC">
+<span class="opt-label">C</span>
+<input type="text" id="optC" placeholder="Option C">
+</div>
+<div class="option-row">
+<input type="radio" name="correctOpt" value="D" class="opt-radio" id="rD">
+<span class="opt-label">D</span>
+<input type="text" id="optD" placeholder="Option D">
+</div>
+<div class="hint">Exactly one option must be marked correct before this question can be added.</div>
+</div>
+
+<div class="field-grid">
+<div class="field">
+<label for="fAuthor">Author <span class="req">*</span></label>
+<input type="text" id="fAuthor" placeholder="e.g. Prof. R. Apte" required>
+</div>
+<div class="field">
+<label for="fMarks">Marks <span class="req">*</span></label>
+<input type="number" id="fMarks" min="1" step="0.5" placeholder="e.g. 2" required>
+</div>
+<div class="field">
+<label for="fBtl">BTL (Bloom's level) <span class="req">*</span></label>
+<select id="fBtl" required>
+<option value="">Select level</option>
+<option value="BTL1">BTL1 — Remember</option>
+<option value="BTL2">BTL2 — Understand</option>
+<option value="BTL3">BTL3 — Apply</option>
+<option value="BTL4">BTL4 — Analyze</option>
+<option value="BTL5">BTL5 — Evaluate</option>
+<option value="BTL6">BTL6 — Create</option>
+</select>
+</div>
+</div>
+
+<div class="form-actions">
+<button type="button" class="btn-secondary" onclick="resetForm()">Clear</button>
+<button type="submit" class="btn-primary">+ Add question to batch</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- CSV PANE -->
+<div id="csvPane" style="display:none;">
+<div class="form-card">
+<div class="csv-toolbar">
+<span class="fields-note" id="csvFieldsNote"></span>
+<button type="button" class="btn-secondary" onclick="downloadTemplate()">⬇ Download CSV template</button>
+</div>
+
+<div class="dropzone" id="dropzone" onclick="document.getElementById('csvInput').click()">
+<div class="arch-mini"></div>
+<h4>Drag &amp; drop your CSV here</h4>
+<p>or click to browse — headers must match the template exactly</p>
+<div class="file-chip" id="fileChip" style="display:none;"></div>
+</div>
+<input type="file" id="csvInput" accept=".csv" style="display:none;">
+
+<div id="csvErrors" class="csv-errors" style="display:none;"></div>
+
+<div class="form-actions" style="margin-top:18px;">
+<button type="button" class="btn-primary" id="csvImportBtn" disabled onclick="importCsvRows()">Add parsed rows to batch</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ===== /STEP 2 ===== -->
+
+<!-- STAGED BATCH TABLE -->
+<div style="margin-top:8px;">
+<div class="batch-header">
+<h4>Batch queue</h4>
+<span class="count" id="batchCount">0 questions staged</span>
+</div>
+<div class="table-card">
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Subject / Unit / Topic</th>
+<th>Question</th>
+<th>Marks</th>
+<th>BTL</th>
+<th>Author</th>
+<th style="text-align:right;">Actions</th>
+</tr>
+</thead>
+<tbody id="batchTableBody"></tbody>
+</table>
+<div class="empty-state" id="batchEmpty">
+<div class="arch-mini"></div>
+<div style="font-weight:600;margin-bottom:4px;">No questions staged yet</div>
+<div style="font-size:13px;">Add questions manually or upload a CSV to build this batch.</div>
+</div>
+</div>
+<div class="form-actions" style="margin-top:18px;">
+<button class="btn-secondary" id="clearBatchBtn" onclick="clearBatch()">Clear batch</button>
+<button class="btn-primary" id="submitBatchBtn" onclick="submitBatch()">Submit batch for moderation</button>
+</div>
+</div>
+
+</div>
+</main>
+</div>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<script>
+// ---------- STATE ----------
+let currentType = null; // 'mcq' | 'descriptive'
+let currentMode = 'manual'; // 'manual' | 'csv'
+let BATCH = []; // staged questions, mirrors QUESTION_BANK table pre-moderation
+let nextBatchId = 1;
+let parsedCsvRows = []; // rows parsed from uploaded CSV, awaiting import
+
+const BTL_LABELS = {BTL1:"Remember",BTL2:"Understand",BTL3:"Apply",BTL4:"Analyze",BTL5:"Evaluate",BTL6:"Create"};
+
+const MANUAL_FIELDS_DESC = ['subject_name','Question','unit','topic_name','author','marks','BTL'];
+const MANUAL_FIELDS_MCQ = ['subject_name','Question','unit','topic_name','author','marks','BTL','option_a','option_b','option_c','option_d','correct_answer'];
+
+function showToast(msg){
+const t = document.getElementById('toast');
+document.getElementById('toastMsg').textContent = msg;
+t.classList.add('show');
+clearTimeout(t._timer);
+t._timer = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+// ---------- STEP NAV ----------
+function goToStep(n){
+if(n === 1){
+document.getElementById('step1').style.display = 'block';
+document.getElementById('step2').style.display = 'none';
+document.getElementById('crumbType').classList.add('current');
+document.getElementById('crumbMode').classList.remove('current');
+document.getElementById('pageTitle').textContent = "Create Question Bank";
+document.getElementById('pageSub').textContent = "Choose a question type to begin.";
+} else {
+if(!currentType){ goToStep(1); return; }
+document.getElementById('step1').style.display = 'none';
+document.getElementById('step2').style.display = 'block';
+document.getElementById('crumbType').classList.remove('current');
+document.getElementById('crumbMode').classList.add('current');
+document.getElementById('pageTitle').textContent = "Create Question Bank";
+document.getElementById('pageSub').textContent = "Add questions manually or import a CSV, then send them for moderation.";
+}
+}
+
+function chooseType(type){
+currentType = type;
+const chip = document.getElementById('typeChip');
+chip.className = "type-chip " + (type === 'mcq' ? 'mcq' : 'desc');
+chip.innerHTML = `<span class="dot"></span>${type === 'mcq' ? 'Multiple Choice (MCQ)' : 'Descriptive'}`;
+document.getElementById('mcqOptionsBlock').style.display = type === 'mcq' ? 'block' : 'none';
+document.getElementById('csvFieldsNote').textContent = "Required columns: " +
+(type === 'mcq' ? MANUAL_FIELDS_MCQ.join(', ') : MANUAL_FIELDS_DESC.join(', '));
+resetCsvState();
+switchMode('manual');
+goToStep(2);
+}
+
+function switchMode(mode){
+currentMode = mode;
+document.getElementById('tabManual').classList.toggle('active', mode === 'manual');
+document.getElementById('tabCsv').classList.toggle('active', mode === 'csv');
+document.getElementById('manualPane').style.display = mode === 'manual' ? 'block' : 'none';
+document.getElementById('csvPane').style.display = mode === 'csv' ? 'block' : 'none';
+}
+
+goToStep(1);
+
+// ---------- MANUAL FORM ----------
+document.getElementById('qForm').addEventListener('submit', function(e){
+e.preventDefault();
+
+const q = {
+type: currentType,
+subject_name: document.getElementById('fSubject').value.trim(),
+question: document.getElementById('fQuestion').value.trim(),
+unit: document.getElementById('fUnit').value.trim(),
+topic_name: document.getElementById('fTopic').value.trim(),
+author: document.getElementById('fAuthor').value.trim(),
+marks: document.getElementById('fMarks').value,
+btl: document.getElementById('fBtl').value
+};
+
+if(currentType === 'mcq'){
+const opts = {
+A: document.getElementById('optA').value.trim(),
+B: document.getElementById('optB').value.trim(),
+C: document.getElementById('optC').value.trim(),
+D: document.getElementById('optD').value.trim()
+};
+const correct = document.querySelector('input[name="correctOpt"]:checked');
+if(!opts.A || !opts.B || !opts.C || !opts.D){
+showToast("Fill in all four options before adding this question.");
+return;
+}
+if(!correct){
+showToast("Select which option is correct.");
+return;
+}
+q.options = opts;
+q.correct_answer = correct.value;
+}
+
+BATCH.push({ id: nextBatchId++, ...q });
+resetForm();
+renderBatch();
+showToast("Question added to batch.");
+});
+
+function resetForm(){
+document.getElementById('qForm').reset();
+}
+
+// ---------- CSV UPLOAD ----------
+const dropzone = document.getElementById('dropzone');
+const csvInput = document.getElementById('csvInput');
+
+['dragover','dragenter'].forEach(evt => dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.add('dragover'); }));
+['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, e => { e.preventDefault(); dropzone.classList.remove('dragover'); }));
+dropzone.addEventListener('drop', e => {
+if(e.dataTransfer.files.length) handleCsvFile(e.dataTransfer.files[0]);
+});
+csvInput.addEventListener('change', e => {
+if(e.target.files.length) handleCsvFile(e.target.files[0]);
+});
+
+function resetCsvState(){
+parsedCsvRows = [];
+document.getElementById('fileChip').style.display = 'none';
+document.getElementById('csvErrors').style.display = 'none';
+document.getElementById('csvImportBtn').disabled = true;
+csvInput.value = '';
+}
+
+function handleCsvFile(file){
+if(!file.name.toLowerCase().endsWith('.csv')){
+showCsvErrors(["Please upload a .csv file."]);
+return;
+}
+Papa.parse(file, {
+header: true,
+skipEmptyLines: true,
+complete: function(results){
+validateAndStageCsv(results.data, results.meta.fields || []);
+},
+error: function(err){
+showCsvErrors(["Could not read the file: " + err.message]);
+}
+});
+document.getElementById('fileChip').style.display = 'inline-flex';
+document.getElementById('fileChip').textContent = "📄 " + file.name;
+}
+
+function validateAndStageCsv(rows, headers){
+const required = currentType === 'mcq' ? MANUAL_FIELDS_MCQ : MANUAL_FIELDS_DESC;
+const missing = required.filter(f => !headers.includes(f));
+if(missing.length){
+showCsvErrors(["Missing required column(s): " + missing.join(', '), "Download the template above to see the exact headers expected."]);
+document.getElementById('csvImportBtn').disabled = true;
+return;
+}
+
+const errors = [];
+const valid = [];
+rows.forEach((row, i) => {
+const lineNo = i + 2; // account for header row
+const missingFields = required.filter(f => !row[f] || !String(row[f]).trim());
+if(missingFields.length){
+errors.push(`Row ${lineNo}: missing ${missingFields.join(', ')}`);
+return;
+}
+if(currentType === 'mcq'){
+const ca = String(row.correct_answer).trim().toUpperCase();
+if(!['A','B','C','D'].includes(ca)){
+errors.push(`Row ${lineNo}: correct_answer must be A, B, C, or D`);
+return;
+}
+}
+valid.push(row);
+});
+
+parsedCsvRows = valid;
+
+if(errors.length){
+showCsvErrors([`${errors.length} row(s) had problems and will be skipped:`].concat(errors.slice(0,8)));
+} else {
+document.getElementById('csvErrors').style.display = 'none';
+}
+
+document.getElementById('csvImportBtn').disabled = valid.length === 0;
+if(valid.length){
+showToast(`${valid.length} row(s) parsed and ready to import.`);
+}
+}
+
+function showCsvErrors(lines){
+const box = document.getElementById('csvErrors');
+box.innerHTML = lines[0] + (lines.length > 1 ? "<ul>" + lines.slice(1).map(l => `<li>${l}</li>`).join('') + "</ul>" : "");
+box.style.display = 'block';
+}
+
+function importCsvRows(){
+parsedCsvRows.forEach(row => {
+const q = {
+type: currentType,
+subject_name: row.subject_name.trim(),
+question: row.Question ? row.Question.trim() : (row.question || '').trim(),
+unit: row.unit.trim(),
+topic_name: row.topic_name.trim(),
+author: row.author.trim(),
+marks: row.marks,
+btl: row.BTL
+};
+if(currentType === 'mcq'){
+q.options = { A: row.option_a, B: row.option_b, C: row.option_c, D: row.option_d };
+q.correct_answer = String(row.correct_answer).trim().toUpperCase();
+}
+BATCH.push({ id: nextBatchId++, ...q });
+});
+showToast(`${parsedCsvRows.length} question(s) added to batch.`);
+resetCsvState();
+renderBatch();
+}
+
+function downloadTemplate(){
+const cols = currentType === 'mcq' ? MANUAL_FIELDS_MCQ : MANUAL_FIELDS_DESC;
+const sampleMcq = ['Data Structures','Which data structure uses FIFO order?','Unit 2','Queues','Prof. R. Apte','2','BTL1','Stack','Queue','Tree','Graph','B'];
+const sampleDesc = ['Operating Systems','Explain the difference between a process and a thread.','Unit 1','Process Management','Dr. S. Kulkarni','5','BTL2'];
+const sample = currentType === 'mcq' ? sampleMcq : sampleDesc;
+const csv = cols.join(',') + "\n" + sample.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
+const blob = new Blob([csv], {type:'text/csv'});
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = (currentType === 'mcq' ? 'mcq' : 'descriptive') + '_question_template.csv';
+a.click();
+URL.revokeObjectURL(url);
+}
+
+// ---------- BATCH TABLE ----------
+function renderBatch(){
+const tbody = document.getElementById('batchTableBody');
+tbody.innerHTML = "";
+document.getElementById('batchEmpty').style.display = BATCH.length ? 'none' : 'block';
+document.getElementById('batchCount').textContent = `${BATCH.length} question${BATCH.length === 1 ? '' : 's'} staged`;
+
+BATCH.forEach(q => {
+const tr = document.createElement('tr');
+const correctText = q.type === 'mcq' ? `<div class="correct-tag">Correct: ${q.correct_answer} — ${escapeHtml(q.options[q.correct_answer] || '')}</div>` : '';
+tr.innerHTML = `
+<td><span class="type-pill ${q.type === 'mcq' ? 'mcq' : 'desc'}">${q.type === 'mcq' ? 'MCQ' : 'Descriptive'}</span></td>
+<td style="font-size:12.5px;color:var(--muted);">${escapeHtml(q.subject_name)}<br>${escapeHtml(q.unit)} · ${escapeHtml(q.topic_name)}</td>
+<td class="q-text">${escapeHtml(q.question)}${correctText}</td>
+<td>${escapeHtml(String(q.marks))}</td>
+<td>${escapeHtml(q.btl || '')}${q.btl && BTL_LABELS[q.btl] ? ` <span style="color:var(--muted);font-size:11.5px;">(${BTL_LABELS[q.btl]})</span>` : ''}</td>
+<td>${escapeHtml(q.author)}</td>
+<td>
+<div class="row-actions" style="justify-content:flex-end;">
+<button class="icon-btn danger" title="Remove" onclick="removeFromBatch(${q.id})">🗑</button>
+</div>
+</td>
+`;
+tbody.appendChild(tr);
+});
+
+document.getElementById('statBatch').textContent = BATCH.length;
+document.getElementById('statMcq').textContent = BATCH.filter(q => q.type === 'mcq').length;
+document.getElementById('statDesc').textContent = BATCH.filter(q => q.type === 'descriptive').length;
+document.getElementById('statSubjects').textContent = new Set(BATCH.map(q => q.subject_name.toLowerCase())).size;
+}
+
+function removeFromBatch(id){
+BATCH = BATCH.filter(q => q.id !== id);
+renderBatch();
+}
+
+function clearBatch(){
+if(!BATCH.length) return;
+if(!confirm("Remove all staged questions from this batch?")) return;
+BATCH = [];
+renderBatch();
+}
+
+function submitBatch(){
+  if(!BATCH.length){
+    showToast("Add at least one question before submitting.");
+    return;
+  }
+  
+  let currentUser = null;
+  try { currentUser = JSON.parse(localStorage.getItem('currentUser')); } catch(e){}
+
+  const firstQ = BATCH[0] || {};
+  const newSubmission = {
+    id: Date.now(),
+    title: `${firstQ.subject_name || 'Subject'} — ${firstQ.unit || 'Unit'} (${firstQ.topic_name || 'Batch'})`,
+    dept: currentUser ? (currentUser.dept || 'Computer Engineering') : 'Computer Engineering',
+    count: BATCH.length,
+    type: firstQ.type === 'mcq' ? 'MCQ' : 'Descriptive',
+    submittedDate: new Date().toISOString().slice(0,10),
+    status: 'pending',
+    questions: [...BATCH]
+  };
+
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  stored.unshift(newSubmission);
+  localStorage.setItem('submittedBatches', JSON.stringify(stored));
+
+  let logs = [];
+  try { logs = JSON.parse(localStorage.getItem('auditLogs') || '[]'); } catch(e){}
+  logs.unshift({
+    log_id: Date.now(),
+    user_id: currentUser ? currentUser.id : 2,
+    action: `Submitted question bank batch (${BATCH.length} questions): ${newSubmission.title}`,
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  });
+  localStorage.setItem('auditLogs', JSON.stringify(logs));
+
+  showToast(`${BATCH.length} question(s) submitted for moderation. Redirecting to dashboard...`);
+  BATCH = [];
+  renderBatch();
+  setTimeout(() => {
+    window.location.href = 'author.html#submissions';
+  }, 1200);
+}
+
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function logout(){
+  localStorage.removeItem('currentUser');
+  window.location.href = '01-login-register.html';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userStr = localStorage.getItem('currentUser');
+  if (!userStr) {
+    window.location.href = '01-login-register.html';
+    return;
+  }
+  try {
+    const user = JSON.parse(userStr);
+    const initials = (user.name || 'Author').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('userAvatar').textContent = initials || 'AU';
+
+    if(user.role === 'Administrator' || user.role === 'Moderator'){
+      document.getElementById('adminLinkContainer').innerHTML = `
+        <a href="admin.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Admin Panel</a>
+      `;
+      document.getElementById('topbarAdminBtn').innerHTML = `
+        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;background:var(--blue);text-decoration:none;">Admin Panel</a>
+      `;
+    }
+  } catch(e){}
+});
+
+renderBatch();
+</script>
+
+</body>
+</html>
