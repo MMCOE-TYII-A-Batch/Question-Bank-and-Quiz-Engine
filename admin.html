@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — User & Role Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--maroon:#7A0C0C;
+--maroon-hover:#A31313;
+--maroon-dark:#4E0808;
+--gold:#D4AF37;
+--bg:#FBF8F5;
+--ink:#2B2320;
+--tint:#FDEEEE;
+--line:#E7DFDA;
+--muted:#8A7F78;
+--green:#2E6B2E;
+--green-bg:#EAF4EA;
+--amber:#8A6116;
+--amber-bg:#FBF1DE;
+--radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--ink);
+-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+
+/* ---------- LAYOUT ---------- */
+.app{
+display:flex;
+min-height:100vh;
+}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+width:250px;
+flex-shrink:0;
+background:linear-gradient(180deg, var(--maroon-dark), var(--maroon));
+color:#fff;
+display:flex;
+flex-direction:column;
+position:sticky;
+top:0;
+height:100vh;
+}
+.sidebar-brand{
+display:flex;align-items:center;gap:12px;
+padding:24px 22px;
+border-bottom:1px solid rgba(255,255,255,.12);
+}
+.crest-badge{
+width:38px;height:38px;
+border:2px solid var(--gold);
+border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-family:'Playfair Display',serif;
+font-weight:800;font-size:16px;color:var(--gold);
+flex-shrink:0;
+}
+.sidebar-brand-text{line-height:1.25;}
+.sidebar-brand-text .t1{font-size:12.5px;font-weight:700;letter-spacing:.02em;}
+.sidebar-brand-text .t2{font-size:10.5px;color:rgba(255,255,255,.6);font-family:'IBM Plex Mono',monospace;}
+
+.nav-group{padding:18px 14px;}
+.nav-label{
+font-size:10.5px;
+letter-spacing:.12em;
+text-transform:uppercase;
+color:rgba(255,255,255,.45);
+padding:8px 10px 8px;
+font-family:'IBM Plex Mono',monospace;
+}
+.nav-item{
+display:flex;align-items:center;gap:11px;
+padding:10px 12px;
+border-radius:8px;
+font-size:13.5px;
+font-weight:500;
+color:rgba(255,255,255,.82);
+cursor:pointer;
+margin-bottom:2px;
+transition:background .15s ease, color .15s ease;
+}
+.nav-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);flex-shrink:0;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.14);color:#fff;font-weight:600;}
+.nav-item.active .dot{background:var(--gold);}
+
+.sidebar-footer{
+margin-top:auto;
+padding:16px 22px 22px;
+border-top:1px solid rgba(255,255,255,.12);
+font-size:12px;
+color:rgba(255,255,255,.5);
+font-family:'IBM Plex Mono',monospace;
+}
+
+/* ---------- MAIN ---------- */
+.main{flex:1;min-width:0;}
+.topbar{
+display:flex;align-items:center;justify-content:space-between;
+padding:20px 32px;
+background:#fff;
+border-bottom:1px solid var(--line);
+}
+.page-title{
+font-family:'Playfair Display',serif;
+font-size:23px;font-weight:700;
+}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.avatar{
+width:36px;height:36px;border-radius:50%;
+background:var(--tint);color:var(--maroon);
+display:flex;align-items:center;justify-content:center;
+font-weight:700;font-size:13.5px;
+border:1.5px solid var(--gold);
+}
+.content{padding:28px 32px 60px;}
+
+/* ---------- STAT CARDS ---------- */
+.stats-row{
+display:grid;
+grid-template-columns:repeat(4, 1fr);
+gap:18px;
+margin-bottom:28px;
+}
+.stat-card{
+background:#fff;
+border:1px solid var(--line);
+border-radius:var(--radius);
+padding:18px 20px;
+position:relative;
+overflow:hidden;
+}
+.stat-card::before{
+content:"";
+position:absolute; top:0; left:0; right:0; height:3px;
+background:var(--maroon);
+}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+.stat-label{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+/* ---------- TOOLBAR ---------- */
+.toolbar{
+display:flex;align-items:center;justify-content:space-between;
+margin-bottom:16px;
+gap:14px;
+flex-wrap:wrap;
+}
+.toolbar-left{display:flex;gap:10px;flex-wrap:wrap;}
+.search-box{
+position:relative;
+}
+.search-box input{
+padding:9px 14px 9px 34px;
+border:1px solid var(--line);
+border-radius:8px;
+font-size:13.5px;
+width:230px;
+font-family:'Inter',sans-serif;
+}
+.search-box input:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(122,12,12,.10);}
+.search-box::before{
+content:"⌕";
+position:absolute;left:12px;top:50%;transform:translateY(-50%);
+color:var(--muted);font-size:15px;
+}
+select.filter{
+padding:9px 12px;
+border:1px solid var(--line);
+border-radius:8px;
+font-size:13.5px;
+background:#fff;
+font-family:'Inter',sans-serif;
+color:var(--ink);
+}
+select.filter:focus, .search-box input:focus{outline:none;}
+
+.btn-primary{
+padding:10px 18px;
+background:var(--maroon);
+color:#fff;
+border:none;
+border-radius:8px;
+font-size:13.5px;
+font-weight:700;
+cursor:pointer;
+font-family:'Inter',sans-serif;
+transition:background .15s ease;
+}
+.btn-primary:hover{background:var(--maroon-hover);}
+
+/* ---------- TABLE ---------- */
+.table-card{
+background:#fff;
+border:1px solid var(--line);
+border-radius:var(--radius);
+overflow:hidden;
+}
+table{width:100%;border-collapse:collapse;}
+thead th{
+text-align:left;
+font-size:11.5px;
+letter-spacing:.06em;
+text-transform:uppercase;
+color:var(--muted);
+font-weight:600;
+padding:13px 18px;
+background:#FAF6F3;
+border-bottom:1px solid var(--line);
+}
+tbody td{
+padding:14px 18px;
+font-size:13.5px;
+border-bottom:1px solid var(--line);
+vertical-align:middle;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FDFBF9;}
+
+.user-cell{display:flex;align-items:center;gap:10px;}
+.user-avatar{
+width:32px;height:32px;border-radius:50%;
+background:var(--tint);color:var(--maroon);
+display:flex;align-items:center;justify-content:center;
+font-weight:700;font-size:12px;flex-shrink:0;
+}
+.user-name{font-weight:600;font-size:13.5px;}
+.user-email{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+
+.role-pill{
+display:inline-block;
+padding:4px 10px;
+border-radius:20px;
+font-size:11.5px;
+font-weight:600;
+background:var(--tint);
+color:var(--maroon-hover);
+}
+.status-pill{
+display:inline-flex;align-items:center;gap:6px;
+padding:4px 10px;
+border-radius:20px;
+font-size:11.5px;
+font-weight:600;
+}
+.status-pill.active{background:var(--green-bg);color:var(--green);}
+.status-pill.pending{background:var(--amber-bg);color:var(--amber);}
+.status-pill.inactive{background:#F1EDEA;color:var(--muted);}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+.row-actions{display:flex;gap:8px;}
+.icon-btn{
+width:30px;height:30px;
+border-radius:7px;
+border:1px solid var(--line);
+background:#fff;
+cursor:pointer;
+font-size:13px;
+display:flex;align-items:center;justify-content:center;
+transition:background .15s ease, border-color .15s ease;
+color:var(--ink);
+}
+.icon-btn:hover{border-color:var(--maroon);background:var(--tint);}
+.icon-btn.danger:hover{border-color:#B23A3A;background:#FBEAEA;color:#B23A3A;}
+
+.empty-state{
+text-align:center;
+padding:60px 20px;
+color:var(--muted);
+}
+.empty-state .arch-mini{
+width:60px;height:90px;
+border:2.5px solid var(--line);
+border-bottom:none;
+border-radius:60px 60px 0 0;
+margin:0 auto 18px;
+}
+
+/* ---------- MODAL ---------- */
+.modal-overlay{
+display:none;
+position:fixed;inset:0;
+background:rgba(43,35,32,.45);
+align-items:center;justify-content:center;
+z-index:50;
+padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+background:#fff;
+border-radius:var(--radius);
+width:100%;max-width:440px;
+padding:28px;
+max-height:90vh;
+overflow-y:auto;
+}
+.modal-title{
+font-family:'Playfair Display',serif;
+font-size:20px;font-weight:700;
+margin-bottom:4px;
+}
+.modal-desc{font-size:13px;color:var(--muted);margin-bottom:22px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;}
+.field input, .field select{
+width:100%;
+padding:10px 12px;
+border:1px solid var(--line);
+border-radius:8px;
+font-size:13.5px;
+font-family:'Inter',sans-serif;
+}
+.field input:focus, .field select:focus{outline:none;border-color:var(--maroon);box-shadow:0 0 0 3px rgba(122,12,12,.10);}
+.modal-actions{display:flex;gap:10px;margin-top:22px;}
+.btn-secondary{
+flex:1;
+padding:10px;
+background:#fff;
+border:1px solid var(--line);
+border-radius:8px;
+font-size:13.5px;
+font-weight:600;
+cursor:pointer;
+font-family:'Inter',sans-serif;
+}
+.btn-secondary:hover{background:#FAF6F3;}
+.modal-actions .btn-primary{flex:1;}
+
+/* ---------- VIEWS ---------- */
+.view{display:none;}
+.view.active{display:block;}
+
+/* ---------- ACTIVITY / AUDIT ---------- */
+.activity-modal .modal{max-width:480px;}
+.activity-user{
+display:flex;align-items:center;gap:12px;
+padding:14px;
+background:#FAF6F3;
+border-radius:8px;
+margin-bottom:18px;
+}
+.timeline{
+max-height:360px;
+overflow-y:auto;
+padding-left:2px;
+}
+.timeline-item{
+display:flex;
+gap:12px;
+padding-bottom:18px;
+position:relative;
+}
+.timeline-item::before{
+content:"";
+position:absolute;
+left:5px; top:16px; bottom:0;
+width:1px;
+background:var(--line);
+}
+.timeline-item:last-child::before{display:none;}
+.timeline-dot{
+width:11px;height:11px;border-radius:50%;
+background:var(--maroon);
+border:2px solid var(--tint);
+flex-shrink:0;
+margin-top:3px;
+}
+.timeline-action{font-size:13.5px;font-weight:600;}
+.timeline-time{font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+.timeline-empty{
+text-align:center;
+padding:30px 10px;
+color:var(--muted);
+font-size:13px;
+}
+
+.audit-toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;}
+.sync-note{
+display:flex;align-items:center;gap:8px;
+font-size:12px;
+color:var(--amber);
+background:var(--amber-bg);
+padding:8px 12px;
+border-radius:7px;
+margin-bottom:16px;
+}
+.sync-note .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0;}
+
+.action-tag{
+font-family:'IBM Plex Mono',monospace;
+font-size:11.5px;
+color:var(--maroon-hover);
+background:var(--tint);
+padding:3px 8px;
+border-radius:5px;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
+outline:3px solid var(--gold);
+outline-offset:1px;
+}
+
+@media (max-width:960px){
+.sidebar{position:fixed;transform:translateX(-100%);transition:transform .2s ease;z-index:60;}
+.sidebar.open{transform:translateX(0);}
+.stats-row{grid-template-columns:repeat(2,1fr);}
+.content{padding:20px 16px 50px;}
+.topbar{padding:16px 18px;}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<a href="admin.html" class="sidebar-brand">
+<div class="crest-badge">M</div>
+<div class="sidebar-brand-text">
+<div class="t1">Quiz Engine</div>
+<div class="t2">MMCOE · ADMIN</div>
+</div>
+</a>
+
+<div class="nav-group">
+<div class="nav-label">Overview</div>
+<div class="nav-item" onclick="switchView('users')"><span class="dot"></span>Dashboard</div>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Manage</div>
+<div class="nav-item active" id="navUsers" onclick="switchView('users')"><span class="dot"></span>Users &amp; Roles</div>
+<a href="author.html" class="nav-item"><span class="dot"></span>Question Bank</a>
+<a href="author.html" class="nav-item"><span class="dot"></span>Quizzes</a>
+<a href="author.html" class="nav-item"><span class="dot"></span>Subjects &amp; Topics</a>
+</div>
+
+<div class="nav-group">
+<div class="nav-label">Insights</div>
+<a href="#" class="nav-item" onclick="switchView('audit');return false;"><span class="dot"></span>Analytics &amp; Reports</a>
+<div class="nav-item" id="navAudit" onclick="switchView('audit')"><span class="dot"></span>Audit Log</div>
+</div>
+
+<div class="nav-group" style="margin-top:auto;">
+<div class="nav-label" style="color:var(--gold);">Inspect Dashboards</div>
+<a href="author.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Author Workspace</a>
+<a href="moderator.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Moderator Workspace</a>
+<a href="student.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Student Portal</a>
+<div class="nav-item" onclick="logout()"><span class="dot" style="background:#fff;"></span>Sign Out</div>
+</div>
+
+<div class="sidebar-footer">v1.0 · Frontend demo</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<div class="topbar">
+<div>
+<div class="page-title" id="pageTitle">User &amp; Role Management</div>
+<div class="page-sub" id="pageSub">Create, edit, and manage access across the platform.</div>
+</div>
+<div class="topbar-right">
+<select onchange="if(this.value) window.location.href=this.value;" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:#fff;font-weight:600;">
+<option value="">Inspect Role View...</option>
+<option value="author.html">Author Workspace</option>
+<option value="moderator.html">Moderator Workspace</option>
+<option value="student.html">Student Portal</option>
+</select>
+<div class="avatar" id="adminAvatar" title="Signed in as Admin">NA</div>
+<button onclick="logout()" style="background:none;border:none;color:var(--maroon-hover);font-size:13px;font-weight:600;cursor:pointer;">Sign Out</button>
+</div>
+</div>
+
+<div class="content">
+
+<!-- ===== USERS & ROLES VIEW ===== -->
+<div class="view active" id="usersView">
+
+<!-- STATS -->
+<div class="stats-row">
+<div class="stat-card">
+<div class="stat-num" id="statTotal">0</div>
+<div class="stat-label">Total users</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statActive">0</div>
+<div class="stat-label">Active accounts</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statPending">0</div>
+<div class="stat-label">Pending approval</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statRoles">5</div>
+<div class="stat-label">Defined roles</div>
+</div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+<div class="toolbar-left">
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Search name, email, or department...">
+</div>
+<select class="filter" id="roleFilter">
+<option value="">All roles</option>
+<option>Administrator</option>
+<option>Question Author</option>
+<option>Moderator</option>
+<option>Instructor</option>
+<option>Quiz Taker</option>
+</select>
+<select class="filter" id="statusFilter">
+<option value="">All statuses</option>
+<option>active</option>
+<option>pending</option>
+<option>inactive</option>
+</select>
+</div>
+<div style="display:flex;gap:8px;">
+<button class="btn-secondary" onclick="exportSystemJson()">⬇ Backup Data (JSON)</button>
+<button class="btn-primary" onclick="openAddModal()">+ Add User</button>
+</div>
+</div>
+
+<!-- TABLE -->
+<div class="table-card" style="margin-bottom:28px;">
+<table>
+<thead>
+<tr>
+<th>User &amp; Email</th>
+<th>Assigned Role</th>
+<th>Department</th>
+<th>Account Status</th>
+<th>Last Active</th>
+<th style="text-align:right;">Actions</th>
+</tr>
+</thead>
+<tbody id="userTableBody"></tbody>
+</table>
+<div class="empty-state" id="emptyState" style="display:none;">
+<div class="arch-mini"></div>
+<div style="font-weight:600;margin-bottom:4px;">No users match your filters</div>
+<div style="font-size:13px;">Try clearing the search or filters above.</div>
+</div>
+</div>
+
+<!-- DEPARTMENT OVERVIEW CARDS -->
+<div style="margin-top:32px;">
+<div class="card-header">
+<div class="card-title">Department System Breakdown</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" id="deptGrid"></div>
+</div>
+
+</div>
+<!-- ===== /USERS & ROLES VIEW ===== -->
+
+<!-- ===== AUDIT LOG VIEW ===== -->
+<div class="view" id="auditView">
+
+<div class="sync-note">
+<span class="dot"></span>
+Entries shown are synchronized across sessions via <code style="font-family:inherit;">localStorage.auditLogs</code>.
+</div>
+
+<div class="audit-toolbar">
+<div class="toolbar-left">
+<div class="search-box">
+<input type="text" id="auditSearch" placeholder="Search user or action...">
+</div>
+<select class="filter" id="auditUserFilter">
+<option value="">All users</option>
+</select>
+</div>
+<button class="btn-secondary" onclick="exportAuditCsv()">⬇ Export Audit Log (CSV)</button>
+</div>
+
+<div class="table-card">
+<table>
+<thead>
+<tr>
+<th>User</th>
+<th>Action Performed</th>
+<th>Timestamp</th>
+</tr>
+</thead>
+<tbody id="auditTableBody"></tbody>
+</table>
+<div class="empty-state" id="auditEmptyState" style="display:none;">
+<div class="arch-mini"></div>
+<div style="font-weight:600;margin-bottom:4px;">No activity recorded yet</div>
+<div style="font-size:13px;">Actions taken across the platform will appear here.</div>
+</div>
+</div>
+
+</div>
+<!-- ===== /AUDIT LOG VIEW ===== -->
+
+</div>
+</main>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="userModal">
+<div class="modal">
+<div class="modal-title" id="modalTitle">Add user</div>
+<div class="modal-desc">New accounts are created as active by default.</div>
+<form id="userForm">
+<div class="field">
+<label for="mName">Full name</label>
+<input type="text" id="mName" required>
+</div>
+<div class="field">
+<label for="mEmail">Email</label>
+<input type="email" id="mEmail" required>
+</div>
+<div class="field">
+<label for="mDept">Department</label>
+<select id="mDept" required>
+<option value="">Select</option>
+<option>Computer Engineering</option>
+<option>IT</option>
+<option>E&TC</option>
+<option>Mechanical</option>
+</select>
+</div>
+<div class="field">
+<label for="mRole">Role</label>
+<select id="mRole" required>
+<option value="">Select role</option>
+<option>Administrator</option>
+<option>Question Author</option>
+<option>Moderator</option>
+<option>Instructor</option>
+<option>Quiz Taker</option>
+</select>
+</div>
+<div class="field">
+<label for="mStatus">Status</label>
+<select id="mStatus" required>
+<option>active</option>
+<option>pending</option>
+<option>inactive</option>
+</select>
+</div>
+<div class="modal-actions">
+<button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+<button type="submit" class="btn-primary">Save user</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- USER DETAILS INSPECTOR MODAL -->
+<div class="modal-overlay" id="userDetailsModal">
+<div class="modal" style="max-width:540px;">
+<div style="display:flex;align-items:center;gap:14px;padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:18px;">
+<div class="avatar" id="udAvatar" style="width:48px;height:48px;font-size:18px;">UA</div>
+<div>
+<h3 style="font-family:'Playfair Display',serif;font-size:20px;" id="udName">User Name</h3>
+<div style="font-size:12.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;" id="udEmail">email@mmcoe.edu.in</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;font-size:13px;">
+<div style="background:#FAF6F3;padding:12px;border-radius:8px;">
+<div style="font-size:11.5px;color:var(--muted);margin-bottom:4px;">ACCOUNT ID</div>
+<strong id="udId">#123</strong>
+</div>
+<div style="background:#FAF6F3;padding:12px;border-radius:8px;">
+<div style="font-size:11.5px;color:var(--muted);margin-bottom:4px;">DEPARTMENT</div>
+<strong id="udDept">Computer Engineering</strong>
+</div>
+<div style="background:#FAF6F3;padding:12px;border-radius:8px;">
+<div style="font-size:11.5px;color:var(--muted);margin-bottom:4px;">ASSIGNED ROLE</div>
+<select id="udRoleSelect" onchange="updateUserRoleFromModal(this.value)" style="padding:4px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-weight:600;width:100%;">
+<option>Administrator</option>
+<option>Moderator</option>
+<option>Question Author</option>
+<option>Instructor</option>
+<option>Quiz Taker</option>
+</select>
+</div>
+<div style="background:#FAF6F3;padding:12px;border-radius:8px;">
+<div style="font-size:11.5px;color:var(--muted);margin-bottom:4px;">ACCOUNT STATUS</div>
+<select id="udStatusSelect" onchange="updateUserStatusFromModal(this.value)" style="padding:4px 8px;border:1px solid var(--line);border-radius:6px;font-size:13px;font-weight:600;width:100%;">
+<option value="active">Active</option>
+<option value="pending">Pending Approval</option>
+<option value="inactive">Inactive</option>
+</select>
+</div>
+</div>
+
+<div style="background:var(--tint);border-left:3px solid var(--gold);padding:12px 14px;border-radius:6px;font-size:12.5px;margin-bottom:20px;" id="udActivitySummary">
+Activity Metrics: Authored 3 Question Banks · Reviewed 12 Batches · Took 2 Quizzes
+</div>
+
+<div class="modal-actions">
+<button type="button" class="btn-secondary" onclick="closeUserDetailsModal()">Close</button>
+<button type="button" class="btn-primary" id="udTimelineBtn" onclick="openActivityFromDetails()">View Activity Timeline</button>
+</div>
+</div>
+</div>
+
+<!-- ACTIVITY / AUDIT TRAIL MODAL -->
+<div class="modal-overlay activity-modal" id="activityModal">
+<div class="modal">
+<div class="modal-title">Activity log</div>
+<div class="modal-desc">Recent actions recorded for this account.</div>
+
+<div class="activity-user" id="activityUserHeader"></div>
+
+<div class="timeline" id="activityTimeline"></div>
+
+<div class="modal-actions">
+<button type="button" class="btn-secondary" style="flex:1;" onclick="closeActivityModal()">Close</button>
+</div>
+</div>
+</div>
+
+<script>
+
+let USERS = [];
+let AUDIT_LOG = [];
+let editingId = null;
+let nextLogId = 101;
+
+function checkAuth(){
+  const userStr = localStorage.getItem('currentUser');
+  if(!userStr){
+    window.location.href = '01-login-register.html';
+    return null;
+  }
+  try {
+    const user = JSON.parse(userStr);
+    if(user.role !== 'Administrator' && user.role !== 'Moderator'){
+      window.location.href = 'author.html';
+      return null;
+    }
+    document.getElementById('adminAvatar').textContent = initials(user.name || 'Admin');
+    return user;
+  } catch(e) {
+    localStorage.removeItem('currentUser');
+    window.location.href = '01-login-register.html';
+    return null;
+  }
+}
+
+function logout(){
+  localStorage.removeItem('currentUser');
+  window.location.href = '01-login-register.html';
+}
+
+function loadState(){
+  const storedUsers = localStorage.getItem('usersList');
+  if(storedUsers){
+    try { USERS = JSON.parse(storedUsers); } catch(e){}
+  }
+  if(!USERS || !USERS.length){
+    USERS = [
+      { id: 1, name: "Nisha Agarwal", email: "admin@mmcoe.edu.in", password: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active", lastActive: "Just now" },
+      { id: 2, name: "Prof. R. Apte", email: "author@mmcoe.edu.in", password: "author123", role: "Question Author", dept: "Computer Engineering", status: "active", lastActive: "2 hours ago" },
+      { id: 3, name: "Dr. S. Kulkarni", email: "mod@mmcoe.edu.in", password: "mod12345", role: "Moderator", dept: "IT", status: "active", lastActive: "Yesterday" },
+      { id: 4, name: "Student User", email: "student@mmcoe.edu.in", password: "student1", role: "Quiz Taker", dept: "E&TC", status: "active", lastActive: "3 days ago" },
+      { id: 5, name: "Instructor User", email: "pending@mmcoe.edu.in", password: "pending1", role: "Instructor", dept: "Mechanical", status: "pending", lastActive: "—" }
+    ];
+    localStorage.setItem('usersList', JSON.stringify(USERS));
+  }
+
+  const storedLogs = localStorage.getItem('auditLogs');
+  if(storedLogs){
+    try { AUDIT_LOG = JSON.parse(storedLogs); } catch(e){}
+  }
+  if(!AUDIT_LOG || !AUDIT_LOG.length){
+    AUDIT_LOG = [
+      { log_id: 100, user_id: 1, action: "Admin session initialized", timestamp: new Date().toISOString().slice(0,16).replace('T',' ') },
+      { log_id: 99, user_id: 2, action: "Submitted question bank batch: Data Structures — Unit 3", timestamp: "2026-08-04 14:20" },
+      { log_id: 98, user_id: 3, action: "Approved question bank batch: OS Process Management", timestamp: "2026-08-01 11:05" }
+    ];
+    localStorage.setItem('auditLogs', JSON.stringify(AUDIT_LOG));
+  }
+  nextLogId = Math.max(...AUDIT_LOG.map(l => l.log_id || 0), 100) + 1;
+}
+
+function saveState(){
+  localStorage.setItem('usersList', JSON.stringify(USERS));
+  localStorage.setItem('auditLogs', JSON.stringify(AUDIT_LOG));
+}
+
+function logAction(userId, action){
+  AUDIT_LOG.unshift({
+    log_id: nextLogId++,
+    user_id: userId,
+    action: action,
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  });
+  saveState();
+}
+
+function switchView(view){
+  document.getElementById('usersView').classList.toggle('active', view === 'users');
+  document.getElementById('auditView').classList.toggle('active', view === 'audit');
+  document.getElementById('navUsers').classList.toggle('active', view === 'users');
+  document.getElementById('navAudit').classList.toggle('active', view === 'audit');
+  if(view === 'users'){
+    document.getElementById('pageTitle').textContent = "User & Role Management";
+    document.getElementById('pageSub').textContent = "Create, edit, and manage access across the platform.";
+  } else {
+    document.getElementById('pageTitle').textContent = "Audit Log";
+    document.getElementById('pageSub').textContent = "Every recorded action across all accounts.";
+    renderAuditView();
+  }
+}
+
+function renderAuditView(){
+  const userFilter = document.getElementById('auditUserFilter');
+  userFilter.innerHTML = '<option value="">All users</option>';
+  USERS.forEach(u => {
+    const opt = document.createElement('option');
+    opt.value = u.id;
+    opt.textContent = u.name;
+    userFilter.appendChild(opt);
+  });
+
+  const search = document.getElementById('auditSearch').value.toLowerCase();
+  const userF = document.getElementById('auditUserFilter').value;
+
+  const rows = AUDIT_LOG.filter(entry => {
+    const u = USERS.find(x => x.id === entry.user_id);
+    const uname = u ? u.name : "Deleted user";
+    const matchSearch = uname.toLowerCase().includes(search) || entry.action.toLowerCase().includes(search);
+    const matchUser = !userF || String(entry.user_id) === userF;
+    return matchSearch && matchUser;
+  });
+
+  const tbody = document.getElementById('auditTableBody');
+  tbody.innerHTML = "";
+  document.getElementById('auditEmptyState').style.display = rows.length ? 'none' : 'block';
+
+  rows.forEach(entry => {
+    const u = USERS.find(x => x.id === entry.user_id);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+    <td>
+      <div class="user-cell">
+        <div class="user-avatar">${u ? initials(u.name) : "?"}</div>
+        <div class="user-name">${u ? u.name : "Deleted user"}</div>
+      </div>
+    </td>
+    <td><span class="action-tag">${entry.action}</span></td>
+    <td style="color:var(--muted);font-size:12.5px;font-family:'IBM Plex Mono',monospace;">${entry.timestamp}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function exportAuditCsv(){
+  const headers = ['log_id','user_id','user_name','action','timestamp'];
+  const rows = AUDIT_LOG.map(e => {
+    const u = USERS.find(x => x.id === e.user_id);
+    return [e.log_id, e.user_id, u ? u.name : 'Deleted', `"${(e.action||'').replace(/"/g,'""')}"`, e.timestamp];
+  });
+  const csv = headers.join(',') + "\n" + rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `audit_log_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportSystemJson(){
+  const backup = {
+    usersList: USERS,
+    auditLogs: AUDIT_LOG,
+    submittedBatches: JSON.parse(localStorage.getItem('submittedBatches') || '[]'),
+    assignedQuizzes: JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'),
+    completedQuizzes: JSON.parse(localStorage.getItem('completedQuizzes') || '[]'),
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `quiz_engine_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function openActivityModal(userId){
+  const u = USERS.find(x => x.id === userId);
+  if(!u) return;
+  document.getElementById('activityUserHeader').innerHTML = `
+    <div class="user-avatar">${initials(u.name)}</div>
+    <div>
+      <div class="user-name">${u.name}</div>
+      <div class="user-email">${u.email}</div>
+    </div>
+  `;
+  const entries = AUDIT_LOG.filter(e => e.user_id === userId);
+  const timeline = document.getElementById('activityTimeline');
+  if(!entries.length){
+    timeline.innerHTML = `<div class="timeline-empty">No recorded activity for this user yet.</div>`;
+  } else {
+    timeline.innerHTML = entries.map(e => `
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-action">${e.action}</div>
+          <div class="timeline-time">${e.timestamp}</div>
+        </div>
+      </div>
+    `).join("");
+  }
+  document.getElementById('activityModal').classList.add('open');
+}
+
+function closeActivityModal(){
+  document.getElementById('activityModal').classList.remove('open');
+}
+document.getElementById('activityModal').addEventListener('click', e => { if(e.target.id === 'activityModal') closeActivityModal(); });
+
+let selectedDetailUserId = null;
+function openUserDetailsModal(userId){
+  selectedDetailUserId = userId;
+  const u = USERS.find(x => x.id === userId);
+  if(!u) return;
+
+  document.getElementById('udAvatar').textContent = initials(u.name);
+  document.getElementById('udName').textContent = u.name;
+  document.getElementById('udEmail').textContent = u.email;
+  document.getElementById('udId').textContent = `#${u.id}`;
+  document.getElementById('udDept').textContent = u.dept || 'Computer Engineering';
+  document.getElementById('udRoleSelect').value = u.role;
+  document.getElementById('udStatusSelect').value = u.status;
+
+  document.getElementById('udActivitySummary').textContent = `Account created as ${u.role} (${u.status.toUpperCase()}) · Last Active: ${u.lastActive}`;
+  document.getElementById('userDetailsModal').classList.add('open');
+}
+
+function closeUserDetailsModal(){
+  document.getElementById('userDetailsModal').classList.remove('open');
+}
+
+function updateUserRoleFromModal(newRole){
+  if(selectedDetailUserId){
+    changeUserRole(selectedDetailUserId, newRole);
+  }
+}
+
+function updateUserStatusFromModal(newStatus){
+  if(selectedDetailUserId){
+    const u = USERS.find(x => x.id === selectedDetailUserId);
+    if(u){
+      u.status = newStatus;
+      logAction(1, `Updated account status for ${u.name} to ${newStatus}`);
+      saveState();
+      render();
+    }
+  }
+}
+
+function openActivityFromDetails(){
+  if(selectedDetailUserId){
+    closeUserDetailsModal();
+    openActivityModal(selectedDetailUserId);
+  }
+}
+
+function initials(name){
+  return name.split(" ").filter(w => !/^(Dr\.|Prof\.)$/.test(w)).slice(0,2).map(w => w[0]).join("").toUpperCase();
+}
+
+function changeUserRole(userId, newRole){
+  const u = USERS.find(x => x.id === userId);
+  if(!u) return;
+  const oldRole = u.role;
+  u.role = newRole;
+  logAction(1, `Changed role of ${u.name} from ${oldRole} to ${newRole}`);
+  saveState();
+  render();
+}
+
+function approveUser(userId){
+  const u = USERS.find(x => x.id === userId);
+  if(!u) return;
+  u.status = 'active';
+  logAction(1, `APPROVED account registration for ${u.name} as ${u.role}`);
+  saveState();
+  render();
+}
+
+function rejectUser(userId){
+  const u = USERS.find(x => x.id === userId);
+  if(!u) return;
+  if(confirm(`Reject registration request for ${u.name}?`)){
+    logAction(1, `REJECTED registration request for ${u.name}`);
+    USERS = USERS.filter(x => x.id !== userId);
+    saveState();
+    render();
+  }
+}
+
+function render(){
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+  const roleF = document.getElementById('roleFilter').value;
+  const statusF = document.getElementById('statusFilter').value;
+
+  const filtered = USERS.filter(u => {
+    const matchSearch = u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search) || (u.dept||'').toLowerCase().includes(search);
+    const matchRole = !roleF || u.role === roleF;
+    const matchStatus = !statusF || u.status === statusF;
+    return matchSearch && matchRole && matchStatus;
+  });
+
+  const tbody = document.getElementById('userTableBody');
+  tbody.innerHTML = "";
+  document.getElementById('emptyState').style.display = filtered.length ? 'none' : 'block';
+
+  filtered.forEach(u => {
+    const tr = document.createElement('tr');
+    
+    const roleOptions = ['Administrator','Moderator','Question Author','Instructor','Quiz Taker'];
+    const roleSelectHtml = `
+      <select onchange="changeUserRole(${u.id}, this.value)" style="padding:4px 8px;border:1px solid var(--line);border-radius:6px;font-size:12px;font-weight:600;background:#fff;color:var(--maroon-hover);">
+        ${roleOptions.map(r => `<option value="${r}" ${u.role === r ? 'selected' : ''}>${r}</option>`).join('')}
+      </select>
+    `;
+
+    let actionBtns = `
+      <button class="icon-btn" title="Inspect user details" onclick="openUserDetailsModal(${u.id})">👁</button>
+      <button class="icon-btn" title="View activity" onclick="openActivityModal(${u.id})">🕒</button>
+      <button class="icon-btn" title="Edit" onclick="openEditModal(${u.id})">✎</button>
+      <button class="icon-btn" title="${u.status === 'active' ? 'Deactivate' : 'Activate'}" onclick="toggleStatus(${u.id})">${u.status === 'active' ? '⏸' : '▶'}</button>
+      <button class="icon-btn danger" title="Delete" onclick="deleteUser(${u.id})">🗑</button>
+    `;
+
+    if(u.status === 'pending'){
+      actionBtns = `
+        <button onclick="approveUser(${u.id})" style="padding:4px 10px;font-size:11.5px;background:var(--green);color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:700;margin-right:4px;">✓ Approve</button>
+        <button onclick="rejectUser(${u.id})" style="padding:4px 8px;font-size:11.5px;background:var(--maroon);color:#fff;border:none;border-radius:5px;cursor:pointer;font-weight:700;margin-right:4px;">✕ Reject</button>
+        <button class="icon-btn" title="Inspect details" onclick="openUserDetailsModal(${u.id})">👁</button>
+      `;
+    }
+
+    tr.innerHTML = `
+    <td>
+      <div class="user-cell">
+        <div class="user-avatar">${initials(u.name)}</div>
+        <div>
+          <div class="user-name">${u.name}</div>
+          <div class="user-email">${u.email}</div>
+        </div>
+      </div>
+    </td>
+    <td>${roleSelectHtml}</td>
+    <td>${u.dept || 'Computer Engineering'}</td>
+    <td><span class="status-pill ${u.status}"><span class="dot"></span>${u.status}</span></td>
+    <td style="color:var(--muted);font-size:12.5px;">${u.lastActive}</td>
+    <td>
+      <div class="row-actions" style="justify-content:flex-end;">
+        ${actionBtns}
+      </div>
+    </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('statTotal').textContent = USERS.length;
+  document.getElementById('statActive').textContent = USERS.filter(u => u.status === 'active').length;
+  document.getElementById('statPending').textContent = USERS.filter(u => u.status === 'pending').length;
+
+  renderDepartmentGrid();
+}
+
+function renderDepartmentGrid(){
+  const depts = ['Computer Engineering', 'IT', 'E&TC', 'Mechanical'];
+  const grid = document.getElementById('deptGrid');
+  if(!grid) return;
+  grid.innerHTML = "";
+
+  depts.forEach(dept => {
+    const deptUsers = USERS.filter(u => (u.dept||'').toLowerCase() === dept.toLowerCase());
+    const activeCount = deptUsers.filter(u => u.status === 'active').length;
+    
+    const card = document.createElement('div');
+    card.style.cssText = "background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px;";
+    card.innerHTML = `
+      <div style="font-size:11.5px;font-family:'IBM Plex Mono',monospace;color:var(--muted);margin-bottom:4px;">DEPARTMENT</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:8px;">${dept}</div>
+      <div style="font-size:13px;color:var(--ink);"><strong>${deptUsers.length}</strong> total accounts</div>
+      <div style="font-size:12px;color:var(--green);margin-top:2px;">${activeCount} active</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function toggleStatus(id){
+  const u = USERS.find(x => x.id === id);
+  if(!u) return;
+  const newStatus = u.status === 'active' ? 'inactive' : 'active';
+  u.status = newStatus;
+  logAction(1, `Marked ${u.name} as ${newStatus} (Administrator action)`);
+  saveState();
+  render();
+}
+
+function deleteUser(id){
+  if(!confirm("Remove this user account? This cannot be undone.")) return;
+  const u = USERS.find(x => x.id === id);
+  if(u){
+    logAction(1, `Deleted account: ${u.name}`);
+    USERS = USERS.filter(x => x.id !== id);
+    saveState();
+    render();
+  }
+}
+
+function openAddModal(){
+  editingId = null;
+  document.getElementById('modalTitle').textContent = "Add user";
+  document.getElementById('userForm').reset();
+  document.getElementById('userModal').classList.add('open');
+}
+
+function openEditModal(id){
+  const u = USERS.find(x => x.id === id);
+  if(!u) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = "Edit user";
+  document.getElementById('mName').value = u.name;
+  document.getElementById('mEmail').value = u.email;
+  document.getElementById('mDept').value = u.dept;
+  document.getElementById('mRole').value = u.role;
+  document.getElementById('mStatus').value = u.status;
+  document.getElementById('userModal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('userModal').classList.remove('open');
+}
+
+document.getElementById('userForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const data = {
+    name: document.getElementById('mName').value.trim(),
+    email: document.getElementById('mEmail').value.trim(),
+    dept: document.getElementById('mDept').value,
+    role: document.getElementById('mRole').value,
+    status: document.getElementById('mStatus').value
+  };
+
+  if(editingId){
+    const u = USERS.find(x => x.id === editingId);
+    if(u){
+      Object.assign(u, data);
+      logAction(1, `Edited account details for ${u.name}`);
+    }
+  } else {
+    const newId = Date.now();
+    USERS.push({ id: newId, ...data, lastActive: "—" });
+    logAction(1, `Created account for ${data.name} (${data.role})`);
+  }
+  saveState();
+  closeModal();
+  render();
+});
+
+document.getElementById('searchInput').addEventListener('input', render);
+document.getElementById('roleFilter').addEventListener('change', render);
+document.getElementById('statusFilter').addEventListener('change', render);
+document.getElementById('userModal').addEventListener('click', e => { if(e.target.id === 'userModal') closeModal(); });
+document.getElementById('userDetailsModal').addEventListener('click', e => { if(e.target.id === 'userDetailsModal') closeUserDetailsModal(); });
+
+window.addEventListener('DOMContentLoaded', () => {
+  checkAuth();
+  loadState();
+  render();
+});
+</script>
+
+</body>
+</html>
