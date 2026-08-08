@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question Author Dashboard — MMCOE Quiz Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--maroon:#7A0C0C;
+--maroon-hover:#A31313;
+--maroon-dark:#4E0808;
+--gold:#D4AF37;
+--bg:#FBF8F5;
+--ink:#2B2320;
+--tint:#FDEEEE;
+--line:#E7DFDA;
+--muted:#8A7F78;
+--green:#2E6B2E;
+--green-bg:#EAF4EA;
+--amber:#8A6116;
+--amber-bg:#FBF1DE;
+--blue:#2A5A8A;
+--blue-bg:#EAF1F8;
+--radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--ink);
+-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:'Inter',sans-serif;}
+
+.app{display:flex;min-height:100vh;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+width:250px;flex-shrink:0;
+background:linear-gradient(180deg, var(--maroon-dark), var(--maroon));
+color:#fff;display:flex;flex-direction:column;
+position:sticky;top:0;height:100vh;
+}
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:24px 22px;border-bottom:1px solid rgba(255,255,255,.12);}
+.crest-badge{
+width:38px;height:38px;border:2px solid var(--gold);border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-family:'Playfair Display',serif;font-weight:800;font-size:16px;color:var(--gold);flex-shrink:0;
+}
+.sidebar-brand-text{line-height:1.25;}
+.sidebar-brand-text .t1{font-size:12.5px;font-weight:700;letter-spacing:.02em;}
+.sidebar-brand-text .t2{font-size:10.5px;color:rgba(255,255,255,.6);font-family:'IBM Plex Mono',monospace;}
+.nav-group{padding:14px 14px;}
+.nav-label{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:8px 10px 8px;font-family:'IBM Plex Mono',monospace;}
+.nav-item{
+display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+font-size:13.5px;font-weight:500;color:rgba(255,255,255,.82);cursor:pointer;margin-bottom:2px;
+transition:background .15s ease, color .15s ease;
+}
+.nav-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);flex-shrink:0;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.14);color:#fff;font-weight:600;}
+.nav-item.active .dot{background:var(--gold);}
+.sidebar-footer{margin-top:auto;padding:16px 22px 22px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.5);font-family:'IBM Plex Mono',monospace;}
+
+/* ---------- MAIN ---------- */
+.main{flex:1;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;background:#fff;border-bottom:1px solid var(--line);}
+.page-title{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.avatar{
+width:36px;height:36px;border-radius:50%;background:var(--tint);color:var(--maroon);
+display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13.5px;border:1.5px solid var(--gold);
+}
+.content{padding:28px 32px 60px;}
+
+.btn-primary{
+padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;
+font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;
+transition:background .15s ease;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{background:var(--maroon-hover);}
+
+/* ---------- STAT CARDS ---------- */
+.stats-row{display:grid;grid-template-columns:repeat(4, 1fr);gap:18px;margin-bottom:28px;}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;}
+.stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--maroon);}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+.stat-label{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+/* ---------- TABLE & CARDS ---------- */
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;}
+.table-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{
+text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+color:var(--muted);font-weight:600;padding:13px 18px;background:#FAF6F3;border-bottom:1px solid var(--line);
+}
+tbody td{padding:14px 18px;font-size:13.5px;border-bottom:1px solid var(--line);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FDFBF9;}
+
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:600;}
+.status-pill.approved{background:var(--green-bg);color:var(--green);}
+.status-pill.pending{background:var(--amber-bg);color:var(--amber);}
+.status-pill.returned{background:var(--tint);color:var(--maroon-hover);}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+</style>
+</head>
+<body>
+
+<div class="app">
+<!-- SIDEBAR -->
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<a href="author.html" class="sidebar-brand">
+<div class="crest-badge">M</div>
+<div class="sidebar-brand-text">
+<div class="t1">Quiz Engine</div>
+<div class="t2">MMCOE · AUTHOR</div>
+</div>
+</a>
+<div class="nav-group">
+<div class="nav-label">Overview</div>
+<a href="author.html" class="nav-item active"><span class="dot"></span>Dashboard</a>
+</div>
+<div class="nav-group">
+<div class="nav-label">Question Bank</div>
+<a href="create-question-bank.html" class="nav-item"><span class="dot"></span>Create Question Bank</a>
+<a href="#submissions" class="nav-item"><span class="dot"></span>My Submissions</a>
+<a href="#submissions" class="nav-item"><span class="dot"></span>Returned for Edits</a>
+</div>
+<div class="nav-group">
+<div class="nav-label">Insights</div>
+<a href="#" class="nav-item" onclick="alert('Viewing author activity metrics');return false;"><span class="dot"></span>My Activity</a>
+</div>
+<div class="nav-group" style="margin-top:auto;">
+<div id="adminLinkContainer"></div>
+<div class="nav-item" onclick="logout()"><span class="dot" style="background:var(--gold);"></span>Sign Out</div>
+</div>
+<div class="sidebar-footer">v1.0 · Frontend demo</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<div class="topbar">
+<div>
+<div class="page-title" id="welcomeHeading">Question Author Dashboard</div>
+<div class="page-sub">Manage your authored question banks, track submissions, and draft new questions.</div>
+</div>
+<div class="topbar-right">
+<div id="topbarAdminBtn"></div>
+<button class="btn-primary" onclick="window.location.href='create-question-bank.html'">+ Create Question Bank</button>
+<div class="avatar" id="userAvatar">RA</div>
+</div>
+</div>
+
+<div class="content">
+
+<!-- STATS -->
+<div class="stats-row">
+<div class="stat-card">
+<div class="stat-num" id="statTotalQ">48</div>
+<div class="stat-label">Total Questions Authored</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statPendingQ">12</div>
+<div class="stat-label">Pending Review</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statApprovedQ">32</div>
+<div class="stat-label">Approved &amp; Live</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statNeedsRevQ">4</div>
+<div class="stat-label">Returned for Edits</div>
+</div>
+</div>
+
+<!-- SUBMISSIONS TABLE -->
+<div class="card-header" id="submissions">
+<div class="card-title">Recent Submissions</div>
+<a href="create-question-bank.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;">+ New Question Bank</a>
+</div>
+
+<div class="table-card" style="margin-bottom:28px;">
+<table>
+<thead>
+<tr>
+<th>Batch Title / Subject</th>
+<th>Questions</th>
+<th>Type</th>
+<th>Submitted Date</th>
+<th>Status</th>
+<th style="text-align:right;">Actions</th>
+</tr>
+</thead>
+<tbody id="submissionsTableBody"></tbody>
+</table>
+</div>
+
+<!-- PUBLISHED QUIZZES FOR STUDENTS -->
+<div class="card-header">
+<div class="card-title">Published Student Quizzes</div>
+<button class="btn-primary" style="padding:8px 14px;font-size:12.5px;background:var(--blue);" onclick="openAssignModal()">+ Assign Quiz to Students</button>
+</div>
+
+<div class="table-card">
+<table>
+<thead>
+<tr>
+<th>Quiz Title</th>
+<th>Department</th>
+<th>Questions</th>
+<th>Time Limit</th>
+<th>Due Date</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="publishedQuizzesBody"></tbody>
+</table>
+</div>
+
+</div>
+</main>
+</div>
+
+<!-- ASSIGN QUIZ MODAL -->
+<div class="modal-overlay" id="assignModal">
+<div style="background:#fff;border-radius:10px;width:100%;max-width:480px;padding:24px;">
+<h3 style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:6px;">Assign Approved Question Bank to Students</h3>
+<p style="font-size:13px;color:var(--muted);margin-bottom:18px;">Publish an approved question bank as an active timed quiz for students.</p>
+
+<form id="assignForm">
+<div style="margin-bottom:14px;">
+<label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Select Approved Question Bank</label>
+<select id="aBatchSelect" required style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;"></select>
+</div>
+
+<div style="margin-bottom:14px;">
+<label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Quiz Title</label>
+<input type="text" id="aTitle" placeholder="e.g. Data Structures Mid-Term Assessment" required style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;">
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+<div>
+<label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Time Limit (Mins)</label>
+<input type="number" id="aDuration" value="15" min="1" max="180" required style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;">
+</div>
+<div>
+<label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Due Date</label>
+<input type="date" id="aDueDate" required style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;">
+</div>
+</div>
+
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+<button type="button" class="btn-secondary" onclick="closeAssignModal()">Cancel</button>
+<button type="submit" class="btn-primary" style="background:var(--blue);">Publish Quiz for Students</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+function logout(){
+  localStorage.removeItem('currentUser');
+  window.location.href = '01-login-register.html';
+}
+
+function loadSubmissions(){
+  const defaultSubmissions = [
+    { id: 101, title: "Data Structures — Unit 3 (Trees)", dept: "Computer Engineering", count: 15, type: "MCQ", submittedDate: "2026-08-04", status: "pending" },
+    { id: 103, title: "Operating Systems — Process Management", dept: "Computer Engineering", count: 10, type: "Descriptive", submittedDate: "2026-08-01", status: "approved" },
+    { id: 104, title: "Database Systems — SQL & Normalization", dept: "IT", count: 8, type: "MCQ", submittedDate: "2026-07-28", status: "returned" }
+  ];
+
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+
+  const allSubmissions = [...stored, ...defaultSubmissions];
+  const tbody = document.getElementById('submissionsTableBody');
+  tbody.innerHTML = "";
+
+  allSubmissions.forEach(sub => {
+    const tr = document.createElement('tr');
+    let statusBadge = `<span class="status-pill pending"><span class="dot"></span>Pending Review</span>`;
+    if(sub.status === 'approved') statusBadge = `<span class="status-pill approved"><span class="dot"></span>Approved</span>`;
+    if(sub.status === 'returned' || sub.status === 'returned_for_edits') statusBadge = `<span class="status-pill returned"><span class="dot"></span>Needs Revision</span>`;
+
+    const typeColor = sub.type === 'MCQ' ? 'var(--blue)' : 'var(--amber)';
+
+    let assignBtn = '';
+    if(sub.status === 'approved'){
+      assignBtn = `<button onclick="quickAssign(${sub.id})" style="padding:4px 8px;font-size:11.5px;background:var(--blue);color:#fff;border:none;border-radius:4px;cursor:pointer;margin-right:6px;">Assign Quiz</button>`;
+    }
+
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(sub.title)}</strong><br><span style="font-size:12px;color:var(--muted);">${escapeHtml(sub.dept || 'Computer Engineering')}</span></td>
+      <td>${sub.count}</td>
+      <td><span style="font-size:12px;font-weight:600;color:${typeColor};">${escapeHtml(sub.type)}</span></td>
+      <td>${escapeHtml(sub.submittedDate)}</td>
+      <td>${statusBadge}</td>
+      <td style="text-align:right;">
+        ${assignBtn}
+        <a href="create-question-bank.html" style="font-size:12.5px;color:var(--maroon-hover);font-weight:600;margin-right:6px;">Edit/View</a>
+        <button onclick="deleteSubmission(${sub.id})" style="background:none;border:none;color:#B23A3A;cursor:pointer;font-size:13px;" title="Delete Draft">🗑</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const totalQ = allSubmissions.reduce((acc, curr) => acc + (Number(curr.count) || 0), 0);
+  const pendingQ = allSubmissions.filter(s => s.status === 'pending').reduce((acc, curr) => acc + (Number(curr.count) || 0), 0);
+  const approvedQ = allSubmissions.filter(s => s.status === 'approved').reduce((acc, curr) => acc + (Number(curr.count) || 0), 0);
+  const returnedQ = allSubmissions.filter(s => s.status === 'returned' || s.status === 'returned_for_edits').reduce((acc, curr) => acc + (Number(curr.count) || 0), 0);
+
+  document.getElementById('statTotalQ').textContent = totalQ;
+  document.getElementById('statPendingQ').textContent = pendingQ;
+  document.getElementById('statApprovedQ').textContent = approvedQ;
+  document.getElementById('statNeedsRevQ').textContent = returnedQ;
+
+  loadPublishedQuizzes();
+}
+
+function deleteSubmission(id){
+  if(!confirm("Delete this question bank submission?")) return;
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  stored = stored.filter(s => s.id !== id);
+  localStorage.setItem('submittedBatches', JSON.stringify(stored));
+  loadSubmissions();
+}
+
+function loadPublishedQuizzes(){
+  const defaultQuizzes = [
+    { id: 201, title: "Operating Systems — Process Management Test", dept: "Computer Engineering", count: 10, duration: 15, dueDate: "2026-08-15", status: "Active" }
+  ];
+
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
+
+  const allQuizzes = [...stored, ...defaultQuizzes];
+  const tbody = document.getElementById('publishedQuizzesBody');
+  tbody.innerHTML = "";
+
+  allQuizzes.forEach(q => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(q.title)}</strong></td>
+      <td>${escapeHtml(q.dept || 'Computer Engineering')}</td>
+      <td>${q.count || 10}</td>
+      <td>${q.duration || 15} mins</td>
+      <td>${escapeHtml(q.dueDate || '2026-08-20')}</td>
+      <td><span class="status-pill approved"><span class="dot"></span>Active</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openAssignModal(){
+  const defaultSubmissions = [
+    { id: 103, title: "Operating Systems — Process Management", dept: "Computer Engineering", count: 10, type: "Descriptive", status: "approved" }
+  ];
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  const approved = [...stored, ...defaultSubmissions].filter(s => s.status === 'approved');
+
+  const select = document.getElementById('aBatchSelect');
+  select.innerHTML = "";
+  if(!approved.length){
+    select.innerHTML = `<option value="">No approved question banks available</option>`;
+  } else {
+    approved.forEach(b => {
+      const opt = document.createElement('option');
+      opt.value = b.id;
+      opt.textContent = `${b.title} (${b.count} questions)`;
+      select.appendChild(opt);
+    });
+  }
+
+  document.getElementById('assignModal').classList.add('open');
+}
+
+function quickAssign(id){
+  openAssignModal();
+  document.getElementById('aBatchSelect').value = id;
+}
+
+function closeAssignModal(){
+  document.getElementById('assignModal').classList.remove('open');
+}
+
+document.getElementById('assignForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const batchId = document.getElementById('aBatchSelect').value;
+  const title = document.getElementById('aTitle').value.trim();
+  const duration = document.getElementById('aDuration').value;
+  const dueDate = document.getElementById('aDueDate').value;
+
+  if(!batchId){
+    alert("Select an approved question bank.");
+    return;
+  }
+
+  let storedBatches = [];
+  try { storedBatches = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  const batch = storedBatches.find(b => String(b.id) === String(batchId)) || { count: 10, dept: 'Computer Engineering' };
+
+  const newQuiz = {
+    id: Date.now(),
+    batchId: batchId,
+    title: title,
+    dept: batch.dept || 'Computer Engineering',
+    count: batch.count || 10,
+    duration: duration,
+    dueDate: dueDate,
+    status: 'Active',
+    questions: batch.questions || []
+  };
+
+  let storedQuizzes = [];
+  try { storedQuizzes = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
+  storedQuizzes.unshift(newQuiz);
+  localStorage.setItem('assignedQuizzes', JSON.stringify(storedQuizzes));
+
+  // Audit log
+  let logs = [];
+  try { logs = JSON.parse(localStorage.getItem('auditLogs') || '[]'); } catch(e){}
+  logs.unshift({
+    log_id: Date.now(),
+    user_id: 2,
+    action: `Published Quiz for Students: ${title} (${duration} mins)`,
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  });
+  localStorage.setItem('auditLogs', JSON.stringify(logs));
+
+  alert(`Quiz "${title}" has been assigned to students!`);
+  closeAssignModal();
+  loadSubmissions();
+});
+
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userStr = localStorage.getItem('currentUser');
+  if (!userStr) {
+    window.location.href = '01-login-register.html';
+    return;
+  }
+  try {
+    const user = JSON.parse(userStr);
+    document.getElementById('welcomeHeading').textContent = `Welcome back, ${user.name || 'Author'}`;
+    const initials = (user.name || 'Author').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('userAvatar').textContent = initials || 'AU';
+
+    if(user.role === 'Administrator' || user.role === 'Moderator'){
+      document.getElementById('adminLinkContainer').innerHTML = `
+        <a href="admin.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Admin Panel</a>
+      `;
+      document.getElementById('topbarAdminBtn').innerHTML = `
+        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;background:var(--blue);text-decoration:none;">Admin Panel</a>
+      `;
+    }
+  } catch(e){}
+
+  loadSubmissions();
+});
+</script>
+
+</body>
+</html>
