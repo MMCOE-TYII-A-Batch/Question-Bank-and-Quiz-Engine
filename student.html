@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal — Quizzes & Assessments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--maroon:#7A0C0C;
+--maroon-hover:#A31313;
+--maroon-dark:#4E0808;
+--gold:#D4AF37;
+--bg:#FBF8F5;
+--ink:#2B2320;
+--tint:#FDEEEE;
+--line:#E7DFDA;
+--muted:#8A7F78;
+--green:#2E6B2E;
+--green-bg:#EAF4EA;
+--amber:#8A6116;
+--amber-bg:#FBF1DE;
+--blue:#2A5A8A;
+--blue-bg:#EAF1F8;
+--radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--ink);
+-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:'Inter',sans-serif;}
+
+.app{display:flex;min-height:100vh;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+width:250px;flex-shrink:0;
+background:linear-gradient(180deg, var(--maroon-dark), var(--maroon));
+color:#fff;display:flex;flex-direction:column;
+position:sticky;top:0;height:100vh;
+}
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:24px 22px;border-bottom:1px solid rgba(255,255,255,.12);}
+.crest-badge{
+width:38px;height:38px;border:2px solid var(--gold);border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-family:'Playfair Display',serif;font-weight:800;font-size:16px;color:var(--gold);flex-shrink:0;
+}
+.sidebar-brand-text{line-height:1.25;}
+.sidebar-brand-text .t1{font-size:12.5px;font-weight:700;letter-spacing:.02em;}
+.sidebar-brand-text .t2{font-size:10.5px;color:rgba(255,255,255,.6);font-family:'IBM Plex Mono',monospace;}
+.nav-group{padding:14px 14px;}
+.nav-label{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:8px 10px 8px;font-family:'IBM Plex Mono',monospace;}
+.nav-item{
+display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+font-size:13.5px;font-weight:500;color:rgba(255,255,255,.82);cursor:pointer;margin-bottom:2px;
+transition:background .15s ease, color .15s ease;
+}
+.nav-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);flex-shrink:0;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.14);color:#fff;font-weight:600;}
+.nav-item.active .dot{background:var(--gold);}
+.sidebar-footer{margin-top:auto;padding:16px 22px 22px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.5);font-family:'IBM Plex Mono',monospace;}
+
+/* ---------- MAIN ---------- */
+.main{flex:1;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;background:#fff;border-bottom:1px solid var(--line);}
+.page-title{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.avatar{
+width:36px;height:36px;border-radius:50%;background:var(--tint);color:var(--maroon);
+display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13.5px;border:1.5px solid var(--gold);
+}
+.content{padding:28px 32px 60px;}
+
+.btn-primary{
+padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;
+font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s ease;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{background:var(--maroon-hover);}
+.btn-secondary{padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;}
+
+/* ---------- STAT CARDS ---------- */
+.stats-row{display:grid;grid-template-columns:repeat(3, 1fr);gap:18px;margin-bottom:28px;}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;}
+.stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--maroon);}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+.stat-label{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+/* ---------- TABLE & CARDS ---------- */
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;}
+.table-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:28px;}
+table{width:100%;border-collapse:collapse;}
+thead th{
+text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+color:var(--muted);font-weight:600;padding:13px 18px;background:#FAF6F3;border-bottom:1px solid var(--line);
+}
+tbody td{padding:14px 18px;font-size:13.5px;border-bottom:1px solid var(--line);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FDFBF9;}
+
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:600;}
+.status-pill.approved{background:var(--green-bg);color:var(--green);}
+.status-pill.pending{background:var(--amber-bg);color:var(--amber);}
+.status-pill.returned{background:var(--tint);color:var(--maroon-hover);}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* ---------- QUIZ OVERLAY MODAL ---------- */
+.quiz-overlay{display:none;position:fixed;inset:0;background:#FAF6F3;z-index:100;flex-direction:column;}
+.quiz-overlay.open{display:flex;}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;background:#fff;border-bottom:1px solid var(--line);}
+.quiz-timer{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:var(--maroon);background:var(--tint);padding:6px 14px;border-radius:8px;}
+.quiz-container{flex:1;max-width:800px;margin:30px auto;width:100%;padding:0 20px;}
+.quiz-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;}
+.q-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;}
+.opt-list{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.opt-label{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;transition:border-color .15s ease;}
+.opt-label:hover{border-color:var(--maroon);}
+.opt-label input{width:18px;height:18px;accent-color:var(--maroon);}
+.quiz-nav{display:flex;justify-content:space-between;margin-top:24px;}
+
+/* ---------- SCORECARD MODAL ---------- */
+.scorecard-modal{display:none;position:fixed;inset:0;background:rgba(43,35,32,.5);align-items:center;justify-content:center;z-index:110;}
+.scorecard-modal.open{display:flex;}
+.scorecard{background:#fff;border-radius:var(--radius);width:100%;max-width:480px;padding:32px;text-align:center;}
+.score-badge{width:80px;height:80px;border-radius:50%;background:var(--green-bg);color:var(--green);font-size:28px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:3px solid #C7E2C7;}
+</style>
+</head>
+<body>
+
+<div class="app">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<a href="student.html" class="sidebar-brand">
+<div class="crest-badge">M</div>
+<div class="sidebar-brand-text">
+<div class="t1">Quiz Engine</div>
+<div class="t2">MMCOE · STUDENT</div>
+</div>
+</a>
+<div class="nav-group">
+<div class="nav-label">Student Portal</div>
+<a href="student.html" class="nav-item active"><span class="dot"></span>My Quizzes</a>
+<a href="#completed" class="nav-item"><span class="dot"></span>Quiz History &amp; Grades</a>
+</div>
+<div class="nav-group">
+<div class="nav-label">Insights</div>
+<a href="#" class="nav-item" onclick="alert('Viewing performance trends');return false;"><span class="dot"></span>Performance Report</a>
+</div>
+<div class="nav-group" style="margin-top:auto;">
+<div id="adminLinkContainer"></div>
+<div class="nav-item" onclick="logout()"><span class="dot" style="background:var(--gold);"></span>Sign Out</div>
+</div>
+<div class="sidebar-footer">v1.0 · Frontend demo</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<div class="topbar">
+<div>
+<div class="page-title" id="welcomeHeading">Student Assessment Portal</div>
+<div class="page-sub">View assigned quizzes, take timed online assessments, and view your scorecards.</div>
+</div>
+<div class="topbar-right">
+<div id="topbarAdminBtn"></div>
+<div class="avatar" id="userAvatar">SU</div>
+<button onclick="logout()" style="background:none;border:none;color:var(--maroon-hover);font-size:13px;font-weight:600;cursor:pointer;">Sign Out</button>
+</div>
+</div>
+
+<div class="content">
+
+<!-- STATS -->
+<div class="stats-row">
+<div class="stat-card">
+<div class="stat-num" id="statAssigned">2</div>
+<div class="stat-label">Active Assigned Quizzes</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statCompleted">3</div>
+<div class="stat-label">Quizzes Completed</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statAvgScore">88%</div>
+<div class="stat-label">Average Score</div>
+</div>
+</div>
+
+<!-- ASSIGNED QUIZZES -->
+<div class="card-header">
+<div class="card-title">Assigned Quizzes &amp; Exams</div>
+</div>
+
+<div class="table-card">
+<table>
+<thead>
+<tr>
+<th>Quiz Title</th>
+<th>Department</th>
+<th>Questions</th>
+<th>Duration</th>
+<th>Due Date</th>
+<th style="text-align:right;">Action</th>
+</tr>
+</thead>
+<tbody id="assignedQuizzesBody"></tbody>
+</table>
+</div>
+
+<!-- COMPLETED QUIZZES -->
+<div class="card-header" id="completed">
+<div class="card-title">Completed Quizzes &amp; Scorecards</div>
+</div>
+
+<div class="table-card">
+<table>
+<thead>
+<tr>
+<th>Quiz Title</th>
+<th>Date Taken</th>
+<th>Score</th>
+<th>Grade</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="completedQuizzesBody"></tbody>
+</table>
+</div>
+
+</div>
+</main>
+</div>
+
+<!-- TIMED QUIZ RUNNER OVERLAY -->
+<div class="quiz-overlay" id="quizOverlay">
+<div class="quiz-header">
+<div>
+<h3 id="runnerTitle" style="font-family:'Playfair Display',serif;font-size:20px;">Data Structures Assessment</h3>
+<span id="runnerSub" style="font-size:12.5px;color:var(--muted);">Question 1 of 5</span>
+</div>
+<div class="quiz-timer" id="runnerTimer">15:00</div>
+</div>
+
+<div class="quiz-container">
+<div class="quiz-card">
+<div class="q-title" id="runnerQuestion">Loading question...</div>
+
+<div class="opt-list" id="runnerOptions"></div>
+
+<div class="quiz-nav">
+<button type="button" class="btn-secondary" id="btnPrevQ" onclick="navigateQuestion(-1)">← Previous</button>
+<button type="button" class="btn-primary" id="btnNextQ" onclick="navigateQuestion(1)">Next Question →</button>
+<button type="button" class="btn-primary" id="btnSubmitQuiz" style="background:var(--green);display:none;" onclick="submitQuizAnswers()">Finish &amp; Submit Quiz</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SCORECARD MODAL -->
+<div class="scorecard-modal" id="scorecardModal">
+<div class="scorecard">
+<div class="score-badge" id="scoreBadge">90%</div>
+<h2 style="font-family:'Playfair Display',serif;font-size:24px;margin-bottom:6px;" id="scoreTitle">Congratulations!</h2>
+<p style="font-size:14px;color:var(--muted);margin-bottom:20px;" id="scoreMsg">You passed the assessment successfully.</p>
+<div style="background:#FAF6F3;padding:16px;border-radius:8px;margin-bottom:24px;text-align:left;font-size:13.5px;">
+<div style="margin-bottom:6px;">Correct Answers: <strong id="scoreCorrect">9 / 10</strong></div>
+<div style="margin-bottom:6px;">Total Marks: <strong id="scoreMarks">18 / 20</strong></div>
+<div>Time Taken: <strong id="scoreTime">04 mins 12 secs</strong></div>
+</div>
+<button class="btn-primary" style="width:100%;" onclick="closeScorecard()">Back to Dashboard</button>
+</div>
+</div>
+
+<script>
+let activeQuizData = null;
+let currentQIdx = 0;
+let userAnswers = {};
+let timerInterval = null;
+let secondsRemaining = 900;
+
+const DEFAULT_ASSIGNED = [
+  {
+    id: 301,
+    title: "Data Structures — Trees & Graph Algorithms",
+    dept: "Computer Engineering",
+    count: 3,
+    duration: 10,
+    dueDate: "2026-08-15",
+    questions: [
+      { id: 1, type: "mcq", question: "Which data structure operates on a First-In, First-Out (FIFO) basis?", options: {A:"Stack", B:"Queue", C:"Tree", D:"Graph"}, correct_answer: "B", marks: 2 },
+      { id: 2, type: "mcq", question: "What is the worst-case time complexity of QuickSort?", options: {A:"O(n log n)", B:"O(n)", C:"O(n^2)", D:"O(1)"}, correct_answer: "C", marks: 2 },
+      { id: 3, type: "mcq", question: "Which graph traversal technique uses a Queue data structure?", options: {A:"Depth-First Search (DFS)", B:"Breadth-First Search (BFS)", C:"Dijkstra's", D:"Kruskal's"}, correct_answer: "B", marks: 2 }
+    ]
+  },
+  {
+    id: 302,
+    title: "Operating Systems — CPU Scheduling & Deadlocks",
+    dept: "Computer Engineering",
+    count: 2,
+    duration: 15,
+    dueDate: "2026-08-18",
+    questions: [
+      { id: 1, type: "mcq", question: "Which scheduling algorithm can cause starvation for long processes?", options: {A:"First-Come, First-Served", B:"Round Robin", C:"Shortest Job First (SJF)", D:"Priority Scheduling without Aging"}, correct_answer: "C", marks: 2 },
+      { id: 2, type: "mcq", question: "Which of the following is NOT a necessary condition for deadlock?", options: {A:"Mutual Exclusion", B:"Hold and Wait", C:"Preemption Allowed", D:"Circular Wait"}, correct_answer: "C", marks: 2 }
+    ]
+  }
+];
+
+const DEFAULT_COMPLETED = [
+  { title: "Database Systems — SQL Queries Test", dateTaken: "2026-08-02", score: "90%", grade: "Pass (A)", status: "Completed" },
+  { title: "Computer Networks — TCP/IP Basics", dateTaken: "2026-07-25", score: "85%", grade: "Pass (B)", status: "Completed" }
+];
+
+function loadStudentDashboard(){
+  let assigned = [];
+  try { assigned = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
+  const allAssigned = [...assigned, ...DEFAULT_ASSIGNED];
+
+  const aBody = document.getElementById('assignedQuizzesBody');
+  aBody.innerHTML = "";
+
+  allAssigned.forEach(q => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(q.title)}</strong></td>
+      <td>${escapeHtml(q.dept || 'Computer Engineering')}</td>
+      <td>${q.count || (q.questions ? q.questions.length : 5)}</td>
+      <td>${q.duration || 15} mins</td>
+      <td>${escapeHtml(q.dueDate || '2026-08-20')}</td>
+      <td style="text-align:right;">
+        <button class="btn-primary" style="padding:6px 14px;font-size:12.5px;background:var(--green);" onclick="startQuiz(${q.id})">Start Quiz</button>
+      </td>
+    `;
+    aBody.appendChild(tr);
+  });
+
+  let completed = [];
+  try { completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]'); } catch(e){}
+  const allCompleted = [...completed, ...DEFAULT_COMPLETED];
+
+  const cBody = document.getElementById('completedQuizzesBody');
+  cBody.innerHTML = "";
+
+  allCompleted.forEach(c => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(c.title)}</strong></td>
+      <td>${escapeHtml(c.dateTaken)}</td>
+      <td><strong>${escapeHtml(c.score)}</strong></td>
+      <td><span class="status-pill approved"><span class="dot"></span>${escapeHtml(c.grade)}</span></td>
+      <td><span style="font-size:12px;color:var(--muted);">${escapeHtml(c.status)}</span></td>
+    `;
+    cBody.appendChild(tr);
+  });
+
+  document.getElementById('statAssigned').textContent = allAssigned.length;
+  document.getElementById('statCompleted').textContent = allCompleted.length;
+}
+
+function startQuiz(quizId){
+  let assigned = [];
+  try { assigned = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
+  const target = [...assigned, ...DEFAULT_ASSIGNED].find(q => q.id === quizId);
+  if(!target) return;
+
+  activeQuizData = target;
+  currentQIdx = 0;
+  userAnswers = {};
+  secondsRemaining = (Number(target.duration) || 15) * 60;
+
+  document.getElementById('runnerTitle').textContent = target.title;
+  document.getElementById('quizOverlay').classList.add('open');
+
+  startTimer();
+  renderCurrentQuestion();
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    secondsRemaining--;
+    if(secondsRemaining <= 0){
+      clearInterval(timerInterval);
+      alert("Time is up! Auto-submitting your quiz.");
+      submitQuizAnswers();
+    } else {
+      updateTimerDisplay();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay(){
+  const mins = Math.floor(secondsRemaining / 60);
+  const secs = secondsRemaining % 60;
+  document.getElementById('runnerTimer').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+}
+
+function renderCurrentQuestion(){
+  const qList = activeQuizData.questions || [];
+  const q = qList[currentQIdx] || { question: "Sample question", options: {A:"A",B:"B",C:"C",D:"D"} };
+
+  document.getElementById('runnerSub').textContent = `Question ${currentQIdx+1} of ${qList.length}`;
+  document.getElementById('runnerQuestion').textContent = `${currentQIdx+1}. ${q.question}`;
+
+  const optsContainer = document.getElementById('runnerOptions');
+  optsContainer.innerHTML = "";
+
+  if(q.options){
+    ['A','B','C','D'].forEach(optKey => {
+      if(q.options[optKey]){
+        const label = document.createElement('label');
+        label.className = 'opt-label';
+        const isChecked = userAnswers[currentQIdx] === optKey ? 'checked' : '';
+        label.innerHTML = `
+          <input type="radio" name="qOpt" value="${optKey}" ${isChecked} onchange="userAnswers[${currentQIdx}]='${optKey}'">
+          <span><strong>${optKey}.</strong> ${escapeHtml(q.options[optKey])}</span>
+        `;
+        optsContainer.appendChild(label);
+      }
+    });
+  }
+
+  document.getElementById('btnPrevQ').style.display = currentQIdx > 0 ? 'inline-flex' : 'none';
+  document.getElementById('btnNextQ').style.display = currentQIdx < qList.length - 1 ? 'inline-flex' : 'none';
+  document.getElementById('btnSubmitQuiz').style.display = currentQIdx === qList.length - 1 ? 'inline-flex' : 'none';
+}
+
+function navigateQuestion(dir){
+  currentQIdx += dir;
+  renderCurrentQuestion();
+}
+
+function submitQuizAnswers(){
+  clearInterval(timerInterval);
+  document.getElementById('quizOverlay').classList.remove('open');
+
+  const qList = activeQuizData.questions || [];
+  let correctCount = 0;
+  let totalMarks = 0;
+  let earnedMarks = 0;
+
+  qList.forEach((q, i) => {
+    const mark = Number(q.marks) || 2;
+    totalMarks += mark;
+    if(userAnswers[i] === q.correct_answer){
+      correctCount++;
+      earnedMarks += mark;
+    }
+  });
+
+  const percentage = Math.round((earnedMarks / (totalMarks || 1)) * 100);
+  const passed = percentage >= 60;
+
+  document.getElementById('scoreBadge').textContent = `${percentage}%`;
+  document.getElementById('scoreBadge').style.borderColor = passed ? '#C7E2C7' : '#F1CACA';
+  document.getElementById('scoreBadge').style.color = passed ? 'var(--green)' : 'var(--maroon-hover)';
+  document.getElementById('scoreTitle').textContent = passed ? "Great Job!" : "Needs Improvement";
+  document.getElementById('scoreMsg').textContent = passed ? "You passed the assessment successfully." : "You scored below passing criteria (60%).";
+  document.getElementById('scoreCorrect').textContent = `${correctCount} / ${qList.length}`;
+  document.getElementById('scoreMarks').textContent = `${earnedMarks} / ${totalMarks}`;
+  document.getElementById('scoreTime').textContent = `Just now`;
+
+  // Save attempt
+  let completed = [];
+  try { completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]'); } catch(e){}
+  completed.unshift({
+    title: activeQuizData.title,
+    dateTaken: new Date().toISOString().slice(0,10),
+    score: `${percentage}%`,
+    grade: passed ? "Pass (A)" : "Fail",
+    status: "Completed"
+  });
+  localStorage.setItem('completedQuizzes', JSON.stringify(completed));
+
+  document.getElementById('scorecardModal').classList.add('open');
+}
+
+function closeScorecard(){
+  document.getElementById('scorecardModal').classList.remove('open');
+  loadStudentDashboard();
+}
+
+function logout(){
+  localStorage.removeItem('currentUser');
+  window.location.href = '01-login-register.html';
+}
+
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userStr = localStorage.getItem('currentUser');
+  if(!userStr){
+    window.location.href = '01-login-register.html';
+    return;
+  }
+  try {
+    const user = JSON.parse(userStr);
+    document.getElementById('welcomeHeading').textContent = `Welcome, ${user.name || 'Student'}`;
+    const initials = (user.name || 'Student User').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('userAvatar').textContent = initials || 'SU';
+
+    if(user.role === 'Administrator'){
+      document.getElementById('adminLinkContainer').innerHTML = `
+        <a href="admin.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Admin Panel</a>
+      `;
+      document.getElementById('topbarAdminBtn').innerHTML = `
+        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;background:var(--blue);text-decoration:none;">Admin Panel</a>
+      `;
+    }
+  } catch(e){}
+
+  loadStudentDashboard();
+});
+</script>
+
+</body>
+</html>
