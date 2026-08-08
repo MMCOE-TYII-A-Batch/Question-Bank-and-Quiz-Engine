@@ -63,6 +63,10 @@ display:flex;align-items:center;justify-content:center;
 font-family:'Playfair Display',serif;
 font-weight:800;font-size:16px;color:var(--gold);
 flex-shrink:0;
+overflow:hidden;
+background:#fff;
+}
+.crest-badge img{width:100%;height:100%;object-fit:contain;padding:2px;}
 }
 .sidebar-brand-text{line-height:1.25;}
 .sidebar-brand-text .t1{font-size:12.5px;font-weight:700;letter-spacing:.02em;}
@@ -136,9 +140,15 @@ margin-bottom:28px;
 background:#fff;
 border:1px solid var(--line);
 border-radius:var(--radius);
-padding:18px 20px;
+padding:20px;
 position:relative;
 overflow:hidden;
+box-shadow:0 2px 8px rgba(43,35,32,.04);
+transition:transform .2s ease, box-shadow .2s ease;
+}
+.stat-card:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 24px rgba(43,35,32,.08);
 }
 .stat-card::before{
 content:"";
@@ -425,7 +435,7 @@ outline-offset:1px;
 <!-- SIDEBAR -->
 <aside class="sidebar">
 <a href="admin.html" class="sidebar-brand">
-<div class="crest-badge">M</div>
+<div class="crest-badge"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSfT1XAvhv3gAaos8PZHtuQJynN--4LbPCL2KYoisw4w&s" alt="MMCOE Logo"></div>
 <div class="sidebar-brand-text">
 <div class="t1">Quiz Engine</div>
 <div class="t2">MMCOE · ADMIN</div>
@@ -459,7 +469,6 @@ outline-offset:1px;
 <div class="nav-item" onclick="logout()"><span class="dot" style="background:#fff;"></span>Sign Out</div>
 </div>
 
-<div class="sidebar-footer">v1.0 · Frontend demo</div>
 </aside>
 
 <!-- MAIN -->
@@ -517,7 +526,6 @@ outline-offset:1px;
 <option>Administrator</option>
 <option>Question Author</option>
 <option>Moderator</option>
-<option>Instructor</option>
 <option>Quiz Taker</option>
 </select>
 <select class="filter" id="statusFilter">
@@ -642,7 +650,6 @@ Entries shown are synchronized across sessions via <code style="font-family:inhe
 <option>Administrator</option>
 <option>Question Author</option>
 <option>Moderator</option>
-<option>Instructor</option>
 <option>Quiz Taker</option>
 </select>
 </div>
@@ -688,7 +695,6 @@ Entries shown are synchronized across sessions via <code style="font-family:inhe
 <option>Administrator</option>
 <option>Moderator</option>
 <option>Question Author</option>
-<option>Instructor</option>
 <option>Quiz Taker</option>
 </select>
 </div>
@@ -759,7 +765,8 @@ function checkAuth(){
 
 function logout(){
   localStorage.removeItem('currentUser');
-  window.location.href = '01-login-register.html';
+  sessionStorage.clear();
+  window.location.href = '01-login-register.html?logout=true';
 }
 
 function loadState(){
@@ -769,11 +776,7 @@ function loadState(){
   }
   if(!USERS || !USERS.length){
     USERS = [
-      { id: 1, name: "Nisha Agarwal", email: "admin@mmcoe.edu.in", password: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active", lastActive: "Just now" },
-      { id: 2, name: "Prof. R. Apte", email: "author@mmcoe.edu.in", password: "author123", role: "Question Author", dept: "Computer Engineering", status: "active", lastActive: "2 hours ago" },
-      { id: 3, name: "Dr. S. Kulkarni", email: "mod@mmcoe.edu.in", password: "mod12345", role: "Moderator", dept: "IT", status: "active", lastActive: "Yesterday" },
-      { id: 4, name: "Student User", email: "student@mmcoe.edu.in", password: "student1", role: "Quiz Taker", dept: "E&TC", status: "active", lastActive: "3 days ago" },
-      { id: 5, name: "Instructor User", email: "pending@mmcoe.edu.in", password: "pending1", role: "Instructor", dept: "Mechanical", status: "pending", lastActive: "—" }
+      { id: 1, name: "System Admin", email: "admin@mmcoe.edu.in", password: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active", lastActive: "Just now" }
     ];
     localStorage.setItem('usersList', JSON.stringify(USERS));
   }
@@ -784,9 +787,7 @@ function loadState(){
   }
   if(!AUDIT_LOG || !AUDIT_LOG.length){
     AUDIT_LOG = [
-      { log_id: 100, user_id: 1, action: "Admin session initialized", timestamp: new Date().toISOString().slice(0,16).replace('T',' ') },
-      { log_id: 99, user_id: 2, action: "Submitted question bank batch: Data Structures — Unit 3", timestamp: "2026-08-04 14:20" },
-      { log_id: 98, user_id: 3, action: "Approved question bank batch: OS Process Management", timestamp: "2026-08-01 11:05" }
+      { log_id: 100, user_id: 1, action: "Admin session initialized", timestamp: new Date().toISOString().slice(0,16).replace('T',' ') }
     ];
     localStorage.setItem('auditLogs', JSON.stringify(AUDIT_LOG));
   }
@@ -1032,7 +1033,7 @@ function render(){
   filtered.forEach(u => {
     const tr = document.createElement('tr');
     
-    const roleOptions = ['Administrator','Moderator','Question Author','Instructor','Quiz Taker'];
+    const roleOptions = ['Administrator','Moderator','Question Author','Quiz Taker'];
     const roleSelectHtml = `
       <select onchange="changeUserRole(${u.id}, this.value)" style="padding:4px 8px;border:1px solid var(--line);border-radius:6px;font-size:12px;font-weight:600;background:#fff;color:var(--maroon-hover);">
         ${roleOptions.map(r => `<option value="${r}" ${u.role === r ? 'selected' : ''}>${r}</option>`).join('')}

@@ -75,7 +75,11 @@
     font-size:22px;
     color:var(--gold);
     margin-bottom:28px;
+    overflow:hidden;
+    background:#fff;
+    flex-shrink:0;
   }
+  .crest-badge img{width:100%;height:100%;object-fit:contain;padding:2px;}
   .brand-eyebrow{
     font-family:'IBM Plex Mono',monospace;
     font-size:12px;
@@ -303,7 +307,7 @@
     </div>
 
     <div class="brand-top">
-      <div class="crest-badge">M</div>
+      <div class="crest-badge"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSfT1XAvhv3gAaos8PZHtuQJynN--4LbPCL2KYoisw4w&s" alt="MMCOE Logo"></div>
       <div class="brand-eyebrow">MMCOE · Karvenagar, Pune</div>
       <div class="brand-title">Question Bank &amp;<br>Quiz Engine</div>
       <p class="brand-sub">A centralized repository for question authoring, moderation, and timed assessment delivery — built for faculty and students.</p>
@@ -354,24 +358,24 @@
           <div class="status-msg" id="loginStatus"></div>
         </form>
 
-        <div class="role-note">
-          Access is role-based. Administrators, question authors, moderators, instructors, and quiz takers each see a different dashboard after sign-in.
-          <div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(122,12,12,.2);font-weight:600;">
-            Quick Demo Logins:
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
-              <button type="button" class="link" onclick="quickFill('admin@mmcoe.edu.in','admin123')" style="background:#fff;border:1px solid var(--line);padding:3px 8px;border-radius:4px;font-size:11.5px;cursor:pointer;">Admin</button>
-              <button type="button" class="link" onclick="quickFill('author@mmcoe.edu.in','author123')" style="background:#fff;border:1px solid var(--line);padding:3px 8px;border-radius:4px;font-size:11.5px;cursor:pointer;">Author</button>
-              <button type="button" class="link" onclick="quickFill('mod@mmcoe.edu.in','mod12345')" style="background:#fff;border:1px solid var(--line);padding:3px 8px;border-radius:4px;font-size:11.5px;cursor:pointer;">Moderator</button>
-              <button type="button" class="link" onclick="quickFill('student@mmcoe.edu.in','student1')" style="background:#fff;border:1px solid var(--line);padding:3px 8px;border-radius:4px;font-size:11.5px;cursor:pointer;">Student</button>
-            </div>
+        <div style="margin-top:16px;padding:12px 14px;background:#FAF6F3;border:1px dashed var(--line);border-radius:8px;font-size:12.5px;color:var(--ink);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-weight:700;color:var(--maroon);font-family:'IBM Plex Mono',monospace;font-size:12px;">System Admin Demo Login</span>
+            <button type="button" onclick="quickFill('admin@mmcoe.edu.in', 'admin123')" style="background:var(--maroon);color:#fff;border:none;padding:4px 10px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Auto Fill</button>
           </div>
+          <div>Email: <code style="font-family:'IBM Plex Mono',monospace;color:var(--maroon-hover);font-weight:600;">admin@mmcoe.edu.in</code></div>
+          <div>Password: <code style="font-family:'IBM Plex Mono',monospace;font-weight:600;">admin123</code></div>
+        </div>
+
+        <div class="role-note" style="margin-top:12px;">
+          Access is role-based. Register a new account or sign in with your registered email and password to continue.
         </div>
       </div>
 
       <!-- REGISTER VIEW -->
       <div class="form-view" id="registerView">
         <div class="panel-title">Create an account</div>
-        <div class="panel-desc">New accounts require moderator approval before activation.</div>
+        <div class="panel-desc">Register with your name, email, department, and role to get started.</div>
 
         <form id="registerForm" novalidate>
           <div class="row-2">
@@ -400,15 +404,14 @@
           </div>
 
           <div class="field" id="regRoleField">
-            <label for="regRole">Requested role</label>
+            <label for="regRole">Role</label>
             <select id="regRole">
               <option value="">Select a role</option>
-              <option>Instructor</option>
               <option>Question Author</option>
               <option>Moderator</option>
               <option>Quiz Taker (Student)</option>
             </select>
-            <div class="field-error">Select the role you're requesting.</div>
+            <div class="field-error">Select your role.</div>
           </div>
 
           <div class="row-2">
@@ -424,7 +427,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn-primary">Request Account</button>
+          <button type="submit" class="btn-primary">Create Account</button>
           <div class="status-msg" id="registerStatus"></div>
         </form>
       </div>
@@ -434,11 +437,7 @@
 
 <script>
   const DEFAULT_USERS = [
-    { id: 1, name: "Nisha Agarwal", email: "admin@mmcoe.edu.in", password: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active", lastActive: "Just now" },
-    { id: 2, name: "Prof. R. Apte", email: "author@mmcoe.edu.in", password: "author123", role: "Question Author", dept: "Computer Engineering", status: "active", lastActive: "2 hours ago" },
-    { id: 3, name: "Dr. S. Kulkarni", email: "mod@mmcoe.edu.in", password: "mod12345", role: "Moderator", dept: "IT", status: "active", lastActive: "Yesterday" },
-    { id: 4, name: "Student User", email: "student@mmcoe.edu.in", password: "student1", role: "Quiz Taker", dept: "E&TC", status: "active", lastActive: "3 days ago" },
-    { id: 5, name: "Instructor User", email: "pending@mmcoe.edu.in", password: "pending1", role: "Instructor", dept: "Mechanical", status: "pending", lastActive: "—" }
+    { id: 1, name: "System Admin", email: "admin@mmcoe.edu.in", password: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active", lastActive: "Just now" }
   ];
 
   function getUsersList(){
@@ -448,7 +447,12 @@
       return DEFAULT_USERS;
     }
     try {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      if(!parsed.length){
+        localStorage.setItem('usersList', JSON.stringify(DEFAULT_USERS));
+        return DEFAULT_USERS;
+      }
+      return parsed;
     } catch(e) {
       localStorage.setItem('usersList', JSON.stringify(DEFAULT_USERS));
       return DEFAULT_USERS;
@@ -470,7 +474,7 @@
 
   function showForgot(e){
     e.preventDefault();
-    alert("Password reset flow — hook up to backend's /auth/forgot-password endpoint.");
+    alert("Password reset flow — please contact system administrator or register a new account.");
   }
 
   function setInvalid(fieldId, isInvalid){
@@ -497,10 +501,10 @@
     if(!valid) return;
 
     const users = getUsersList();
-    const user = users.find(u => u.email === email && u.password === pass);
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === pass);
     if(!user){
       statusBox.className = 'status-msg error';
-      statusBox.textContent = 'Invalid email or password. Try admin@mmcoe.edu.in / admin123 (demo).';
+      statusBox.textContent = 'Invalid email or password. Please check your credentials or register a new account.';
       return;
     }
     if(user.status === 'pending'){
@@ -515,7 +519,7 @@
     }
 
     statusBox.className = 'status-msg success';
-    statusBox.textContent = `Signed in as ${user.role}. Redirecting to dashboard...`;
+    statusBox.textContent = `Welcome, ${user.name}! Redirecting to dashboard...`;
 
     user.lastActive = "Just now";
     localStorage.setItem('usersList', JSON.stringify(users));
@@ -544,24 +548,17 @@
     }, 600);
   });
 
-  // Auto-redirect if already logged in
+  // Handle page load and logout parameter
   window.addEventListener('DOMContentLoaded', () => {
     getUsersList();
-    const savedUser = localStorage.getItem('currentUser');
-    if (savedUser) {
-      try {
-        const userObj = JSON.parse(savedUser);
-        if (userObj.role === 'Administrator') {
-          window.location.href = 'admin.html';
-        } else if (userObj.role === 'Moderator') {
-          window.location.href = 'moderator.html';
-        } else if (userObj.role === 'Quiz Taker') {
-          window.location.href = 'student.html';
-        } else if (userObj.role) {
-          window.location.href = 'author.html';
-        }
-      } catch(e) {
-        localStorage.removeItem('currentUser');
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('logout') === 'true') {
+      localStorage.removeItem('currentUser');
+      sessionStorage.clear();
+      const statusBox = document.getElementById('loginStatus');
+      if (statusBox) {
+        statusBox.className = 'status-msg success';
+        statusBox.textContent = 'You have been signed out successfully.';
       }
     }
   });
@@ -602,7 +599,7 @@
     if(!valid) return;
 
     const users = getUsersList();
-    if(users.some(u => u.email === email)){
+    if(users.some(u => u.email.toLowerCase() === email.toLowerCase())){
       statusBox.className = 'status-msg error';
       statusBox.textContent = 'An account with this email already exists.';
       return;
@@ -626,14 +623,22 @@
     auditLogs.unshift({
       log_id: Date.now(),
       user_id: newUser.id,
-      action: `Self-registration requested for ${newUser.name} (${newUser.role})`,
+      action: `Self-registration requested by ${newUser.name} (${newUser.email}) - Pending Admin Approval`,
       timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
     });
     localStorage.setItem('auditLogs', JSON.stringify(auditLogs));
 
     statusBox.className = 'status-msg success';
-    statusBox.textContent = `Request submitted for ${role}. A moderator will review your account shortly.`;
-    this.reset();
+    statusBox.textContent = `Registration submitted for ${name}! Your account is pending Admin approval.`;
+    
+    setTimeout(() => {
+      document.getElementById('loginEmail').value = email;
+      document.getElementById('loginPass').value = pass;
+      switchTab('login');
+      document.getElementById('loginStatus').className = 'status-msg error';
+      document.getElementById('loginStatus').textContent = `Account created for ${name} (${email}). It is currently pending Admin approval (admin@mmcoe.edu.in).`;
+      this.reset();
+    }, 800);
   });
 </script>
 

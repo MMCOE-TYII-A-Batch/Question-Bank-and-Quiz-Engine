@@ -44,12 +44,13 @@ background:linear-gradient(180deg, var(--maroon-dark), var(--maroon));
 color:#fff;display:flex;flex-direction:column;
 position:sticky;top:0;height:100vh;
 }
-.sidebar-brand{display:flex;align-items:center;gap:12px;padding:24px 22px;border-bottom:1px solid rgba(255,255,255,.12);}
-.crest-badge{
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:24px 22px;border-bottom:1px solid rgba(255,255,255,.12);}.crest-badge{
 width:38px;height:38px;border:2px solid var(--gold);border-radius:50%;
 display:flex;align-items:center;justify-content:center;
 font-family:'Playfair Display',serif;font-weight:800;font-size:16px;color:var(--gold);flex-shrink:0;
+overflow:hidden;background:#fff;
 }
+.crest-badge img{width:100%;height:100%;object-fit:contain;padding:2px;}
 .sidebar-brand-text{line-height:1.25;}
 .sidebar-brand-text .t1{font-size:12.5px;font-weight:700;letter-spacing:.02em;}
 .sidebar-brand-text .t2{font-size:10.5px;color:rgba(255,255,255,.6);font-family:'IBM Plex Mono',monospace;}
@@ -80,25 +81,43 @@ display:flex;align-items:center;justify-content:center;font-weight:700;font-size
 
 .btn-primary{
 padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;
-font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s ease;display:inline-flex;align-items:center;gap:8px;
+font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;
+transition:background .15s ease;display:inline-flex;align-items:center;gap:8px;
 }
 .btn-primary:hover{background:var(--maroon-hover);}
 .btn-success{padding:10px 18px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;}
 .btn-success:hover{background:#235423;}
 .btn-warning{padding:10px 18px;background:var(--amber);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;}
-.btn-secondary{padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;}
+
+.btn-secondary{
+padding:8px 14px;background:#fff;border:1px solid var(--line);border-radius:8px;
+font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;
+}
+.btn-secondary:hover{background:#FAF6F3;}
 
 /* ---------- STAT CARDS ---------- */
 .stats-row{display:grid;grid-template-columns:repeat(4, 1fr);gap:18px;margin-bottom:28px;}
-.stat-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;}
+.stat-card{
+background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+padding:20px;position:relative;overflow:hidden;
+box-shadow:0 2px 8px rgba(43,35,32,.04);
+transition:transform .2s ease, box-shadow .2s ease;
+}
+.stat-card:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 24px rgba(43,35,32,.08);
+}
 .stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--maroon);}
 .stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
 .stat-label{font-size:12.5px;color:var(--muted);margin-top:4px;}
 
-/* ---------- TABLE & CARDS ---------- */
+/* ---------- QUEUE CARDS & TABLES ---------- */
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;}
-.table-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.table-card{
+background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+overflow:hidden;box-shadow:0 2px 10px rgba(43,35,32,.04);
+}
 table{width:100%;border-collapse:collapse;}
 thead th{
 text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
@@ -115,10 +134,18 @@ tbody tr:hover{background:#FDFBF9;}
 .status-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
 
 /* ---------- MODAL ---------- */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(43,35,32,.45);align-items:center;justify-content:center;z-index:50;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal{background:#fff;border-radius:var(--radius);width:100%;max-width:760px;padding:28px;max-height:90vh;overflow-y:auto;}
-.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px;}
+.modal-overlay{
+display:none;position:fixed;inset:0;background:rgba(43,35,32,.55);
+backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:1000;padding:20px;
+opacity:0;transition:opacity .2s ease;
+}
+.modal-overlay.open{display:flex;opacity:1;}
+.modal{
+background:#fff;border-radius:var(--radius);width:100%;max-width:540px;
+padding:28px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,.18);
+border-top:4px solid var(--maroon);
+}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;}
 .modal-desc{font-size:13px;color:var(--muted);margin-bottom:20px;}
 
 .q-review-card{border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:14px;background:#FDFBF9;}
@@ -144,7 +171,7 @@ tbody tr:hover{background:#FDFBF9;}
 <!-- SIDEBAR -->
 <aside class="sidebar">
 <a href="moderator.html" class="sidebar-brand">
-<div class="crest-badge">M</div>
+<div class="crest-badge"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSfT1XAvhv3gAaos8PZHtuQJynN--4LbPCL2KYoisw4w&s" alt="MMCOE Logo"></div>
 <div class="sidebar-brand-text">
 <div class="t1">Quiz Engine</div>
 <div class="t2">MMCOE · MODERATOR</div>
@@ -158,13 +185,12 @@ tbody tr:hover{background:#FDFBF9;}
 </div>
 <div class="nav-group">
 <div class="nav-label">Insights</div>
-<a href="#" class="nav-item" onclick="alert('Viewing moderation activity metrics');return false;"><span class="dot"></span>Activity Log</a>
+<a href="#" class="nav-item" onclick="openModActivityModal(); return false;"><span class="dot"></span>Activity Log</a>
 </div>
 <div class="nav-group" style="margin-top:auto;">
 <div id="adminLinkContainer"></div>
 <div class="nav-item" onclick="logout()"><span class="dot" style="background:var(--gold);"></span>Sign Out</div>
 </div>
-<div class="sidebar-footer">v1.0 · Frontend demo</div>
 </aside>
 
 <!-- MAIN -->
@@ -259,20 +285,55 @@ tbody tr:hover{background:#FDFBF9;}
 
 <div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
 
+<!-- MODERATION ACTIVITY MODAL -->
+<div class="modal-overlay" id="modActivityModal" onclick="handleModActivityOverlayClick(event)">
+<div class="modal" style="max-width:540px;">
+<div class="modal-title">Moderation Activity Log</div>
+<div class="modal-desc">Recent question bank reviews, decisions, and system events.</div>
+
+<div id="modActivityLogContainer" style="max-height:260px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:12px;font-size:12.5px;"></div>
+
+<div style="display:flex;justify-content:flex-end;margin-top:20px;">
+<button type="button" class="btn-secondary" onclick="closeModActivityModal()">Close Log</button>
+</div>
+</div>
+</div>
+
 <script>
 let currentReviewBatchId = null;
 
-const DEFAULT_BATCHES = [
-  { id: 101, title: "Data Structures — Unit 3 (Trees)", dept: "Computer Engineering", count: 15, type: "MCQ", submittedDate: "2026-08-04", status: "pending", questions: [
-    { id: 1, type: "mcq", question: "Which algorithm is used for finding shortest paths in weighted graphs?", options: {A:"BFS", B:"Dijkstra's Algorithm", C:"Kruskal's", D:"DFS"}, correct_answer: "B", btl: "BTL3", marks: 2 },
-    { id: 2, type: "mcq", question: "What is the worst-case height of an AVL tree with n nodes?", options: {A:"O(n)", B:"O(log n)", C:"O(n^2)", D:"O(1)"}, correct_answer: "B", btl: "BTL2", marks: 2 }
-  ]},
-  { id: 102, title: "Signals & Systems — Fourier Transform", dept: "E&TC", count: 12, type: "MCQ", submittedDate: "2026-08-03", status: "pending", questions: [
-    { id: 1, type: "mcq", question: "The continuous Fourier transform converts a signal from continuous time to continuous frequency.", options: {A:"True", B:"False", C:"Conditional", D:"None"}, correct_answer: "A", btl: "BTL1", marks: 1 }
-  ]},
-  { id: 103, title: "Operating Systems — Process Management", dept: "Computer Engineering", count: 10, type: "Descriptive", submittedDate: "2026-08-01", status: "approved", questions: []},
-  { id: 104, title: "Database Systems — SQL & Normalization", dept: "IT", count: 8, type: "MCQ", submittedDate: "2026-07-28", status: "returned", questions: []}
-];
+function openModActivityModal(){
+  let logs = [];
+  try { logs = JSON.parse(localStorage.getItem('auditLogs') || '[]'); } catch(e){}
+  logs = logs.filter(l => !/registration|registered|account approved|account rejected|role/i.test(l.action));
+
+  const container = document.getElementById('modActivityLogContainer');
+  container.innerHTML = '';
+  if(!logs.length){
+    container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:16px;">No activity recorded in moderation log yet.</div>';
+  } else {
+    logs.forEach(l => {
+      const item = document.createElement('div');
+      item.style.cssText = 'padding:8px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;';
+      item.innerHTML = `<span>${escapeHtml(l.action)}</span><span style="font-size:11px;color:var(--muted);font-family:\'IBM Plex Mono\',monospace;">${escapeHtml(l.timestamp)}</span>`;
+      container.appendChild(item);
+    });
+  }
+
+  document.getElementById('modActivityModal').classList.add('open');
+}
+
+function closeModActivityModal(){
+  document.getElementById('modActivityModal').classList.remove('open');
+}
+
+function handleModActivityOverlayClick(e){
+  if(e.target === document.getElementById('modActivityModal')){
+    closeModActivityModal();
+  }
+}
+
+const DEFAULT_BATCHES = [];
 
 function getBatches(){
   let stored = [];
@@ -440,7 +501,8 @@ function performReviewAction(newStatus){
 
 function logout(){
   localStorage.removeItem('currentUser');
-  window.location.href = '01-login-register.html';
+  sessionStorage.clear();
+  window.location.href = '01-login-register.html?logout=true';
 }
 
 function escapeHtml(str){
@@ -455,16 +517,16 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   try {
     const user = JSON.parse(userStr);
-    document.getElementById('welcomeHeading').textContent = `Moderation Queue — ${user.name || 'Dr. S. Kulkarni'}`;
+    document.getElementById('welcomeHeading').textContent = `Moderation Queue — ${user.name || 'Moderator'}`;
     const initials = (user.name || 'Moderator').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
-    document.getElementById('userAvatar').textContent = initials || 'SK';
+    document.getElementById('userAvatar').textContent = initials || 'MO';
 
     if(user.role === 'Administrator'){
       document.getElementById('adminLinkContainer').innerHTML = `
         <a href="admin.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Admin Panel</a>
       `;
       document.getElementById('topbarAdminBtn').innerHTML = `
-        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;background:var(--blue);text-decoration:none;">Admin Panel</a>
+        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;text-decoration:none;">Admin Panel</a>
       `;
     }
   } catch(e){}

@@ -269,7 +269,6 @@ outline:3px solid var(--gold);outline-offset:1px;
 <div id="adminLinkContainer"></div>
 <div class="nav-item" onclick="logout()"><span class="dot" style="background:var(--gold);"></span>Sign Out</div>
 </div>
-<div class="sidebar-footer">v1.0 · Frontend demo</div>
 </aside>
 
 <!-- MAIN -->
@@ -281,7 +280,8 @@ outline:3px solid var(--gold);outline-offset:1px;
 </div>
 <div class="topbar-right">
 <div id="topbarAdminBtn"></div>
-<div class="avatar" id="userAvatar">RA</div>
+<div class="avatar" id="userAvatar">AU</div>
+<button onclick="logout()" style="background:none;border:1px solid var(--line);padding:6px 12px;border-radius:8px;color:var(--maroon-hover);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.15s ease;" onmouseover="this.style.background='#FAF6F3'" onmouseout="this.style.background='none'">Sign Out</button>
 </div>
 </div>
 
@@ -385,7 +385,7 @@ outline:3px solid var(--gold);outline-offset:1px;
 <div class="field-grid">
 <div class="field">
 <label for="fAuthor">Author <span class="req">*</span></label>
-<input type="text" id="fAuthor" placeholder="e.g. Prof. R. Apte" required>
+<input type="text" id="fAuthor" placeholder="Full Name" required>
 </div>
 <div class="field">
 <label for="fMarks">Marks <span class="req">*</span></label>
@@ -700,8 +700,8 @@ renderBatch();
 
 function downloadTemplate(){
 const cols = currentType === 'mcq' ? MANUAL_FIELDS_MCQ : MANUAL_FIELDS_DESC;
-const sampleMcq = ['Data Structures','Which data structure uses FIFO order?','Unit 2','Queues','Prof. R. Apte','2','BTL1','Stack','Queue','Tree','Graph','B'];
-const sampleDesc = ['Operating Systems','Explain the difference between a process and a thread.','Unit 1','Process Management','Dr. S. Kulkarni','5','BTL2'];
+const sampleMcq = ['Data Structures','Which data structure uses FIFO order?','Unit 2','Queues','Author Name','2','BTL1','Stack','Queue','Tree','Graph','B'];
+const sampleDesc = ['Operating Systems','Explain the difference between a process and a thread.','Unit 1','Process Management','Author Name','5','BTL2'];
 const sample = currentType === 'mcq' ? sampleMcq : sampleDesc;
 const csv = cols.join(',') + "\n" + sample.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
 const blob = new Blob([csv], {type:'text/csv'});
@@ -807,7 +807,8 @@ function escapeHtml(str){
 
 function logout(){
   localStorage.removeItem('currentUser');
-  window.location.href = '01-login-register.html';
+  sessionStorage.clear();
+  window.location.href = '01-login-register.html?logout=true';
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -818,6 +819,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
   try {
     const user = JSON.parse(userStr);
+    if(user.name){
+      const authorInput = document.getElementById('fAuthor');
+      if(authorInput) authorInput.value = user.name;
+    }
     const initials = (user.name || 'Author').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
     document.getElementById('userAvatar').textContent = initials || 'AU';
 
@@ -826,7 +831,7 @@ window.addEventListener('DOMContentLoaded', () => {
         <a href="admin.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Admin Panel</a>
       `;
       document.getElementById('topbarAdminBtn').innerHTML = `
-        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;background:var(--blue);text-decoration:none;">Admin Panel</a>
+        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;text-decoration:none;">Admin Panel</a>
       `;
     }
   } catch(e){}
