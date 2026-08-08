@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moderator Dashboard — MMCOE Quiz Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--maroon:#7A0C0C;
+--maroon-hover:#A31313;
+--maroon-dark:#4E0808;
+--gold:#D4AF37;
+--bg:#FBF8F5;
+--ink:#2B2320;
+--tint:#FDEEEE;
+--line:#E7DFDA;
+--muted:#8A7F78;
+--green:#2E6B2E;
+--green-bg:#EAF4EA;
+--amber:#8A6116;
+--amber-bg:#FBF1DE;
+--blue:#2A5A8A;
+--blue-bg:#EAF1F8;
+--radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--ink);
+-webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:'Inter',sans-serif;}
+
+.app{display:flex;min-height:100vh;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+width:250px;flex-shrink:0;
+background:linear-gradient(180deg, var(--maroon-dark), var(--maroon));
+color:#fff;display:flex;flex-direction:column;
+position:sticky;top:0;height:100vh;
+}
+.sidebar-brand{display:flex;align-items:center;gap:12px;padding:24px 22px;border-bottom:1px solid rgba(255,255,255,.12);}
+.crest-badge{
+width:38px;height:38px;border:2px solid var(--gold);border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-family:'Playfair Display',serif;font-weight:800;font-size:16px;color:var(--gold);flex-shrink:0;
+}
+.sidebar-brand-text{line-height:1.25;}
+.sidebar-brand-text .t1{font-size:12.5px;font-weight:700;letter-spacing:.02em;}
+.sidebar-brand-text .t2{font-size:10.5px;color:rgba(255,255,255,.6);font-family:'IBM Plex Mono',monospace;}
+.nav-group{padding:14px 14px;}
+.nav-label{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.45);padding:8px 10px 8px;font-family:'IBM Plex Mono',monospace;}
+.nav-item{
+display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:8px;
+font-size:13.5px;font-weight:500;color:rgba(255,255,255,.82);cursor:pointer;margin-bottom:2px;
+transition:background .15s ease, color .15s ease;
+}
+.nav-item .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);flex-shrink:0;}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.14);color:#fff;font-weight:600;}
+.nav-item.active .dot{background:var(--gold);}
+.sidebar-footer{margin-top:auto;padding:16px 22px 22px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.5);font-family:'IBM Plex Mono',monospace;}
+
+/* ---------- MAIN ---------- */
+.main{flex:1;min-width:0;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;background:#fff;border-bottom:1px solid var(--line);}
+.page-title{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.avatar{
+width:36px;height:36px;border-radius:50%;background:var(--tint);color:var(--maroon);
+display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13.5px;border:1.5px solid var(--gold);
+}
+.content{padding:28px 32px 60px;}
+
+.btn-primary{
+padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;
+font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s ease;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{background:var(--maroon-hover);}
+.btn-success{padding:10px 18px;background:var(--green);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;}
+.btn-success:hover{background:#235423;}
+.btn-warning{padding:10px 18px;background:var(--amber);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;}
+.btn-secondary{padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;}
+
+/* ---------- STAT CARDS ---------- */
+.stats-row{display:grid;grid-template-columns:repeat(4, 1fr);gap:18px;margin-bottom:28px;}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;}
+.stat-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--maroon);}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+.stat-label{font-size:12.5px;color:var(--muted);margin-top:4px;}
+
+/* ---------- TABLE & CARDS ---------- */
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;}
+.table-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{
+text-align:left;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+color:var(--muted);font-weight:600;padding:13px 18px;background:#FAF6F3;border-bottom:1px solid var(--line);
+}
+tbody td{padding:14px 18px;font-size:13.5px;border-bottom:1px solid var(--line);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:#FDFBF9;}
+
+.status-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:600;}
+.status-pill.approved{background:var(--green-bg);color:var(--green);}
+.status-pill.pending{background:var(--amber-bg);color:var(--amber);}
+.status-pill.returned{background:var(--tint);color:var(--maroon-hover);}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+/* ---------- MODAL ---------- */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(43,35,32,.45);align-items:center;justify-content:center;z-index:50;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:var(--radius);width:100%;max-width:760px;padding:28px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px;}
+.modal-desc{font-size:13px;color:var(--muted);margin-bottom:20px;}
+
+.q-review-card{border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:14px;background:#FDFBF9;}
+.q-review-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.q-meta{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.q-body{font-size:14px;font-weight:600;margin-bottom:10px;line-height:1.4;}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12.5px;margin-bottom:10px;}
+.q-opt{padding:6px 10px;background:#fff;border:1px solid var(--line);border-radius:6px;}
+.q-opt.correct{background:var(--green-bg);border-color:#C7E2C7;color:var(--green);font-weight:600;}
+.q-actions{display:flex;gap:8px;justify-content:flex-end;}
+.icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:12.5px;display:flex;align-items:center;justify-content:center;}
+.icon-btn:hover{border-color:var(--maroon);background:var(--tint);}
+.icon-btn.danger:hover{border-color:#B23A3A;background:#FBEAEA;color:#B23A3A;}
+
+.toast{position:fixed;bottom:26px;right:26px;background:var(--ink);color:#fff;padding:13px 20px;border-radius:8px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(10px);transition:opacity .2s ease, transform .2s ease;pointer-events:none;z-index:80;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+</style>
+</head>
+<body>
+
+<div class="app">
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<a href="moderator.html" class="sidebar-brand">
+<div class="crest-badge">M</div>
+<div class="sidebar-brand-text">
+<div class="t1">Quiz Engine</div>
+<div class="t2">MMCOE · MODERATOR</div>
+</div>
+</a>
+<div class="nav-group">
+<div class="nav-label">Moderation</div>
+<a href="moderator.html" class="nav-item active"><span class="dot"></span>Review Queue</a>
+<a href="#approved" class="nav-item" onclick="filterByStatus('approved')"><span class="dot"></span>Approved Batches</a>
+<a href="#returned" class="nav-item" onclick="filterByStatus('returned')"><span class="dot"></span>Returned for Edits</a>
+</div>
+<div class="nav-group">
+<div class="nav-label">Insights</div>
+<a href="#" class="nav-item" onclick="alert('Viewing moderation activity metrics');return false;"><span class="dot"></span>Activity Log</a>
+</div>
+<div class="nav-group" style="margin-top:auto;">
+<div id="adminLinkContainer"></div>
+<div class="nav-item" onclick="logout()"><span class="dot" style="background:var(--gold);"></span>Sign Out</div>
+</div>
+<div class="sidebar-footer">v1.0 · Frontend demo</div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<div class="topbar">
+<div>
+<div class="page-title" id="welcomeHeading">Question Moderation Queue</div>
+<div class="page-sub">Review submitted question banks, verify difficulty &amp; accuracy, and approve for student quizzes.</div>
+</div>
+<div class="topbar-right">
+<div id="topbarAdminBtn"></div>
+<div class="avatar" id="userAvatar">SK</div>
+<button onclick="logout()" style="background:none;border:none;color:var(--maroon-hover);font-size:13px;font-weight:600;cursor:pointer;">Sign Out</button>
+</div>
+</div>
+
+<div class="content">
+
+<!-- STATS -->
+<div class="stats-row">
+<div class="stat-card">
+<div class="stat-num" id="statPending">2</div>
+<div class="stat-label">Pending Review</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statApproved">12</div>
+<div class="stat-label">Total Approved</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statReturned">3</div>
+<div class="stat-label">Returned for Edits</div>
+</div>
+<div class="stat-card">
+<div class="stat-num" id="statReviewed">165</div>
+<div class="stat-label">Questions Audited</div>
+</div>
+</div>
+
+<!-- SUBMISSIONS QUEUE -->
+<div class="card-header">
+<div class="card-title">Submitted Question Banks</div>
+<div style="display:flex;gap:10px;">
+<select id="statusFilter" onchange="renderQueue()" style="padding:6px 12px;border:1px solid var(--line);border-radius:6px;font-size:13px;">
+<option value="">All Statuses</option>
+<option value="pending" selected>Pending Review</option>
+<option value="approved">Approved</option>
+<option value="returned">Needs Revision</option>
+</select>
+</div>
+</div>
+
+<div class="table-card">
+<table>
+<thead>
+<tr>
+<th>Batch Title / Subject</th>
+<th>Questions</th>
+<th>Type</th>
+<th>Submitted Date</th>
+<th>Status</th>
+<th style="text-align:right;">Actions</th>
+</tr>
+</thead>
+<tbody id="queueTableBody"></tbody>
+</table>
+</div>
+
+</div>
+</main>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="reviewModal">
+<div class="modal">
+<div class="modal-title" id="mBatchTitle">Review Batch</div>
+<div class="modal-desc" id="mBatchSub">Author details &amp; question breakdown</div>
+
+<div id="mQuestionsContainer"></div>
+
+<div style="margin-top:20px;">
+<label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Moderator Notes / Feedback</label>
+<textarea id="mNotes" placeholder="Provide feedback or recommendations for the author..." style="width:100%;height:70px;padding:10px;border:1px solid var(--line);border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;"></textarea>
+</div>
+
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
+<button type="button" class="btn-secondary" onclick="closeReviewModal()">Cancel</button>
+<button type="button" class="btn-warning" onclick="performReviewAction('returned')">Return for Edits</button>
+<button type="button" class="btn-success" onclick="performReviewAction('approved')">✓ Approve Question Bank</button>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<script>
+let currentReviewBatchId = null;
+
+const DEFAULT_BATCHES = [
+  { id: 101, title: "Data Structures — Unit 3 (Trees)", dept: "Computer Engineering", count: 15, type: "MCQ", submittedDate: "2026-08-04", status: "pending", questions: [
+    { id: 1, type: "mcq", question: "Which algorithm is used for finding shortest paths in weighted graphs?", options: {A:"BFS", B:"Dijkstra's Algorithm", C:"Kruskal's", D:"DFS"}, correct_answer: "B", btl: "BTL3", marks: 2 },
+    { id: 2, type: "mcq", question: "What is the worst-case height of an AVL tree with n nodes?", options: {A:"O(n)", B:"O(log n)", C:"O(n^2)", D:"O(1)"}, correct_answer: "B", btl: "BTL2", marks: 2 }
+  ]},
+  { id: 102, title: "Signals & Systems — Fourier Transform", dept: "E&TC", count: 12, type: "MCQ", submittedDate: "2026-08-03", status: "pending", questions: [
+    { id: 1, type: "mcq", question: "The continuous Fourier transform converts a signal from continuous time to continuous frequency.", options: {A:"True", B:"False", C:"Conditional", D:"None"}, correct_answer: "A", btl: "BTL1", marks: 1 }
+  ]},
+  { id: 103, title: "Operating Systems — Process Management", dept: "Computer Engineering", count: 10, type: "Descriptive", submittedDate: "2026-08-01", status: "approved", questions: []},
+  { id: 104, title: "Database Systems — SQL & Normalization", dept: "IT", count: 8, type: "MCQ", submittedDate: "2026-07-28", status: "returned", questions: []}
+];
+
+function getBatches(){
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  return [...stored, ...DEFAULT_BATCHES];
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+function renderQueue(){
+  const filter = document.getElementById('statusFilter').value;
+  const batches = getBatches().filter(b => !filter || b.status === filter);
+  const tbody = document.getElementById('queueTableBody');
+  tbody.innerHTML = "";
+
+  if(!batches.length){
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--muted);">No question banks match this filter.</td></tr>`;
+    return;
+  }
+
+  batches.forEach(b => {
+    const tr = document.createElement('tr');
+    let statusBadge = `<span class="status-pill pending"><span class="dot"></span>Pending Review</span>`;
+    if(b.status === 'approved') statusBadge = `<span class="status-pill approved"><span class="dot"></span>Approved</span>`;
+    if(b.status === 'returned' || b.status === 'returned_for_edits') statusBadge = `<span class="status-pill returned"><span class="dot"></span>Needs Revision</span>`;
+
+    const typeColor = b.type === 'MCQ' ? 'var(--blue)' : 'var(--amber)';
+
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(b.title)}</strong><br><span style="font-size:12px;color:var(--muted);">${escapeHtml(b.dept)}</span></td>
+      <td>${b.count}</td>
+      <td><span style="font-size:12px;font-weight:600;color:${typeColor};">${escapeHtml(b.type)}</span></td>
+      <td>${escapeHtml(b.submittedDate)}</td>
+      <td>${statusBadge}</td>
+      <td style="text-align:right;">
+        <button class="btn-primary" style="padding:6px 12px;font-size:12px;" onclick="openReviewModal(${b.id})">Review Batch</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const all = getBatches();
+  document.getElementById('statPending').textContent = all.filter(b => b.status === 'pending').length;
+  document.getElementById('statApproved').textContent = all.filter(b => b.status === 'approved').length;
+  document.getElementById('statReturned').textContent = all.filter(b => b.status === 'returned' || b.status === 'returned_for_edits').length;
+}
+
+function filterByStatus(val){
+  document.getElementById('statusFilter').value = val;
+  renderQueue();
+}
+
+function openReviewModal(batchId){
+  currentReviewBatchId = batchId;
+  const batch = getBatches().find(b => b.id === batchId);
+  if(!batch) return;
+
+  document.getElementById('mBatchTitle').textContent = `Review: ${batch.title}`;
+  document.getElementById('mBatchSub').textContent = `Department: ${batch.dept} | Total Questions: ${batch.count} | Type: ${batch.type}`;
+  document.getElementById('mNotes').value = "";
+
+  const container = document.getElementById('mQuestionsContainer');
+  container.innerHTML = "";
+
+  const qList = batch.questions && batch.questions.length ? batch.questions : [
+    { id: 1, type: "mcq", question: "Sample question from batch for moderation audit.", options: {A:"Option A", B:"Option B", C:"Option C", D:"Option D"}, correct_answer: "A", btl: "BTL2", marks: 2 }
+  ];
+
+  qList.forEach((q, idx) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'q-review-card';
+    qDiv.id = `qCard_${q.id}`;
+    
+    let optsHtml = '';
+    if(q.type === 'mcq' && q.options){
+      optsHtml = `<div class="q-opts">
+        <div class="q-opt ${q.correct_answer === 'A' ? 'correct' : ''}">A) ${escapeHtml(q.options.A)}</div>
+        <div class="q-opt ${q.correct_answer === 'B' ? 'correct' : ''}">B) ${escapeHtml(q.options.B)}</div>
+        <div class="q-opt ${q.correct_answer === 'C' ? 'correct' : ''}">C) ${escapeHtml(q.options.C)}</div>
+        <div class="q-opt ${q.correct_answer === 'D' ? 'correct' : ''}">D) ${escapeHtml(q.options.D)}</div>
+      </div>`;
+    }
+
+    qDiv.innerHTML = `
+      <div class="q-review-header">
+        <span class="q-meta">Question ${idx+1} · Marks: ${q.marks || 2} · BTL: ${q.btl || 'BTL2'}</span>
+        <div class="q-actions">
+          <button class="icon-btn" title="Edit Question" onclick="editQuestionInline(${q.id})">✎</button>
+          <button class="icon-btn danger" title="Delete Question" onclick="deleteQuestionInline(${q.id})">🗑</button>
+        </div>
+      </div>
+      <div class="q-body" id="qBody_${q.id}">${escapeHtml(q.question)}</div>
+      ${optsHtml}
+    `;
+    container.appendChild(qDiv);
+  });
+
+  document.getElementById('reviewModal').classList.add('open');
+}
+
+function closeReviewModal(){
+  document.getElementById('reviewModal').classList.remove('open');
+}
+
+function editQuestionInline(qId){
+  const newBody = prompt("Edit Question Text:", document.getElementById(`qBody_${qId}`).textContent);
+  if(newBody !== null && newBody.trim()){
+    document.getElementById(`qBody_${qId}`).textContent = newBody.trim();
+    showToast("Question updated in draft review.");
+  }
+}
+
+function deleteQuestionInline(qId){
+  if(confirm("Remove this question from the batch?")){
+    const card = document.getElementById(`qCard_${qId}`);
+    if(card) card.remove();
+    showToast("Question removed from batch.");
+  }
+}
+
+function performReviewAction(newStatus){
+  if(!currentReviewBatchId) return;
+  const notes = document.getElementById('mNotes').value.trim();
+
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+
+  const idx = stored.findIndex(b => b.id === currentReviewBatchId);
+  if(idx !== -1){
+    stored[idx].status = newStatus;
+    stored[idx].moderatorNotes = notes;
+    localStorage.setItem('submittedBatches', JSON.stringify(stored));
+  } else {
+    // Modify default batch mock copy
+    const target = DEFAULT_BATCHES.find(b => b.id === currentReviewBatchId);
+    if(target){
+      target.status = newStatus;
+      target.moderatorNotes = notes;
+      stored.unshift(target);
+      localStorage.setItem('submittedBatches', JSON.stringify(stored));
+    }
+  }
+
+  // Audit Log
+  let logs = [];
+  try { logs = JSON.parse(localStorage.getItem('auditLogs') || '[]'); } catch(e){}
+  logs.unshift({
+    log_id: Date.now(),
+    user_id: 3,
+    action: `Moderator ${newStatus === 'approved' ? 'APPROVED' : 'RETURNED'} batch #${currentReviewBatchId}. Notes: ${notes || 'None'}`,
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  });
+  localStorage.setItem('auditLogs', JSON.stringify(logs));
+
+  showToast(`Question bank has been ${newStatus === 'approved' ? 'Approved' : 'Returned for Edits'}.`);
+  closeReviewModal();
+  renderQueue();
+}
+
+function logout(){
+  localStorage.removeItem('currentUser');
+  window.location.href = '01-login-register.html';
+}
+
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const userStr = localStorage.getItem('currentUser');
+  if(!userStr){
+    window.location.href = '01-login-register.html';
+    return;
+  }
+  try {
+    const user = JSON.parse(userStr);
+    document.getElementById('welcomeHeading').textContent = `Moderation Queue — ${user.name || 'Dr. S. Kulkarni'}`;
+    const initials = (user.name || 'Moderator').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('userAvatar').textContent = initials || 'SK';
+
+    if(user.role === 'Administrator'){
+      document.getElementById('adminLinkContainer').innerHTML = `
+        <a href="admin.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Admin Panel</a>
+      `;
+      document.getElementById('topbarAdminBtn').innerHTML = `
+        <a href="admin.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;background:var(--blue);text-decoration:none;">Admin Panel</a>
+      `;
+    }
+  } catch(e){}
+
+  renderQueue();
+});
+</script>
+
+</body>
+</html>
