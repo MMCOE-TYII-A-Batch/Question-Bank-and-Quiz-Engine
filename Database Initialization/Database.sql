@@ -6,18 +6,18 @@ password_hash text not null default 'Not Initialized',
 reset_token varchar(255),
 reset_token_expiry timestamp default now(),
 last_login timestamp default now(),
-status varchar(50) default 'Unverifed',
+status varchar(50) default 'Unverifed'
 );
 
 create table if not exists role(
-role_id serial primary key ,
-role_name varchar(100) not null
+role_id serial primary key,
+role_name varchar(100) not null   -- "Roles:Teacher,Student,Admin"
 );
 
 create table if not exists user_role(
-user_id int,
-role_id int,
-primary key (user_id, role_id),
+user_id int not null,
+role_id int not null, 
+primary key (user_id,role_id),
 foreign key (user_id) references "user"(user_id),
 foreign key (role_id) references role(role_id)
 );
@@ -90,7 +90,7 @@ foreign key (subject_id) references subject(subject_id),
 foreign key (unit_id) references unit(unit_id),
 foreign key (topic_id) references topic(topic_id),
 foreign key (author_id) references "user"(user_id),
-foreign key (reviewer_id) references "user"(user_id),
+foreign key (reviewer_id) references "user"(user_id)
 );
 
 create table if not exists question_option(
