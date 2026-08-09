@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Question Bank &amp; Quiz Engine — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon:#7A0C0C;
+    --maroon-hover:#A31313;
+    --maroon-dark:#4E0808;
+    --gold:#D4AF37;
+    --bg:#FBF8F5;
+    --ink:#2B2320;
+    --tint:#FDEEEE;
+    --line:#E7DFDA;
+    --muted:#8A7F78;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- LEFT PANEL ---------- */
+  .brand-panel{
+    flex:1 1 46%;
+    min-height:100vh;
+    background:linear-gradient(160deg, var(--maroon-dark) 0%, var(--maroon) 55%, var(--maroon-hover) 100%);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:56px 56px 40px;
+    position:relative;
+    overflow:hidden;
+  }
+  .arch-pattern{
+    position:absolute;
+    inset:0;
+    opacity:.10;
+    background-image:
+      repeating-linear-gradient(90deg, transparent 0 78px, rgba(255,255,255,.9) 78px 80px);
+    -webkit-mask-image: radial-gradient(circle at 50% 120%, black 0%, transparent 70%);
+    mask-image: radial-gradient(circle at 50% 120%, black 0%, transparent 70%);
+  }
+  .arch-row{
+    position:absolute;
+    bottom:-40px; left:0; right:0;
+    display:flex;
+    justify-content:space-around;
+    opacity:.16;
+  }
+  .arch{
+    width:70px;height:110px;
+    border:3px solid #fff;
+    border-bottom:none;
+    border-radius:70px 70px 0 0;
+  }
+  .brand-top{position:relative;z-index:2;}
+  .crest-badge{
+    width:52px;height:52px;
+    border:2px solid var(--gold);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;
+    font-weight:800;
+    font-size:22px;
+    color:var(--gold);
+    margin-bottom:28px;
+    overflow:hidden;
+    background:#fff;
+    flex-shrink:0;
+  }
+  .crest-badge img{width:100%;height:100%;object-fit:contain;padding:2px;}
+  .brand-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:14px;
+  }
+  .brand-title{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:38px;
+    line-height:1.18;
+    max-width:420px;
+  }
+  .brand-sub{
+    margin-top:18px;
+    font-size:15.5px;
+    line-height:1.6;
+    color:rgba(255,255,255,.78);
+    max-width:380px;
+  }
+  .brand-bottom{position:relative;z-index:2;}
+  .tagline{
+    font-size:17px;
+    color:rgba(255,255,255,.9);
+    margin-bottom:6px;
+  }
+  .college-name{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.06em;
+    color:rgba(255,255,255,.55);
+  }
+
+  /* ---------- RIGHT PANEL ---------- */
+  .form-panel{
+    flex:1 1 54%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 32px;
+  }
+  .form-card{
+    width:100%;
+    max-width:420px;
+  }
+  .tabs{
+    display:flex;
+    border-bottom:1px solid var(--line);
+    margin-bottom:32px;
+  }
+  .tab{
+    flex:1;
+    text-align:center;
+    padding:12px 0 14px;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--muted);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+    background:none;
+    border-top:none;border-left:none;border-right:none;
+    font-family:'Inter',sans-serif;
+  }
+  .tab.active{
+    color:var(--maroon);
+    border-bottom-color:var(--maroon);
+  }
+  .panel-title{
+    font-family:'Playfair Display',serif;
+    font-size:26px;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .panel-desc{
+    font-size:14px;
+    color:var(--muted);
+    margin-bottom:28px;
+  }
+  .field{
+    margin-bottom:18px;
+  }
+  .field label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
+    color:var(--ink);
+  }
+  .field input, .field select{
+    width:100%;
+    padding:11px 13px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:14.5px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:#fff;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .field input:focus, .field select:focus{
+    outline:none;
+    border-color:var(--maroon);
+    box-shadow:0 0 0 3px rgba(122,12,12,.10);
+  }
+  .row-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  .field-hint{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:5px;
+  }
+  .field-error{
+    font-size:12px;
+    color:var(--maroon-hover);
+    margin-top:5px;
+    display:none;
+  }
+  .field.invalid input{
+    border-color:#B23A3A;
+  }
+  .field.invalid .field-error{display:block;}
+
+  .row-between{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:24px;
+    font-size:13.5px;
+  }
+  .remember{
+    display:flex;align-items:center;gap:7px;
+    color:var(--ink);
+  }
+  .remember input{width:15px;height:15px;accent-color:var(--maroon);}
+  .link{
+    color:var(--maroon);
+    text-decoration:none;
+    font-weight:600;
+  }
+  .link:hover{text-decoration:underline;}
+
+  .btn-primary{
+    width:100%;
+    padding:13px;
+    background:var(--maroon);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+    font-weight:700;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    transition:background .15s ease, transform .1s ease;
+    letter-spacing:.01em;
+  }
+  .btn-primary:hover{background:var(--maroon-hover);}
+  .btn-primary:active{transform:scale(.99);}
+  .btn-primary:focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:2px;
+  }
+
+  .status-msg{
+    margin-top:16px;
+    padding:11px 13px;
+    border-radius:8px;
+    font-size:13.5px;
+    display:none;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .status-msg.success{
+    display:block;
+    background:#EAF4EA;
+    color:#2E6B2E;
+    border:1px solid #C7E2C7;
+  }
+  .status-msg.error{
+    display:block;
+    background:var(--tint);
+    color:var(--maroon-hover);
+    border:1px solid #F1CACA;
+  }
+
+  .role-note{
+    margin-top:26px;
+    padding:12px 14px;
+    background:var(--tint);
+    border-left:3px solid var(--gold);
+    border-radius:6px;
+    font-size:12.5px;
+    color:#6B2A2A;
+    line-height:1.5;
+  }
+
+  .form-view{display:none;}
+  .form-view.active{display:block;}
+
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:1px;
+  }
+
+  @media (max-width:880px){
+    body{flex-direction:column;}
+    .brand-panel{min-height:280px;padding:36px 28px;}
+    .brand-title{font-size:28px;}
+    .form-panel{padding:32px 24px 56px;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- LEFT BRAND PANEL -->
+  <div class="brand-panel">
+    <div class="arch-pattern"></div>
+    <div class="arch-row">
+      <div class="arch"></div><div class="arch"></div><div class="arch"></div>
+      <div class="arch"></div><div class="arch"></div>
+    </div>
+
+    <div class="brand-top">
+      <div class="crest-badge"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSfT1XAvhv3gAaos8PZHtuQJynN--4LbPCL2KYoisw4w&s" alt="MMCOE Logo"></div>
+      <div class="brand-eyebrow">MMCOE · Karvenagar, Pune</div>
+      <div class="brand-title">Question Bank &amp;<br>Quiz Engine</div>
+      <p class="brand-sub">A centralized repository for question authoring, moderation, and timed assessment delivery — built for faculty and students.</p>
+    </div>
+
+    <div class="brand-bottom">
+      <div class="tagline">'येथे बहुतांचे हित।'</div>
+      <div class="college-name">MARATHWADA MITRA MANDAL'S COLLEGE OF ENGINEERING</div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM PANEL -->
+  <div class="form-panel">
+    <div class="form-card">
+
+      <!-- LOGIN VIEW -->
+      <div class="form-view active" id="loginView">
+        <div class="panel-title">Sign In</div>
+        <div class="panel-desc">Sign in with your institute credentials to continue.</div>
+
+        <form id="loginForm" novalidate>
+          <div class="field" id="loginEmailField">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" placeholder="you@mmcoe.edu.in" autocomplete="email">
+            <div class="field-error">Enter a valid email address.</div>
+          </div>
+
+          <div class="field" id="loginPassField">
+            <label for="loginPass">Password</label>
+            <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password">
+            <div class="field-error">Password is required.</div>
+          </div>
+
+          <div class="row-between">
+            <label class="remember">
+              <input type="checkbox" id="rememberMe">
+              Remember me
+            </label>
+            <a href="#" class="link" onclick="showForgot(event)">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-primary">Sign In</button>
+          <div class="status-msg" id="loginStatus"></div>
+        </form>
+
+        <div style="margin-top:16px;padding:12px 14px;background:#FAF6F3;border:1px dashed var(--line);border-radius:8px;font-size:12.5px;color:var(--ink);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-weight:700;color:var(--maroon);font-family:'IBM Plex Mono',monospace;font-size:12px;">System Admin Demo Login</span>
+            <button type="button" onclick="quickFill('admin@mmcoe.edu.in', 'admin123')" style="background:var(--maroon);color:#fff;border:none;padding:4px 10px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Auto Fill</button>
+          </div>
+          <div>Email: <code style="font-family:'IBM Plex Mono',monospace;color:var(--maroon-hover);font-weight:600;">admin@mmcoe.edu.in</code></div>
+          <div>Password: <code style="font-family:'IBM Plex Mono',monospace;font-weight:600;">admin123</code></div>
+        </div>
+
+        <div class="role-note" style="margin-top:12px;">
+          Only administrators can create user accounts. Please contact your system administrator if you require an account.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  const DEFAULT_USERS = [
+    { id: 1, name: "System Admin", email: "admin@mmcoe.edu.in", password: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active", lastActive: "Just now" }
+  ];
+
+  function getUsersList(){
+    const stored = localStorage.getItem('usersList');
+    if(!stored){
+      localStorage.setItem('usersList', JSON.stringify(DEFAULT_USERS));
+      return DEFAULT_USERS;
+    }
+    try {
+      const parsed = JSON.parse(stored);
+      if(!parsed.length){
+        localStorage.setItem('usersList', JSON.stringify(DEFAULT_USERS));
+        return DEFAULT_USERS;
+      }
+      return parsed;
+    } catch(e) {
+      localStorage.setItem('usersList', JSON.stringify(DEFAULT_USERS));
+      return DEFAULT_USERS;
+    }
+  }
+
+  function quickFill(email, pass){
+    document.getElementById('loginEmail').value = email;
+    document.getElementById('loginPass').value = pass;
+  }
+
+  function showForgot(e){
+    e.preventDefault();
+    alert("Password reset flow — please contact system administrator.");
+  }
+
+  function setInvalid(fieldId, isInvalid){
+    document.getElementById(fieldId).classList.toggle('invalid', isInvalid);
+  }
+
+  // ---------- LOGIN ----------
+  document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    const statusBox = document.getElementById('loginStatus');
+    statusBox.className = 'status-msg';
+    statusBox.textContent = '';
+
+    let valid = true;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setInvalid('loginEmailField', !emailOk);
+    if(!emailOk) valid = false;
+
+    setInvalid('loginPassField', pass.length === 0);
+    if(pass.length === 0) valid = false;
+
+    if(!valid) return;
+
+    const users = getUsersList();
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === pass);
+    if(!user){
+      statusBox.className = 'status-msg error';
+      statusBox.textContent = 'Invalid email or password. Please contact your system administrator if you do not have an account.';
+      return;
+    }
+    if(user.status === 'pending'){
+      statusBox.className = 'status-msg error';
+      statusBox.textContent = 'Account pending administrator approval. Please check back later.';
+      return;
+    }
+    if(user.status === 'inactive'){
+      statusBox.className = 'status-msg error';
+      statusBox.textContent = 'This account has been deactivated. Please contact an administrator.';
+      return;
+    }
+
+    statusBox.className = 'status-msg success';
+    statusBox.textContent = `Welcome, ${user.name}! Redirecting to dashboard...`;
+
+    user.lastActive = "Just now";
+    localStorage.setItem('usersList', JSON.stringify(users));
+    
+    // Store user session in localStorage
+    const sessionUser = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      dept: user.dept || 'Computer Engineering'
+    };
+    localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+
+    setTimeout(() => {
+      if (user.role === 'Administrator') {
+        window.location.href = 'admin.html';
+      } else if (user.role === 'Moderator') {
+        window.location.href = 'moderator.html';
+      } else if (user.role === 'Quiz Taker') {
+        window.location.href = 'student.html';
+      } else {
+        window.location.href = 'author.html';
+      }
+    }, 600);
+  });
+
+  // Handle page load and logout parameter
+  window.addEventListener('DOMContentLoaded', () => {
+    getUsersList();
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('logout') === 'true') {
+      localStorage.removeItem('currentUser');
+      sessionStorage.clear();
+      const statusBox = document.getElementById('loginStatus');
+      if (statusBox) {
+        statusBox.className = 'status-msg success';
+        statusBox.textContent = 'You have been signed out successfully.';
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
