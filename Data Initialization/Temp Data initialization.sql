@@ -28,7 +28,8 @@ values
 ('Balraj Rasal','balrajrasal2024.comp@mmcoe.edu.in'),
 ('Anula Borse','anulaborse2024.comp@mmcoe.edu.in'),
 ('Gunaji Mohite','gunajimohite2024.comp@mmcoe.edu.in'),
-('Altamash Mujawar','altamashmujawar2024.comp@mmcoe.edu.in');
+('Altamash Mujawar','altamashmujawar2024.comp@mmcoe.edu.in')
+on conflict (email) do nothing;
 
 select * from "user";
 
@@ -40,14 +41,40 @@ values (1,'Teacher'),
 select * from role;
 
 INSERT INTO user_role (user_id, role_id)
-VALUES
-(1, 2),(2, 2),(3, 2),
-(4, 2), (5, 2),(6, 2),
-(7, 2), (8, 2), (9, 2), (10, 2),
-(11, 2), (12, 2), (13, 2), (14, 2), (15, 2),
-(16, 2), (17, 2), (18, 2), (19, 2), (20, 2),
-(21, 2), (22, 2), (23, 2), (24, 2), (25, 2),
-(26, 2), (27, 2), (28, 2), (29, 2);
+SELECT user_id, 2
+FROM "user"
+WHERE username IN (
+    'Tushar Borate',
+    'Sahil Veer',
+    'Vishwesh Bhilare',
+    'Abhijeet Bedse',
+    'Pravin Ambhore',
+    'Avishkar Patil',
+    'Neel Kadam',
+    'Kshitij Bhate',
+    'Mahesh Gaikwad',
+    'Pooja Umare',
+    'Ayush Chandekar',
+    'Ritik Mirase',
+    'Vedantika Ranaware',
+    'Rugved Deshwant',
+    'Swarada Deshpande',
+    'Jahnavi Dhanapune',
+    'Vaidehi Shinde',
+    'Yugant Varekar',
+    'Sajiree Damle',
+    'Yash More',
+    'Gayatri Dethe',
+    'Srushti Shewale',
+    'Shravani Pataskar',
+    'Jidnyasa Patil',
+    'Ashutosh Kulkarni',
+    'Balraj Rasal',
+    'Anula Borse',
+    'Gunaji Mohite',
+    'Altamash Mujawar'
+)
+ON CONFLICT (user_id, role_id) DO NOTHING;
 
 INSERT INTO "user" (username, email)
 VALUES
@@ -115,3 +142,5 @@ WHERE username IN (
     'Mr. Mahesh A. Kandekar'
 )
 ON CONFLICT (user_id, role_id) DO NOTHING;
+
+select * from user_role; 

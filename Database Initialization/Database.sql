@@ -1,3 +1,4 @@
+
 create table if not exists "user"(
 user_id serial primary key ,
 username varchar(100) not null,
