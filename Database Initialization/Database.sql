@@ -6,7 +6,7 @@ password_hash text not null default 'Not Initialized',
 reset_token varchar(255),
 reset_token_expiry timestamp default now(),
 last_login timestamp default now(),
-status varchar(50)
+status varchar(50) default 'Unverifed',
 );
 
 create table if not exists role(
