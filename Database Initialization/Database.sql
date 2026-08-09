@@ -2,7 +2,7 @@ create table if not exists "user"(
 user_id serial primary key ,
 username varchar(100) not null,
 email varchar(150) not null unique,
-password_hash text not null,
+password_hash text not null default 'Not Initialized',
 reset_token varchar(255),
 reset_token_expiry timestamp default now(),
 last_login timestamp default now(),
