@@ -731,7 +731,7 @@ let nextLogId = 101;
 function checkAuth(){
   const userStr = localStorage.getItem('currentUser');
   if(!userStr){
-    window.location.href = '01-login-register.html';
+    window.location.href = 'login.html';
     return null;
   }
   try {
@@ -750,7 +750,7 @@ function checkAuth(){
     return user;
   } catch(e) {
     localStorage.removeItem('currentUser');
-    window.location.href = '01-login-register.html';
+    window.location.href = 'login.html';
     return null;
   }
 }
@@ -758,7 +758,7 @@ function checkAuth(){
 function logout(){
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
-  window.location.href = '01-login-register.html?logout=true';
+  window.location.href = 'login.html?logout=true';
 }
 
 function loadState(){
