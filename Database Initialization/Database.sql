@@ -72,6 +72,27 @@ foreign key (author_id) references "user"(user_id),
 foreign key (mod_id) references "user"(user_id)
 );
 
+create table if not exists question_bank(
+question_bank_id serial primary key,
+-- question_bank_name varchar(255),
+question_bank_type varchar(255),
+status varchar(255) default 'DRAFT',
+acedemic_year varchar(50),
+create_time timestamp default now(),
+last_update timestamp default now(),
+subject_id int not null,
+unit_id int not null,
+topic_id int not null,
+author_id int not null,
+reviewer_id int,
+question_id int not null,
+foreign key (subject_id) references subject(subject_id),
+foreign key (unit_id) references unit(unit_id),
+foreign key (topic_id) references topic(topic_id),
+foreign key (author_id) references "user"(user_id),
+foreign key (reviewer_id) references "user"(user_id),
+);
+
 create table if not exists question_option(
 option_id serial primary key ,
 question_id int not null,
@@ -130,7 +151,7 @@ text_response text,
 marks_awarded float,
 is_auto_graded boolean default false,
 evaluator_id int,
-create_time timestamp default now(), 
+create_time timestamp default now(),
 last_update timestamp default now(),
 foreign key (attempt_id) references quiz_attempt(attempt_id),
 foreign key (question_id) references question(question_id),
