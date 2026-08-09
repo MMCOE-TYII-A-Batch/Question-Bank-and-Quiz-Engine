@@ -35,7 +35,7 @@ create-question-bank.html	Question-bank creation and submission
 moderator.html	Moderator / Reviewer dashboard
 student.html	Student / Quiz Taker interface
 Main Frontend Features
-🔐 Login & Role-Based UI
+Login & Role-Based UI
 
 The frontend provides login and role-based navigation for:
 
@@ -46,7 +46,7 @@ Student / Quiz Taker
 
 Different roles are presented with their respective dashboards and available actions.
 
-👨‍💼 Administrator Dashboard
+Administrator Dashboard
 
 The administrator interface includes:
 
@@ -57,7 +57,7 @@ Account activation/deactivation
 User filtering
 User activity information
 Audit log interface
-✍️ Question Authoring
+Question Authoring
 
 Authors can create question banks through a staged workflow.
 
@@ -83,7 +83,7 @@ Option B
 Option C
 Option D
 Correct answer
-📄 CSV Import
+CSV Import
 
 The question-bank interface supports importing questions from CSV files.
 
@@ -104,13 +104,13 @@ Missing-field detection
 MCQ correct-answer validation
 Error messages for invalid rows
 Preview of imported questions
-📝 Question Batch Management
+Question Batch Management
 
 Manually entered and CSV-imported questions are displayed together in a staged question-bank table.
 
 Authors can review the questions before submitting the complete batch for moderation.
 
-🔎 Moderator Interface
+Moderator Interface
 
 The moderator page provides the frontend interface for reviewing submitted question banks.
 
@@ -122,7 +122,7 @@ Checking question information
 Approving question banks
 Returning question banks for edits
 Adding moderator feedback
-🎓 Student Interface
+Student Interface
 
 The student page provides the frontend interface for the quiz-taker experience, including the foundation for:
 
