@@ -49,7 +49,7 @@ WHERE username IN (
     'Vishwesh Bhilare',
     'Abhijeet Bedse',
     'Pravin Ambhore',
-    'Avishkar Patil',
+    'Avishkar Patil', 
     'Neel Kadam',
     'Kshitij Bhate',
     'Mahesh Gaikwad',
