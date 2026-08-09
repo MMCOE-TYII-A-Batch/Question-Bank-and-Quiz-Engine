@@ -11,7 +11,7 @@ status varchar(50) default 'Unverifed'
 
 create table if not exists role(
 role_id serial primary key,
-role_name varchar(100) not null   -- "Roles:Teacher,Student,Admin"
+role_name varchar(100) not null unique   -- "Roles:Teacher,Student,Admin"
 );
 
 create table if not exists user_role(
