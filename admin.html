@@ -450,22 +450,14 @@ outline-offset:1px;
 <div class="nav-group">
 <div class="nav-label">Manage</div>
 <div class="nav-item active" id="navUsers" onclick="switchView('users')"><span class="dot"></span>Users &amp; Roles</div>
-<a href="author.html" class="nav-item"><span class="dot"></span>Question Bank</a>
-<a href="author.html" class="nav-item"><span class="dot"></span>Quizzes</a>
-<a href="author.html" class="nav-item"><span class="dot"></span>Subjects &amp; Topics</a>
 </div>
 
 <div class="nav-group">
-<div class="nav-label">Insights</div>
-<a href="#" class="nav-item" onclick="switchView('audit');return false;"><span class="dot"></span>Analytics &amp; Reports</a>
+<div class="nav-label">System Activity</div>
 <div class="nav-item" id="navAudit" onclick="switchView('audit')"><span class="dot"></span>Audit Log</div>
 </div>
 
 <div class="nav-group" style="margin-top:auto;">
-<div class="nav-label" style="color:var(--gold);">Inspect Dashboards</div>
-<a href="author.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Author Workspace</a>
-<a href="moderator.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Moderator Workspace</a>
-<a href="student.html" class="nav-item"><span class="dot" style="background:var(--gold);"></span>Student Portal</a>
 <div class="nav-item" onclick="logout()"><span class="dot" style="background:#fff;"></span>Sign Out</div>
 </div>
 
@@ -479,12 +471,6 @@ outline-offset:1px;
 <div class="page-sub" id="pageSub">Create, edit, and manage access across the platform.</div>
 </div>
 <div class="topbar-right">
-<select onchange="if(this.value) window.location.href=this.value;" style="padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:12.5px;background:#fff;font-weight:600;">
-<option value="">Inspect Role View...</option>
-<option value="author.html">Author Workspace</option>
-<option value="moderator.html">Moderator Workspace</option>
-<option value="student.html">Student Portal</option>
-</select>
 <div class="avatar" id="adminAvatar" title="Signed in as Admin">NA</div>
 <button onclick="logout()" style="background:none;border:none;color:var(--maroon-hover);font-size:13px;font-weight:600;cursor:pointer;">Sign Out</button>
 </div>
@@ -750,8 +736,14 @@ function checkAuth(){
   }
   try {
     const user = JSON.parse(userStr);
-    if(user.role !== 'Administrator' && user.role !== 'Moderator'){
-      window.location.href = 'author.html';
+    if(user.role !== 'Administrator'){
+      if(user.role === 'Moderator'){
+        window.location.href = 'moderator.html';
+      } else if(user.role === 'Quiz Taker'){
+        window.location.href = 'student.html';
+      } else {
+        window.location.href = 'author.html';
+      }
       return null;
     }
     document.getElementById('adminAvatar').textContent = initials(user.name || 'Admin');
