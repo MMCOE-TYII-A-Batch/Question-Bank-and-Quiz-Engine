@@ -212,4 +212,4 @@ http://localhost:8080
 
 ## Summary
 
-The Integration Layer acts as the communication bridge between the Frontend, Backend Logic Layer, and PostgreSQL Database. By exposing REST APIs and routing client requests, it ensures reliable and efficient interaction between all components of the Question Bank & Quiz Generator.
+The Integration Layer serves as a communication link between the Frontend, Backend Logic Layer, and PostgreSQL Database. Through REST APIs and proper request routing, it enables smooth, reliable and efficient communication among all components of the Question Bank & Quiz Generator system.
