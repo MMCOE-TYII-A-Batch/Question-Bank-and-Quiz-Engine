@@ -12,6 +12,7 @@ All source code is organized into standard, modular Java packages under `src/`:
 
 ```
 src/
+├── admin/                  # Admin logic for student entry,teacher entry and updates.
 ├── model/                  # Data structures (QuestionBank, Question, QuestionOption, Quiz, QuizAttempt, etc.)
 ├── service/                # Business logic rules, validations, quiz paper generator, & auto-grading
 ├── dao/                    # Database queries (SQL PreparedStatements for PostgreSQL)
@@ -19,7 +20,6 @@ src/
 ├── util/                   # Connection helpers (DBConnection.java) & JSON API wrappers (ApiResponse.java)
 ├── exception/              # ValidationException handling
 ├── constant/               # Status codes & PostgreSQL Database Schema (Database.sql)
-└── AppServer.java          # Runnable REST API Server (Port 8080, CORS enabled)
 ```
 
 ---
