@@ -201,7 +201,7 @@ border-top:4px solid var(--maroon);
 </div>
 <div class="topbar-right">
 <div id="topbarAdminBtn"></div>
-<div class="avatar" id="userAvatar">SU</div>
+<div class="avatar" id="userAvatar" onclick="openProfileModal()" style="cursor:pointer;" title="My Profile">SU</div>
 <button onclick="logout()" style="background:none;border:none;color:var(--maroon-hover);font-size:13px;font-weight:600;cursor:pointer;">Sign Out</button>
 </div>
 </div>
@@ -382,17 +382,31 @@ let currentQIdx = 0;
 let userAnswers = {};
 let timerInterval = null;
 let secondsRemaining = 900;
-const DEFAULT_ASSIGNED = [];
-const DEFAULT_COMPLETED = [];
 
 function filterStudentQuizzes(){
   loadStudentDashboard();
 }
 
-function loadStudentDashboard(){
+let fetchedStudentQuizzes = [];
+
+async function loadStudentDashboard(){
   let assigned = [];
   try { assigned = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
-  let allAssigned = [...assigned, ...DEFAULT_ASSIGNED];
+
+  try {
+    let res = await fetch('/api/quizzes');
+    if(!res.ok) res = await fetch('http://localhost:8080/api/quizzes');
+    if(res.ok){
+      fetchedStudentQuizzes = await res.json();
+    }
+  } catch(e){}
+
+  const map = new Map();
+  [...assigned, ...fetchedStudentQuizzes].forEach(q => {
+    if(q && q.id) map.set(String(q.id), q);
+  });
+
+  let allAssigned = Array.from(map.values());
 
   const searchVal = (document.getElementById('quizSearchInput')?.value || '').toLowerCase();
   const deptVal = (document.getElementById('quizDeptFilter')?.value || '').toLowerCase();
@@ -405,62 +419,95 @@ function loadStudentDashboard(){
     });
   }
 
+  const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const myDiv = (me.dept || me.division || 'TY-1').trim().toUpperCase();
+
+  // Filter by student class / division
+  allAssigned = allAssigned.filter(q => {
+    if(q.targetClass && q.targetClass !== 'All'){
+      const tc = q.targetClass.trim().toUpperCase();
+      if(!myDiv.includes(tc) && !tc.includes(myDiv)) return false;
+    }
+    return true;
+  });
+
+  let completed = [];
+  try { completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]'); } catch(e){}
+
   const aBody = document.getElementById('assignedQuizzesBody');
   aBody.innerHTML = "";
 
   if(!allAssigned.length){
-    aBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted);">${(searchVal||deptVal)?'No assigned quizzes match your search filters.':'No active quizzes assigned yet. Check back when an author assigns a quiz!'}</td></tr>`;
+    aBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted);">${(searchVal||deptVal)?'No assigned quizzes match your search filters.':'No active quizzes assigned for your class division yet.'}</td></tr>`;
   } else {
     allAssigned.forEach(q => {
       const tr = document.createElement('tr');
+      const attemptsDone = completed.filter(c => String(c.quizId || c.id) === String(q.id) && (String(c.studentId || me.id) === String(me.id) || String(c.studentName || me.name) === String(me.name))).length;
+      const maxAttempts = q.maxAttempts || 1;
+      const now = new Date();
+      const startDateObj = q.startDateTime ? new Date(q.startDateTime) : null;
+      const dueDateObj = q.dueDate ? (q.dueDate.includes('T') ? new Date(q.dueDate) : new Date(`${q.dueDate}T23:59:59`)) : null;
+
+      const isStartFuture = startDateObj && now < startDateObj;
+      const isExpired = dueDateObj && now > dueDateObj;
+      const isMaxReached = attemptsDone >= maxAttempts;
+
+      let actionHtml = `<button class="btn-primary" style="padding:6px 14px;font-size:12.5px;background:var(--green);" onclick="startQuiz('${q.id}')">Start Quiz</button>`;
+      
+      if(isStartFuture){
+        const startStr = new Date(q.startDateTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+        actionHtml = `<span style="font-size:12px;color:var(--amber);font-weight:700;background:#fff8e6;padding:4px 10px;border-radius:6px;border:1px solid var(--amber);">Scheduled (Opens at ${startStr})</span>`;
+      } else if(isExpired){
+        actionHtml = `<span style="font-size:12px;color:var(--muted);font-weight:700;background:#f0f0f0;padding:4px 10px;border-radius:6px;border:1px solid var(--line);">Closed (Past Due)</span>`;
+      } else if(isMaxReached){
+        actionHtml = `<span style="font-size:12px;color:var(--maroon-hover);font-weight:700;background:#fdf0f0;padding:4px 10px;border-radius:6px;border:1px solid var(--maroon-hover);">Completed (${attemptsDone}/${maxAttempts})</span>`;
+      }
+
       tr.innerHTML = `
-        <td><strong>${escapeHtml(q.title)}</strong></td>
+        <td><strong>${escapeHtml(q.title)}</strong><br><span style="font-size:11px;color:var(--muted);">Class: ${escapeHtml(q.targetClass || 'All')} · Max Attempts: ${maxAttempts}</span></td>
         <td>${escapeHtml(q.dept || 'Computer Engineering')}</td>
         <td>${q.count || (q.questions ? q.questions.length : 5)}</td>
         <td>${q.duration || 15} mins</td>
-        <td>${escapeHtml(q.dueDate || '2026-08-20')}</td>
-        <td style="text-align:right;">
-          <button class="btn-primary" style="padding:6px 14px;font-size:12.5px;background:var(--green);" onclick="startQuiz(${q.id})">Start Quiz</button>
-        </td>
+        <td>${escapeHtml(q.dueDate || 'No Due Date')}</td>
+        <td style="text-align:right;">${actionHtml}</td>
       `;
       aBody.appendChild(tr);
     });
   }
 
-  let completed = [];
-  try { completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]'); } catch(e){}
-  const allCompleted = [...completed, ...DEFAULT_COMPLETED];
+  // Remove dummy static cache — filter completed history for logged in student
+  const studentCompleted = completed.filter(c => !c.studentId || String(c.studentId) === String(me.id) || String(c.studentName) === String(me.name));
 
   const cBody = document.getElementById('completedQuizzesBody');
   cBody.innerHTML = "";
 
-  if(!allCompleted.length){
+  if(!studentCompleted.length){
     cBody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted);">No quiz attempt history yet.</td></tr>`;
   } else {
-    allCompleted.forEach(c => {
+    studentCompleted.forEach(c => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td><strong>${escapeHtml(c.title)}</strong></td>
-        <td>${escapeHtml(c.dateTaken)}</td>
+        <td>${escapeHtml(c.dateTaken || c.date || 'Today')}</td>
         <td><strong>${escapeHtml(c.score)}</strong></td>
-        <td><span class="status-pill approved"><span class="dot"></span>${escapeHtml(c.grade)}</span></td>
-        <td><span style="font-size:12px;color:var(--muted);">${escapeHtml(c.status)}</span></td>
+        <td><span class="status-pill approved"><span class="dot"></span>${escapeHtml(c.grade || 'Pass')}</span></td>
+        <td><span style="font-size:12px;color:var(--muted);">${escapeHtml(c.status || 'Completed')}</span></td>
       `;
       cBody.appendChild(tr);
     });
   }
 
   const rawAssigned = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]');
-  document.getElementById('statAssigned').textContent = rawAssigned.length;
-  document.getElementById('statCompleted').textContent = allCompleted.length;
+  document.getElementById('statAssigned').textContent = rawAssigned.length || allAssigned.length;
+  document.getElementById('statCompleted').textContent = studentCompleted.length;
 
-  if(allCompleted.length){
-    const scoreSum = allCompleted.reduce((acc, c) => acc + (parseInt(c.score) || 0), 0);
-    const avgScore = Math.round(scoreSum / allCompleted.length);
+  if(studentCompleted.length){
+    const scoreSum = studentCompleted.reduce((acc, c) => acc + (parseInt(c.score) || 0), 0);
+    const avgScore = Math.round(scoreSum / studentCompleted.length);
     document.getElementById('statAvgScore').textContent = `${avgScore}%`;
 
-    const passCount = allCompleted.filter(c => (c.grade||'').toLowerCase().includes('pass') || (parseInt(c.score)||0) >= 60).length;
-    const passRate = Math.round((passCount / allCompleted.length) * 100);
+    const passCount = studentCompleted.filter(c => (c.grade||'').toLowerCase().includes('pass') || (parseInt(c.score)||0) >= 60).length;
+    const passRate = Math.round((passCount / studentCompleted.length) * 100);
     document.getElementById('statPassRate').textContent = `${passRate}%`;
   } else {
     document.getElementById('statAvgScore').textContent = `0%`;
@@ -471,8 +518,37 @@ function loadStudentDashboard(){
 function startQuiz(quizId){
   let assigned = [];
   try { assigned = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
-  const target = [...assigned, ...DEFAULT_ASSIGNED].find(q => q.id === quizId);
-  if(!target) return;
+  
+  // Include fetchedStudentQuizzes so backend API assigned quizzes start properly
+  const allAvailable = [...assigned, ...fetchedStudentQuizzes];
+  const target = allAvailable.find(q => String(q.id) === String(quizId));
+  if(!target){ alert('Quiz not found. Please refresh the page and try again.'); return; }
+
+  const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const now = new Date();
+
+  // Prevent quiz from starting before startDateTime
+  if(target.startDateTime && now < new Date(target.startDateTime)){
+    alert(`This quiz is scheduled to open at ${new Date(target.startDateTime).toLocaleString()}. You cannot start it early.`);
+    return;
+  }
+
+  // Prevent quiz from starting after dueDate
+  const dueDateObj = target.dueDate ? (target.dueDate.includes('T') ? new Date(target.dueDate) : new Date(`${target.dueDate}T23:59:59`)) : null;
+  if(dueDateObj && now > dueDateObj){
+    alert(`This quiz expired on ${target.dueDate}. You can no longer attempt this quiz.`);
+    return;
+  }
+
+  // Task 5: Prevent student from taking quiz more than maxAttempts allowed
+  let completed = [];
+  try { completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]'); } catch(e){}
+  const attemptsDone = completed.filter(c => String(c.quizId || c.id) === String(target.id) && String(c.studentId || me.id) === String(me.id)).length;
+  const maxAttempts = target.maxAttempts || 1;
+  if(attemptsDone >= maxAttempts){
+    alert(`You have reached the maximum allowed attempts (${maxAttempts}) for this quiz.`);
+    return;
+  }
 
   activeQuizData = target;
   currentQIdx = 0;
@@ -509,10 +585,24 @@ function updateTimerDisplay(){
 
 function renderCurrentQuestion(){
   const qList = activeQuizData.questions || [];
-  const q = qList[currentQIdx] || { question: "Sample question", options: {A:"A",B:"B",C:"C",D:"D"} };
+  const q = qList[currentQIdx] || { question: "Sample question", options: {A:"Option A",B:"Option B",C:"Option C",D:"Option D"} };
 
   document.getElementById('runnerSub').textContent = `Question ${currentQIdx+1} of ${qList.length}`;
   document.getElementById('runnerQuestion').textContent = `${currentQIdx+1}. ${q.question}`;
+
+  // Show difficulty & chapter badge if available
+  let metaBadge = document.getElementById('runnerMetaBadge');
+  if(!metaBadge){
+    metaBadge = document.createElement('div');
+    metaBadge.id = 'runnerMetaBadge';
+    metaBadge.style.cssText = 'font-size:12px;color:var(--muted);margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;';
+    document.getElementById('runnerQuestion').after(metaBadge);
+  }
+  const diffColors = { Easy:'var(--green)', Medium:'var(--amber)', Hard:'var(--maroon-hover)' };
+  const diffHtml = q.difficulty ? `<span style="font-weight:700;color:${diffColors[q.difficulty]||'var(--muted)'};">${q.difficulty}</span>` : '';
+  const chaptHtml = q.chapter ? `<span style="background:#f0f0f0;padding:2px 8px;border-radius:4px;">${escapeHtml(q.chapter)}</span>` : '';
+  const subjectHtml = q.subject_name ? `<span>${escapeHtml(q.subject_name)}</span>` : '';
+  metaBadge.innerHTML = [subjectHtml, chaptHtml, diffHtml].filter(Boolean).join('<span style="color:#ddd;">·</span>');
 
   const progressPct = Math.round(((currentQIdx + 1) / (qList.length || 1)) * 100);
   const progressBar = document.getElementById('quizProgressBar');
@@ -521,20 +611,38 @@ function renderCurrentQuestion(){
   const optsContainer = document.getElementById('runnerOptions');
   optsContainer.innerHTML = "";
 
-  if(q.options){
-    ['A','B','C','D'].forEach(optKey => {
-      if(q.options[optKey]){
+  const isAutoGraded = q.type === 'mcq' || q.type === 'truefalse' || (q.options && Object.keys(q.options).length <= 4);
+
+  const isMultiple = q.is_multiple || (q.correct_answer && q.correct_answer.includes(','));
+
+  if(isAutoGraded && q.options){
+    const optKeys = q.type === 'truefalse' ? ['A','B'] : ['A','B','C','D'];
+    optKeys.forEach(optKey => {
+      if(q.options[optKey] !== undefined && q.options[optKey] !== ''){
         const label = document.createElement('label');
-        const isSelected = userAnswers[currentQIdx] === optKey;
+        let isSelected = false;
+        if(isMultiple){
+          const currentArr = Array.isArray(userAnswers[currentQIdx]) ? userAnswers[currentQIdx] : [];
+          isSelected = currentArr.includes(optKey);
+        } else {
+          isSelected = userAnswers[currentQIdx] === optKey;
+        }
         label.className = `opt-label ${isSelected ? 'selected' : ''}`;
-        const isChecked = isSelected ? 'checked' : '';
+        const inputType = isMultiple ? 'checkbox' : 'radio';
         label.innerHTML = `
-          <input type="radio" name="qOpt" value="${optKey}" ${isChecked} onchange="selectOption('${optKey}')">
-          <span><strong>${optKey}.</strong> ${escapeHtml(q.options[optKey])}</span>
+          <input type="${inputType}" name="qOpt" value="${optKey}" ${isSelected ? 'checked' : ''} onchange="selectOption('${optKey}', ${isMultiple})">
+          <span><strong>${q.options[optKey]}</strong></span>
         `;
         optsContainer.appendChild(label);
       }
     });
+  } else {
+    const ta = document.createElement('textarea');
+    ta.placeholder = 'Type your answer here...';
+    ta.style.cssText = 'width:100%;min-height:100px;padding:12px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;font-family:Inter,sans-serif;resize:vertical;margin-top:8px;';
+    ta.value = (typeof userAnswers[currentQIdx] === 'string' && userAnswers[currentQIdx] !== 'SKIPPED') ? userAnswers[currentQIdx] : '';
+    ta.onchange = () => { userAnswers[currentQIdx] = ta.value; };
+    optsContainer.appendChild(ta);
   }
 
   document.getElementById('btnPrevQ').style.display = currentQIdx > 0 ? 'inline-flex' : 'none';
@@ -542,8 +650,18 @@ function renderCurrentQuestion(){
   document.getElementById('btnSubmitQuiz').style.display = currentQIdx === qList.length - 1 ? 'inline-flex' : 'none';
 }
 
-function selectOption(optKey){
-  userAnswers[currentQIdx] = optKey;
+function selectOption(optKey, isMultiple){
+  if(isMultiple){
+    let currentArr = Array.isArray(userAnswers[currentQIdx]) ? [...userAnswers[currentQIdx]] : [];
+    if(currentArr.includes(optKey)){
+      currentArr = currentArr.filter(k => k !== optKey);
+    } else {
+      currentArr.push(optKey);
+    }
+    userAnswers[currentQIdx] = currentArr;
+  } else {
+    userAnswers[currentQIdx] = optKey;
+  }
   renderCurrentQuestion();
 }
 
@@ -570,7 +688,7 @@ function confirmEndQuiz(){
   }
 }
 
-function submitQuizAnswers(){
+async function submitQuizAnswers(){
   clearInterval(timerInterval);
   document.getElementById('quizOverlay').classList.remove('open');
 
@@ -602,22 +720,41 @@ function submitQuizAnswers(){
       statusColor = 'var(--amber)';
     } else {
       attemptedCount++;
-      if(ans === q.correct_answer){
+      const isMulti = q.is_multiple || (q.correct_answer && q.correct_answer.includes(','));
+      let isCorrect = false;
+      if(isMulti){
+        const userArr = (Array.isArray(ans) ? ans : String(ans).split(',')).map(x => x.trim().toUpperCase()).sort();
+        const expectedArr = (q.correct_answers || String(q.correct_answer).split(',')).map(x => x.trim().toUpperCase()).sort();
+        isCorrect = userArr.join(',') === expectedArr.join(',');
+      } else {
+        isCorrect = String(ans).trim().toUpperCase() === String(q.correct_answer).trim().toUpperCase();
+      }
+
+      if(isCorrect){
         correctCount++;
         earnedMarks += mark;
-        statusText = `Attempted (${ans}) — Correct ✓`;
+        statusText = `Attempted (${Array.isArray(ans) ? ans.join(',') : ans}) — Correct ✓`;
         statusColor = 'var(--green)';
       } else {
-        statusText = `Attempted (${ans}) — Incorrect ✕ (Correct: ${q.correct_answer})`;
+        statusText = `Attempted (${Array.isArray(ans) ? ans.join(',') : ans}) — Incorrect ✕ (Correct: ${q.correct_answer})`;
         statusColor = 'var(--maroon-hover)';
       }
     }
 
     const item = document.createElement('div');
-    item.style.cssText = 'padding:6px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;';
+    item.style.cssText = 'padding:10px 0;border-bottom:1px solid var(--line);';
+    const diffColor = {Easy:'var(--green)',Medium:'var(--amber)',Hard:'var(--maroon-hover)'}[q.difficulty] || 'var(--muted)';
+    const diffBadge = q.difficulty ? `<span style="font-size:11px;font-weight:700;color:${diffColor};margin-left:6px;">[${q.difficulty}]</span>` : '';
+    const correctAnswerLabel = q.options ? (q.options[q.correct_answer] || q.correct_answer) : q.correct_answer;
+    const explanationHtml = q.explanation ? `<div style="margin-top:6px;padding:8px 12px;background:#f0f8f0;border-left:3px solid var(--green);border-radius:4px;font-size:12.5px;color:var(--green);">💡 ${escapeHtml(q.explanation)}</div>` : '';
+    const referenceHtml = q.reference ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;">📖 ${escapeHtml(q.reference)}</div>` : '';
     item.innerHTML = `
-      <span><strong>Q${i+1}.</strong> ${escapeHtml(q.question)}</span>
-      <span style="font-weight:700;color:${statusColor};flex-shrink:0;">${statusText}</span>
+      <div style="display:flex;justify-content:space-between;gap:8px;">
+        <span><strong>Q${i+1}.${diffBadge}</strong> ${escapeHtml(q.question)}</span>
+        <span style="font-weight:700;color:${statusColor};flex-shrink:0;">${statusText}</span>
+      </div>
+      ${(!ans || ans === 'SKIPPED') ? `<div style="font-size:12px;color:var(--muted);margin-top:4px;">Correct answer: <strong>${escapeHtml(String(correctAnswerLabel||''))}</strong></div>` : ''}
+      ${explanationHtml}${referenceHtml}
     `;
     breakdownContainer.appendChild(item);
   });
@@ -638,17 +775,39 @@ function submitQuizAnswers(){
   document.getElementById('scoreMarks').textContent = `${earnedMarks} / ${totalMarks}`;
   document.getElementById('scoreTime').textContent = `Just now`;
 
-  // Save attempt
-  let completed = [];
-  try { completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]'); } catch(e){}
-  completed.unshift({
+  const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+  const resultRecord = {
+    id: Date.now(),
+    quizId: activeQuizData.id,
+    studentId: me.id || me.email || 'unknown',
+    studentName: me.name || 'Student',
     title: activeQuizData.title,
     dateTaken: new Date().toISOString().slice(0,10),
     score: `${percentage}%`,
+    scorePercent: percentage,
+    earnedMarks,
+    totalMarks,
+    correctCount,
+    totalQuestions: qList.length,
     grade: passed ? "Pass (A)" : "Fail",
     status: "Completed"
-  });
+  };
+
+  // Save to localStorage
+  let completed = [];
+  try { completed = JSON.parse(localStorage.getItem('completedQuizzes') || '[]'); } catch(e){}
+  completed.unshift(resultRecord);
   localStorage.setItem('completedQuizzes', JSON.stringify(completed));
+
+  // POST result to backend so teacher can see grades
+  try {
+    await fetch('http://localhost:8080/api/quiz-results', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(resultRecord)
+    });
+  } catch(e){ console.log('Result saved locally; server offline.'); }
 
   document.getElementById('scorecardModal').classList.add('open');
 }
@@ -698,9 +857,60 @@ function handlePerfOverlayClick(e){
 }
 
 function logout(){
+  try {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const u = JSON.parse(userStr);
+      const userId = u.id || u.userId || 1;
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userId, username: u.name })
+      }).catch(err => console.error(err)).finally(() => {
+        localStorage.removeItem('currentUser');
+        sessionStorage.clear();
+        window.location.href = 'login.html?logout=true';
+      });
+      return;
+    }
+  } catch(e){}
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
-  window.location.href = '01-login-register.html?logout=true';
+  window.location.href = 'login.html?logout=true';
+}
+
+function openProfileModal(){
+  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  document.getElementById('profName').value = u.name || '';
+  document.getElementById('profEmail').value = u.email || '';
+  document.getElementById('profDept').value = u.dept || '';
+  document.getElementById('profContact').value = u.contact || '';
+  document.getElementById('profStatus').textContent = '';
+  document.getElementById('profileModal').style.display = 'flex';
+}
+
+async function saveProfile(){
+  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  u.name = document.getElementById('profName').value.trim() || u.name;
+  u.email = document.getElementById('profEmail').value.trim() || u.email;
+  u.dept = document.getElementById('profDept').value.trim();
+  u.contact = document.getElementById('profContact').value.trim();
+
+  try {
+    await fetch('http://localhost:8080/api/auth/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: u.id || 1, name: u.name, email: u.email, department: u.dept, contactNumber: u.contact, subject: u.subject || '' })
+    });
+  } catch(e) { console.log('REST API offline, saved profile locally.'); }
+
+  localStorage.setItem('currentUser', JSON.stringify(u));
+  const initials = (u.name || '').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('userAvatar').textContent = initials || 'SU';
+  document.getElementById('welcomeHeading').textContent = `Welcome, ${u.name || 'Student'}`;
+  document.getElementById('profStatus').style.color = 'var(--green)';
+  document.getElementById('profStatus').textContent = 'Profile updated successfully!';
+  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1200);
 }
 
 function escapeHtml(str){
@@ -710,7 +920,7 @@ function escapeHtml(str){
 window.addEventListener('DOMContentLoaded', () => {
   const userStr = localStorage.getItem('currentUser');
   if(!userStr){
-    window.location.href = '01-login-register.html';
+    window.location.href = 'login.html';
     return;
   }
   try {
@@ -732,6 +942,23 @@ window.addEventListener('DOMContentLoaded', () => {
   loadStudentDashboard();
 });
 </script>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;z-index:1000;padding:20px;">
+  <div style="background:#fff;border-radius:10px;width:100%;max-width:420px;padding:32px;box-shadow:0 20px 40px rgba(0,0,0,.18);border-top:4px solid var(--maroon);">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;">My Profile</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">Update your personal information.</div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Full Name</label><input type="text" id="profName" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Email</label><input type="email" id="profEmail" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Division / Branch</label><input type="text" id="profDept" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:20px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Contact Number</label><input type="tel" id="profContact" placeholder="Optional" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div id="profStatus" style="font-size:13px;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="document.getElementById('profileModal').style.display='none'" style="padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
+      <button onclick="saveProfile()" style="padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Save Changes</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
