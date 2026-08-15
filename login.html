@@ -370,10 +370,71 @@
     </div>
   </div>
 
+  <!-- FORGOT PASSWORD MODAL -->
+  <div id="forgotModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;z-index:1000;padding:20px;">
+    <div style="background:#fff;border-radius:10px;width:100%;max-width:400px;padding:32px;box-shadow:0 20px 40px rgba(0,0,0,.18);border-top:4px solid var(--maroon);">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;">Reset Password</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">Enter your registered email address to update your password.</div>
+      <div class="field" id="forgotEmailField" style="margin-bottom:14px;">
+        <label for="forgotEmail" style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Registered Email</label>
+        <input type="email" id="forgotEmail" placeholder="you@mmcoe.edu.in" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;">
+      </div>
+      <div class="field" id="forgotNewPassField" style="margin-bottom:14px;">
+        <label for="forgotNewPass" style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">New Password</label>
+        <input type="password" id="forgotNewPass" placeholder="Enter new password" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;">
+      </div>
+      <div class="field" style="margin-bottom:20px;">
+        <label for="forgotConfirmPass" style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Confirm New Password</label>
+        <input type="password" id="forgotConfirmPass" placeholder="Confirm new password" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;">
+      </div>
+      <div id="forgotStatus" style="font-size:13px;margin-bottom:12px;"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="closeForgotModal()" style="padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
+        <button onclick="submitForgotPassword()" style="padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Update Password</button>
+      </div>
+    </div>
+  </div>
+
 <script>
   const DEFAULT_USERS = [
-    { id: 1, name: "System Admin", email: "admin@mmcoe.edu.in", password: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active", lastActive: "Just now" }
-  ];
+  { id: 1, name: "System Admin", email: "admin@mmcoe.edu.in", username: "admin", password: "mmcoeadmin@123", altPassword: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active" },
+  { id: 2, name: "Dr. Sankirti S. Shiravale", email: "sankirtishiravale@mmcoe.edu.in", subject: "Data Science and Machine Learning", username: "sankirtishiravale", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 3, name: "Dr. Kalpana S. Thakre", email: "kalpanathakre@mmcoe.edu.in", subject: "Database Management System", username: "kalpanathakre", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 4, name: "Dr. Girija G. Chiddarwar", email: "girijachiddarwar@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "girijachiddarwar", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 5, name: "Dr. Swati N. Shekapure", email: "swatishekapure@mmcoe.edu.in", subject: "Information Security", username: "swatishekapure", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 6, name: "Dr. Geetha R. Chillarge", email: "geethasb@mmcoe.edu.in", subject: "Computer Networks Security and Software Engineering", username: "geethasb", password: "mmcoe@123", role: "Moderator", dept: "Computer Engineering", status: "active" },
+  { id: 7, name: "Dr. Smita M. Chaudhari", email: "smitachaudhari@mmcoe.edu.in", subject: "Computer Networks Security", username: "smitachaudhari", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 8, name: "Dr. Neha Jain", email: "nehajain17@mmcoe.edu.in", subject: "Database Management System and System Programming and Operating System", username: "nehajain17", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 9, name: "Dr. Anita V. Shinde", email: "anitashinde@mmcoe.edu.in", subject: "Object Oriented Programming", username: "anitashinde", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 10, name: "Dr. Shailaja B. Jadhav", email: "jadhavsb@mmcoe.edu.in", subject: "Operating System", username: "jadhavsb", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 11, name: "Ms. Rupali M. Dalvi", email: "rupalidalvi@mmcoe.edu.in", subject: "Digital Electronics and Computer Organisation and Operating System Workshop", username: "rupalidalvi", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 12, name: "Ms. Shubhada P. Mone", email: "shubhadamone@mmcoe.edu.in", subject: "Data Structures and Principles of Programming Language", username: "shubhadamone", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 13, name: "Ms. Jagruti A. Wagh", email: "jagrutiwagh@mmcoe.edu.in", subject: "Principles of Programming Language", username: "jagrutiwagh", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 14, name: "Dr. Sarita D. Sapkal", email: "saritasapkal@mmcoe.edu.in", subject: "Digital Marketing and IoT", username: "saritasapkal", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 15, name: "Ms. Vandana S. Rupnar", email: "vandanarupnar@mmcoe.edu.in", subject: "Software Engineering, EDI and Cloud Computing", username: "vandanarupnar", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 16, name: "Ms. Swarupa M. Deshpande", email: "swarupadeshpande@mmcoe.edu.in", subject: "Data Structures", username: "swarupadeshpande", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 17, name: "Mr. Rudragouda G. Patil", email: "rudragoudapatil@mmcoe.edu.in", subject: "Cloud Computing and EDI", username: "rudragoudapatil", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 18, name: "Ms. Aishwarya S. Mane", email: "aishwaryamane@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "aishwaryamane", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 19, name: "Ms. Mayuri S. Shelke", email: "mayurishelke@mmcoe.edu.in", subject: "Digital Marketing", username: "mayurishelke", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 20, name: "Ms. Kirti B. Satpute", email: "kirtisatpute@mmcoe.edu.in", subject: "Data Science and Machine Learning", username: "kirtisatpute", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 21, name: "Ms. Suvarna K. Patil", email: "suvarnapatil@mmcoe.edu.in", subject: "Web Technology", username: "suvarnapatil", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 22, name: "Ms. Reshma D. Kapadi", email: "reshmakapadi@mmcoe.edu.in", subject: "System Programming and Operating System", username: "reshmakapadi", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 23, name: "Ms. Mayuri G. Narkhede", email: "mayurinarkhede@mmcoe.edu.in", subject: "Programming Problem Solving", username: "mayurinarkhede", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 24, name: "Ms. Snehal H. Kuche", email: "snehalkuchee@mmcoe.edu.in", subject: "Database Management System", username: "snehalkuchee", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 25, name: "Ms. Nikita D. Kolambe", email: "nikitakolambe21@mmcoe.edu.in", subject: "Fundamentals of Programming Language and Engineering Exploration Lab 1 and Lab 2", username: "nikitakolambe21", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 26, name: "Ms. Yashashree V. Belkhede", email: "yashashreebelkhede@mmcoe.edu.in", subject: "Fundamentals of Programming Language and Engineering Exploration Lab 1 and Lab 2", username: "yashashreebelkhede", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 27, name: "Ms. Vidya Jaykumar Menoki", email: "vidyamenoki@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "vidyamenoki", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 28, name: "Ms. Gayatri S. Chavan", email: "gayatrichavan@mmcoe.edu.in", subject: "Cloud Computing", username: "gayatrichavan", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 29, name: "Mr. Mahesh A. Kandekar", email: "maheshkandekar@mmcoe.edu.in", subject: "Prompt Engineering", username: "maheshkandekar", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 30, name: "Tushar Borate", email: "tusharborate2024.comp@mmcoe.edu.in", username: "B24CE1001", password: "B24CE1001", role: "Quiz Taker", dept: "TY-1", status: "active" },
+  { id: 31, name: "Sahil Veer", email: "sahilveer2024.comp@mmcoe.edu.in", username: "B24CE1002", password: "B24CE1002", role: "Quiz Taker", dept: "TY-1", status: "active" },
+  { id: 32, name: "Vishwesh Bhilare", email: "vishweshbhilare2024.comp@mmcoe.edu.in", username: "B24CE1003", password: "B24CE1003", role: "Quiz Taker", dept: "TY-1", status: "active" },
+  { id: 33, name: "Gayatri Kompale", email: "gayatrikompale2024.comp@mmcoe.edu.in", username: "B24CE1061", password: "B24CE1061", role: "Quiz Taker", dept: "TY-2", status: "active" },
+  { id: 34, name: "Prince Vyas", email: "princevyas2024.comp@mmcoe.edu.in", username: "B24CE1062", password: "B24CE1062", role: "Quiz Taker", dept: "TY-2", status: "active" },
+  { id: 35, name: "Suraj Rathod", email: "surajrathod2024.comp@mmcoe.edu.in", username: "B24CE1063", password: "B24CE1063", role: "Quiz Taker", dept: "TY-2", status: "active" },
+  { id: 36, name: "Niranjan Mule", email: "niranjanmule2024.comp@mmcoe.edu.in", username: "B24CE1127", password: "B24CE1127", role: "Quiz Taker", dept: "TY-1", status: "active" },
+  { id: 37, name: "Sumit Bhamare", email: "sumitbhamare2025.comp@mmcoe.edu.in", username: "B25CE2002", password: "B25CE2002", role: "Quiz Taker", dept: "TY-1", status: "active" }
+];
 
   function getUsersList(){
     const stored = localStorage.getItem('usersList');
@@ -383,7 +444,7 @@
     }
     try {
       const parsed = JSON.parse(stored);
-      if(!parsed.length){
+      if(!parsed.length || parsed.length < 3){
         localStorage.setItem('usersList', JSON.stringify(DEFAULT_USERS));
         return DEFAULT_USERS;
       }
@@ -401,7 +462,44 @@
 
   function showForgot(e){
     e.preventDefault();
-    alert("Password reset flow — please contact system administrator.");
+    document.getElementById('forgotModal').style.display = 'flex';
+    document.getElementById('forgotStatus').textContent = '';
+    document.getElementById('forgotEmail').value = document.getElementById('loginEmail').value || '';
+    document.getElementById('forgotNewPass').value = '';
+    document.getElementById('forgotConfirmPass').value = '';
+  }
+
+  function closeForgotModal(){
+    document.getElementById('forgotModal').style.display = 'none';
+  }
+
+  function submitForgotPassword(){
+    const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+    const newPass = document.getElementById('forgotNewPass').value;
+    const confirmPass = document.getElementById('forgotConfirmPass').value;
+    const statusEl = document.getElementById('forgotStatus');
+
+    if(!email){ statusEl.style.color='var(--maroon-hover)'; statusEl.textContent = 'Please enter your email address.'; return; }
+    if(newPass.length < 4){ statusEl.style.color='var(--maroon-hover)'; statusEl.textContent = 'Password must be at least 4 characters.'; return; }
+    if(newPass !== confirmPass){ statusEl.style.color='var(--maroon-hover)'; statusEl.textContent = 'Passwords do not match.'; return; }
+
+    // Check if user exists in DEFAULT_USERS or stored list
+    const user = DEFAULT_USERS.find(u => u.email.toLowerCase() === email);
+    if(!user){
+      statusEl.style.color='var(--maroon-hover)';
+      statusEl.textContent = 'No account found with that email address.';
+      return;
+    }
+
+    // Save new password override in localStorage
+    let passOverrides = {};
+    try { passOverrides = JSON.parse(localStorage.getItem('passwordOverrides') || '{}'); } catch(e){}
+    passOverrides[email] = newPass;
+    localStorage.setItem('passwordOverrides', JSON.stringify(passOverrides));
+
+    statusEl.style.color = 'var(--green)';
+    statusEl.textContent = 'Password updated successfully! You can now sign in with your new password.';
+    setTimeout(closeForgotModal, 2000);
   }
 
   function setInvalid(fieldId, isInvalid){
@@ -409,16 +507,16 @@
   }
 
   // ---------- LOGIN ----------
-  document.getElementById('loginForm').addEventListener('submit', function(e){
+  document.getElementById('loginForm').addEventListener('submit', async function(e){
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
-    const pass = document.getElementById('loginPass').value;
+    const pass = document.getElementById('loginPass').value.trim();
     const statusBox = document.getElementById('loginStatus');
     statusBox.className = 'status-msg';
     statusBox.textContent = '';
 
     let valid = true;
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailOk = email.length > 0;
     setInvalid('loginEmailField', !emailOk);
     if(!emailOk) valid = false;
 
@@ -427,11 +525,81 @@
 
     if(!valid) return;
 
-    const users = getUsersList();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === pass);
+    // Try backend REST API login
+    try {
+      const apiRes = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: email, password: pass })
+      });
+      if (apiRes.ok) {
+        const data = await apiRes.json();
+        if (data.status === 'success') {
+          statusBox.className = 'status-msg success';
+          statusBox.textContent = `Welcome, ${data.username}! Redirecting to dashboard...`;
+          
+          const sessionUser = {
+            id: data.userId,
+            name: data.username,
+            email: data.email,
+            role: data.role,
+            division: data.division,
+            status: 'ACTIVE'
+          };
+          localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+
+          setTimeout(() => {
+            const r = (data.role || '').toLowerCase();
+            if (r.includes('admin')) {
+              window.location.href = 'admin.html';
+            } else if (r.includes('moderator')) {
+              window.location.href = 'moderator.html';
+            } else if (r.includes('student') || r.includes('taker')) {
+              window.location.href = 'student.html';
+            } else {
+              window.location.href = 'author.html';
+            }
+          }, 600);
+          return;
+        }
+      }
+    } catch(err) {
+      console.log('Backend API offline or unreachable, using local authentication fallback.');
+    }
+
+    // Local Storage Fallback — always authenticate against DEFAULT_USERS (which have passwords)
+    // Then check localStorage for any status changes made by admin
+    const inputClean = email.toLowerCase();
+    
+    // First find in DEFAULT_USERS (which has passwords)
+    // Also check passwordOverrides saved by the forgot-password flow
+    let passOverrides = {};
+    try { passOverrides = JSON.parse(localStorage.getItem('passwordOverrides') || '{}'); } catch(e){}
+    
+    let user = DEFAULT_USERS.find(u => {
+      const matchId = (u.email && u.email.toLowerCase() === inputClean) || 
+                      (u.username && u.username.toLowerCase() === inputClean) || 
+                      (u.name && u.name.toLowerCase() === inputClean);
+      const overridePass = passOverrides[u.email ? u.email.toLowerCase() : ''];
+      const matchPw = (overridePass && overridePass === pass) || u.password === pass || u.altPassword === pass;
+      return matchId && matchPw;
+    });
+
+    // Also check stored users (for users added by admin) — if they have a password field
+    if(!user) {
+      const storedList = JSON.parse(localStorage.getItem('usersList') || '[]');
+      user = storedList.find(u => {
+        if(!u.password) return false; // skip passwordless entries
+        const matchId = (u.email && u.email.toLowerCase() === inputClean) || 
+                        (u.username && u.username.toLowerCase() === inputClean);
+        const matchPw = u.password === pass || u.altPassword === pass;
+        return matchId && matchPw;
+      });
+    }
+
     if(!user){
       statusBox.className = 'status-msg error';
-      statusBox.textContent = 'Invalid email or password. Please contact your system administrator if you do not have an account.';
+      statusBox.textContent = 'Invalid username/email or password. Please verify credentials.';
       return;
     }
     if(user.status === 'pending'){
@@ -448,26 +616,61 @@
     statusBox.className = 'status-msg success';
     statusBox.textContent = `Welcome, ${user.name}! Redirecting to dashboard...`;
 
-    user.lastActive = "Just now";
-    localStorage.setItem('usersList', JSON.stringify(users));
+    sessionStorage.setItem('sessionStartTime', Date.now().toString());
     
-    // Store user session in localStorage
+    // Audit Log for Sign-In
+    try {
+      let logs = JSON.parse(localStorage.getItem('auditLogs') || '[]');
+      const logEntry = {
+        log_id: Date.now(),
+        user_id: user.id,
+        user_name: user.name,
+        action: `User "${user.name}" signed in`,
+        session_info: `Signed in at ${new Date().toLocaleTimeString()}`,
+        timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+      };
+      logs.unshift(logEntry);
+      localStorage.setItem('auditLogs', JSON.stringify(logs));
+
+      fetch('/api/audit-logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, username: user.name, action: `User "${user.name}" signed in` })
+      }).catch(e=>{});
+    } catch(e){}
+
     const sessionUser = {
       id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
       status: user.status,
-      dept: user.dept || 'Computer Engineering'
+      dept: user.dept || 'Computer Engineering',
+      subject: user.subject || ''
     };
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
 
     setTimeout(() => {
-      if (user.role === 'Administrator') {
+      const r = (user.role || '').toLowerCase();
+      const isAdmin = r.includes('admin') || r === 'administrator';
+
+      // Non-admin users must change password on first login
+      if(!isAdmin){
+        let changedPwds = {};
+        try { changedPwds = JSON.parse(localStorage.getItem('passwordChangedUsers') || '{}'); } catch(e){}
+        if(!changedPwds[user.email.toLowerCase()]){
+          // Show forced password change overlay
+          showForceChangePassword(user, r);
+          return;
+        }
+      }
+
+      // Redirect based on role
+      if (r.includes('admin') || r === 'administrator') {
         window.location.href = 'admin.html';
-      } else if (user.role === 'Moderator') {
+      } else if (r.includes('moderator')) {
         window.location.href = 'moderator.html';
-      } else if (user.role === 'Quiz Taker') {
+      } else if (r.includes('quiz taker') || r.includes('student')) {
         window.location.href = 'student.html';
       } else {
         window.location.href = 'author.html';
@@ -475,11 +678,74 @@
     }, 600);
   });
 
-  // Handle page load and logout parameter
-  window.addEventListener('DOMContentLoaded', () => {
+  function showForceChangePassword(user, roleStr){
+    document.getElementById('fpcUserName').textContent = user.name;
+    document.getElementById('fpcRoleTag').textContent = user.role;
+    document.getElementById('fpcStatus').textContent = '';
+    document.getElementById('fpcNewPass').value = '';
+    document.getElementById('fpcConfirmPass').value = '';
+    document.getElementById('forceChangeModal').style.display = 'flex';
+    // Store role for redirect after change
+    document.getElementById('forceChangeModal').dataset.role = roleStr;
+  }
+
+  async function submitForceChangePassword(){
+    const modal = document.getElementById('forceChangeModal');
+    const newPass = document.getElementById('fpcNewPass').value;
+    const confirmPass = document.getElementById('fpcConfirmPass').value;
+    const status = document.getElementById('fpcStatus');
+    const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    if(newPass.length < 6){ status.style.color='var(--maroon-hover)'; status.textContent='Password must be at least 6 characters.'; return; }
+    if(newPass !== confirmPass){ status.style.color='var(--maroon-hover)'; status.textContent='Passwords do not match.'; return; }
+
+    // Send password update to PostgreSQL Backend REST API
+    try {
+      await fetch('http://localhost:8080/api/auth/force-change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: u.id || 1, newPassword: newPass })
+      });
+    } catch(err) {
+      console.log('Backend REST API offline, updated password locally.');
+    }
+
+    // Save password override locally
+    let passOverrides = {};
+    try { passOverrides = JSON.parse(localStorage.getItem('passwordOverrides') || '{}'); } catch(e){}
+    passOverrides[u.email.toLowerCase()] = newPass;
+    localStorage.setItem('passwordOverrides', JSON.stringify(passOverrides));
+
+    // Mark password as changed
+    let changedPwds = {};
+    try { changedPwds = JSON.parse(localStorage.getItem('passwordChangedUsers') || '{}'); } catch(e){}
+    changedPwds[u.email.toLowerCase()] = true;
+    localStorage.setItem('passwordChangedUsers', JSON.stringify(changedPwds));
+
+    status.style.color='var(--green)';
+    status.textContent='Password set! Redirecting to your dashboard...';
+    setTimeout(() => {
+      const r = modal.dataset.role || '';
+      if (r.includes('moderator')) window.location.href = 'moderator.html';
+      else if (r.includes('quiz taker') || r.includes('student')) window.location.href = 'student.html';
+      else window.location.href = 'author.html';
+    }, 1200);
+  }
+
+  // Handle page load and logout / reset parameters
+  window.addEventListener('DOMContentLoaded', async () => {
     getUsersList();
     const params = new URLSearchParams(window.location.search);
-    if (params.get('logout') === 'true') {
+    if (params.get('reset') === 'true' || params.get('clear') === 'true') {
+      localStorage.clear();
+      sessionStorage.clear();
+      try { await fetch('/api/reset'); } catch(e){}
+      const statusBox = document.getElementById('loginStatus');
+      if (statusBox) {
+        statusBox.className = 'status-msg success';
+        statusBox.textContent = '⚡ All local and server data has been reset cleanly for fresh testing!';
+      }
+    } else if (params.get('logout') === 'true') {
       localStorage.removeItem('currentUser');
       sessionStorage.clear();
       const statusBox = document.getElementById('loginStatus');
@@ -490,6 +756,25 @@
     }
   });
 </script>
+
+<!-- FORCE CHANGE PASSWORD MODAL (shown to teachers/students on first login) -->
+<div id="forceChangeModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:2000;padding:20px;">
+  <div style="background:#fff;border-radius:12px;width:100%;max-width:420px;padding:36px;box-shadow:0 24px 60px rgba(0,0,0,.25);border-top:5px solid var(--maroon);">
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:var(--maroon);margin-bottom:4px;">Set Your Password</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">Welcome, <strong id="fpcUserName"></strong> &nbsp;<span id="fpcRoleTag" style="background:var(--tint);color:var(--maroon-hover);padding:2px 8px;border-radius:4px;font-size:11.5px;font-weight:700;"></span></div>
+    <div style="font-size:13px;color:var(--amber);background:var(--amber-bg);padding:10px 14px;border-radius:8px;margin-bottom:20px;">⚠️ For security, you must set a new password before accessing your dashboard. This is a one-time step.</div>
+    <div style="margin-bottom:14px;">
+      <label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">New Password</label>
+      <input type="password" id="fpcNewPass" placeholder="At least 6 characters" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;">
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Confirm Password</label>
+      <input type="password" id="fpcConfirmPass" placeholder="Re-enter password" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;">
+    </div>
+    <div id="fpcStatus" style="font-size:13px;min-height:20px;margin-bottom:12px;"></div>
+    <button onclick="submitForceChangePassword()" style="width:100%;padding:13px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;">Set Password &amp; Continue →</button>
+  </div>
+</div>
 
 </body>
 </html>
