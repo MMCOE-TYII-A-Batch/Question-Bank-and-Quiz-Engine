@@ -1,139 +1,177 @@
-# Question Bank & Quiz Generator - Backend Logic Layer
+# Question Bank & Quiz Engine — Backend
 
-Welcome! This repository contains the **Core Business Logic Layer**, **Data Access Objects (DAO)**, **Quiz Paper Randomizer Engine**, and **Instant Auto-Grading Engine** for the **Question Bank & Quiz Generator** platform.
+The backend of the **Question Bank & Quiz Engine** provides the application services, business logic, REST APIs, database access, authentication, question-bank management, quiz generation, grading, audit logging, and syllabus management.
 
-This guide explains everything built in this module and provides a step-by-step integration walkthrough written for beginners.
+## Architecture
 
----
-
-## What is Inside This Repository (What Built)
-
-All source code is organized into standard, modular Java packages under `src/`:
-
-```
-src/
-├── admin/                  # Admin logic for student entry,teacher entry and updates.
-├── model/                  # Data structures (QuestionBank, Question, QuestionOption, Quiz, QuizAttempt, etc.)
-├── service/                # Business logic rules, validations, quiz paper generator, & auto-grading
-├── dao/                    # Database queries (SQL PreparedStatements for PostgreSQL)
-├── validator/              # Validation checks (10-char stem limit, 4 MCQ options, 1 correct answer)
-├── util/                   # Connection helpers (DBConnection.java) & JSON API wrappers (ApiResponse.java)
-├── exception/              # ValidationException handling
-├── constant/               # Status codes & PostgreSQL Database Schema (Database.sql)
+```text
+Frontend
+   │
+   ▼
+REST API / AppServer
+   │
+   ▼
+Service Layer
+   │
+   ▼
+DAO Layer
+   │
+   ▼
+PostgreSQL
 ```
 
----
+The backend follows a layered architecture:
 
-## How the Business Workflows Work
+* **Model** — application data structures
+* **DAO** — database access and persistence
+* **Service** — business rules and application logic
+* **Validator** — input and domain validation
+* **Util** — database and security utilities
+* **Admin** — administrative user-management operations
 
-The system supports 3 primary roles: **Teacher**, **Moderator**, and **Student**.
+## Features
 
-```
-[ Teacher ] ──> Create Bank ──> Add Questions ──> Submit for Review
-                                                       │
-[ Moderator ] ─────────────────────────────────────────┴──> Inspect & Edit Questions ──> Approve / Reject
-                                                                                               │
-┌──────────────────────────────────────────────────────────────────────────────────────────────┘
+### Authentication & User Management
+
+* Role-based authentication
+* User management for supported roles
+* Password reset and forgot-password workflows
+* Secure password handling
+* Logout and authentication audit logging
+
+### Question Bank Management
+
+* Question-bank creation and lifecycle management
+* Question and MCQ option management
+* Moderator review and approval workflow
+* Question classification by syllabus and assessment attributes
+
+### Quiz Generation & Auto-Grading
+
+* Randomized quiz generation
+* Question selection based on configured criteria
+* MCQ attempt management
+* Automatic grading and score calculation
+* Attempt completion and duplicate-attempt protection
+
+### Subject & Syllabus Management
+
+* Subject management
+* Unit/Chapter and Topic hierarchy
+* Question-to-topic mapping
+* Syllabus version management
+* Active/inactive syllabus versions
+* Question quotas for units and topics
+
+### Audit Logging
+
+* Persistent logging of authentication and administrative actions
+* User and timestamp tracking
+* Logout event recording
+
+### Bulk Question Import
+
+* CSV-based descriptive-question import
+* Subject, unit, topic, and faculty mapping
+* Database relationship validation
+* Import status and error reporting
+
+## Project Structure
+
+```text
+backend/
+├── src/
+│   ├── admin/
+│   ├── constants/
+│   ├── dao/
+│   ├── exception/
+│   ├── model/
+│   ├── service/
+│   ├── util/
+│   └── validator/
 │
-├──> If DESCRIPTIVE Bank ──> Teacher clicks "Make Live" ──> [ Student ] Views Bank for Study
-│
-└──> If MCQ Bank ──────────> Teacher clicks "Generate Quiz" ──> [ Student ] Takes Quiz ──> Auto-Grading Score
+├── csvimport/
+├── quiz-csv-import/
+└── README.md
 ```
 
-### 1. Teacher Workflow
-- Creates a Question Bank (`MCQ` or `DESCRIPTIVE`) bound to a Subject and Academic Year.
-- Adds questions with **Bloom's Taxonomy Levels (BTL)** and marks. For MCQ questions, adds **4 choices** and marks **1 choice as correct**.
-- Submits the Question Bank for moderation review (`DRAFT` ➔ `SUBMITTED`).
-- If approved (`APPROVED`):
-  - **Descriptive Bank**: Clicks **Make Live** (`LIVE`) to make it readable for students.
-  - **MCQ Bank**: Clicks **Generate Quiz** to create a randomized exam paper.
-- Views the **Student Performance & Scores Leaderboard** for assigned quizzes.
+## API Modules
 
-### 2. Moderator Workflow
-- Views all Question Banks pending review (`SUBMITTED` status).
-- Inspects questions and option choices. Can **edit question text, BTL levels, marks, or correct option selection** directly during review.
-- Gives **Approval** (`SUBMITTED` ➔ `APPROVED`) or **Rejection** (`SUBMITTED` ➔ `REJECTED`).
+| Module         | Base Endpoint         |
+| -------------- | --------------------- |
+| Authentication | `/api/auth`           |
+| Administration | `/api/admin`          |
+| Questions      | `/api/questions`      |
+| Question Banks | `/api/question-banks` |
+| Quizzes        | `/api/quizzes`        |
+| Quiz Attempts  | `/api/attempts`       |
+| Audit Logs     | `/api/audit-logs`     |
+| Syllabus       | `/api/syllabus`       |
 
-### 3. Student Workflow
-- Views published **Live Descriptive Question Banks** for practice/study.
-- Takes scheduled **MCQ Quizzes**.
-- Submits answers and receives **instant auto-graded score** (`scoreObtained / totalMarks`).
-- Once submitted, the attempt is locked (`COMPLETED`) to prevent re-taking the quiz.
+## Database Configuration
 
----
+Configure the PostgreSQL connection using environment variables:
 
-## 🛠️ What the Integration Team Needs to Do (Step-by-Step Guide)
-
-If you are on the **Integration Team** connecting Frontend UI, Login Authentication, or Web Controllers, follow these 3 steps:
-
-### Step 1: Set Up the PostgreSQL Database
-1. Create a PostgreSQL database named `question_bank` (or set environment variable `DB_URL`).
-2. Run the SQL script located at `constant/Database.sql` in your database. This creates all necessary tables (`question_bank`, `question`, `question_option`, `quiz`, `quiz_question`, `quiz_attempt`, `student_answer`).
-
----
-
-### Step 2: Connect Login / User Authentication
-The Login module written by your teammate will authenticate users and return `userId`, `role`, and `subjectId`.
-
-Simply pass those IDs directly into the service methods:
-
-```java
-// Example: After Teacher Login (userId = 101, subjectId = 1)
-QuestionBankService bankService = new QuestionBankServiceImpl();
-
-// 1. Fetch teacher's question banks
-List<QuestionBank> teacherBanks = bankService.getQuestionBanksByTeacher(101);
-
-// Example: After Student Login (studentId = 201)
-QuizAttemptService attemptService = new QuizAttemptServiceImpl();
-
-// 2. Start quiz attempt for student #201
-int attemptId = attemptService.startQuizAttempt(quizId, 201);
+```text
+DB_URL
+DB_USER
+DB_PASSWORD
 ```
 
----
+Example:
 
-### Step 3: Connect Frontend to Backend APIs
+```text
+DB_URL=jdbc:postgresql://localhost:5432/question_bank
+DB_USER=postgres
+DB_PASSWORD=your_password
+```
 
-You have **two options** to connect your web frontend (React, HTML/JS, Angular, Vue):
+Do not commit real credentials or secrets.
 
-#### Option A: Use the Included `AppServer.java` (Zero Setup)
-Simply run [AppServer.java](AppServer.java). It launches a REST server on `http://localhost:8080` with CORS enabled:
+## Running the Backend
+
+From the `backend` directory:
 
 ```bash
-java AppServer.java
+javac -cp "postgresql-42.7.3.jar" -d out <source-files>
 ```
 
----
+Run the application:
 
-## 🔌 Service Method & REST Endpoint Cheatsheet
+```bash
+java -cp "postgresql-42.7.3.jar;out" AppServer
+```
 
-| Task | Java Service Method | REST Endpoint |
-| :--- | :--- | :--- |
-| **Create Bank** | `bankService.createQuestionBank(bank)` | `POST /api/question-banks` |
-| **Get Teacher Banks** | `bankService.getQuestionBanksByTeacher(teacherId)` | `GET /api/question-banks/teacher/{teacherId}` |
-| **Submit Bank** | `bankService.submitQuestionBank(bankId)` | `PUT /api/question-banks/{id}/submit` |
-| **Approve Bank** | `bankService.approveQuestionBank(bankId)` | `PUT /api/question-banks/{id}/approve` |
-| **Reject Bank** | `bankService.rejectQuestionBank(bankId)` | `PUT /api/question-banks/{id}/reject` |
-| **Make Live** | `bankService.publishQuestionBank(bankId)` | `PUT /api/question-banks/{id}/publish` |
-| **Add Question** | `questionService.createQuestion(question)` | `POST /api/questions` |
-| **Save MCQ Options** | `optionService.saveOptions(optionsList)` | `POST /api/questions/{id}/options` |
-| **Generate Quiz** | `quizService.generateRandomQuiz(quizId, criteria)` | `POST /api/quizzes/{id}/generate` |
-| **Start Quiz Attempt** | `attemptService.startQuizAttempt(quizId, studentId)` | `POST /api/attempts/start` |
-| **Submit & Auto-Grade** | `attemptService.submitAndAutoGradeQuiz(attemptId, answersMap)` | `POST /api/attempts/{id}/submit` |
-| **Quiz Score Leaderboard** | `attemptService.getQuizResultsForTeacher(quizId)` | `GET /api/attempts/quiz/{id}/results` |
+The server starts on the configured application port.
 
----
+## CSV Import
 
-## ⚙️ Environment Variables (Optional)
+The CSV import utility is located in:
 
-Configure custom database credentials without changing code:
+```text
+csvimport/
+```
 
-- `DB_URL` (Default: `jdbc:postgresql://localhost:5432/question_bank`)
-- `DB_USER` (Default: `postgres`)
-- `DB_PASSWORD` (Default: `postgres` or your database password)
+It imports descriptive questions into PostgreSQL while resolving their syllabus and faculty relationships.
 
----
+## Syllabus Hierarchy
 
-### ✨ Summary
-This backend logic layer is fully verified, self-contained, and ready to be integrated into any web framework or frontend interface.
+```text
+Subject
+   │
+   └── Unit / Chapter
+          │
+          └── Topic
+                 │
+                 └── Question
+```
+
+Syllabus versions allow multiple course structures to be maintained while preserving historical versions. Question quotas define the expected question allocation for units and topics.
+
+## Development Guidelines
+
+* Follow the existing DAO → Service → Validator architecture.
+* Reuse existing models and database relationships.
+* Keep authentication and database credentials outside source control.
+* Do not commit compiled artifacts such as `.class` files or `out/`.
+* Keep backend changes modular and focused.
