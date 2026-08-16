@@ -160,3 +160,15 @@ foreign key (selected_option_id) references question_option(option_id),
 foreign key (evaluator_id) references "user"(user_id),
 unique (attempt_id,question_id)
 );
+
+ALTER TABLE subject
+ADD COLUMN IF NOT EXISTS version VARCHAR(50);
+
+ALTER TABLE subject
+ADD COLUMN IF NOT EXISTS is_active BOOLEAN;
+
+ALTER TABLE unit
+ADD COLUMN IF NOT EXISTS question_quota INTEGER;
+
+ALTER TABLE topic
+ADD COLUMN IF NOT EXISTS question_quota INTEGER;
