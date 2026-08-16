@@ -225,11 +225,13 @@ transition:background .15s ease;
 <div class="nav-group">
 <div class="nav-label">Question Bank</div>
 <a href="create-question-bank.html" class="nav-item"><span class="dot"></span>Create Question Bank</a>
+<a href="moderator.html" class="nav-item"><span class="dot" style="background:var(--blue);"></span>Moderation Queue</a>
 <a href="#submissions" class="nav-item" onclick="filterSubmissions('all')"><span class="dot"></span>My Submissions</a>
 <a href="#submissions" class="nav-item" onclick="filterSubmissions('returned')"><span class="dot"></span>Returned for Edits</a>
 </div>
 <div class="nav-group">
-<div class="nav-label">Insights</div>
+<div class="nav-label">Results &amp; Analytics</div>
+<a href="#quizResultsSection" class="nav-item" onclick="scrollToResults(); return false;"><span class="dot" style="background:var(--green);"></span>📊 Student Results</a>
 <a href="#" class="nav-item" onclick="openAuthorActivityModal(); return false;"><span class="dot"></span>My Activity</a>
 </div>
 <div class="nav-group" style="margin-top:auto;">
@@ -247,8 +249,9 @@ transition:background .15s ease;
 </div>
 <div class="topbar-right">
 <div id="topbarAdminBtn"></div>
+<a href="moderator.html" class="btn-secondary" style="padding:8px 14px;font-size:12.5px;text-decoration:none;margin-right:4px;">Moderation Queue</a>
 <button class="btn-primary" onclick="window.location.href='create-question-bank.html'">+ Create Question Bank</button>
-<div class="avatar" id="userAvatar">AU</div>
+<div class="avatar" id="userAvatar" onclick="openProfileModal()" style="cursor:pointer;" title="My Profile">AU</div>
 <button onclick="logout()" style="background:none;border:1px solid var(--line);padding:6px 12px;border-radius:8px;color:var(--maroon-hover);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.15s ease;" onmouseover="this.style.background='#FAF6F3'" onmouseout="this.style.background='none'">Sign Out</button>
 </div>
 </div>
@@ -277,7 +280,15 @@ transition:background .15s ease;
 
 <!-- SUBMISSIONS TABLE -->
 <div class="card-header" id="submissions">
-<div class="card-title">Recent Submissions</div>
+<div style="display:flex;align-items:center;gap:12px;">
+  <div class="card-title">Recent Submissions</div>
+  <select id="subStatusFilter" onchange="filterSubmissions(this.value)" style="padding:6px 10px;font-size:12px;border:1px solid var(--line);border-radius:6px;font-family:'Inter',sans-serif;background:#fff;cursor:pointer;">
+    <option value="all">All Statuses</option>
+    <option value="approved">Approved &amp; Live Only</option>
+    <option value="pending">Pending Review Only</option>
+    <option value="returned">Returned for Edits Only</option>
+  </select>
+</div>
 <a href="create-question-bank.html" class="btn-primary" style="padding:8px 14px;font-size:12.5px;">+ New Question Bank</a>
 </div>
 
@@ -319,9 +330,35 @@ transition:background .15s ease;
 </table>
 </div>
 
+<!-- STUDENT QUIZ RESULTS SECTION (inline below Published Quizzes) -->
+<div class="card-header" id="quizResultsSection" style="margin-top:32px;scroll-margin-top:30px;">
+<div class="card-title">Student Quiz Results &amp; Grades</div>
+<button class="btn-secondary" style="padding:6px 14px;font-size:12.5px;" onclick="loadQuizResults()">🔄 Refresh Results</button>
+</div>
+<div class="table-card" style="margin-bottom:32px;">
+<table>
+<thead>
+<tr>
+  <th>Student Name</th>
+  <th>Quiz Title</th>
+  <th>Score</th>
+  <th>Marks</th>
+  <th>Correct</th>
+  <th>Grade</th>
+  <th>Date Taken</th>
+</tr>
+</thead>
+<tbody id="quizResultsBody">
+  <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">Loading results...</td></tr>
+</tbody>
+</table>
+</div>
+
 </div>
 </main>
 </div>
+
+
 
 <!-- ASSIGN QUIZ MODAL -->
 <div class="modal-overlay" id="assignModal" onclick="handleAssignOverlayClick(event)">
@@ -346,12 +383,67 @@ transition:background .15s ease;
 <input type="number" id="aDuration" value="15" min="1" max="180" required>
 </div>
 <div class="field">
-<label for="aDueDate">Due Date</label>
+<label for="aTargetClass">Target Class / Division</label>
+<select id="aTargetClass" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;">
+  <option value="All">All Classes (TY-1 & TY-2)</option>
+  <option value="TY-1">TY-1 Only</option>
+  <option value="TY-2">TY-2 Only</option>
+</select>
+</div>
+<div class="field">
+<label for="aMaxAttempts">Allowed Attempts per Student</label>
+<input type="number" id="aMaxAttempts" value="1" min="1" max="10" required>
+</div>
+<div class="field">
+<label for="aStartDate">Start Date</label>
+<input type="date" id="aStartDate" required>
+</div>
+<div class="field">
+<label for="aStartTime">Start Time</label>
+<input type="time" id="aStartTime" value="09:00" required>
+</div>
+<div class="field">
+<label for="aDueDate">Due / End Date</label>
 <input type="date" id="aDueDate" required>
 </div>
 </div>
 
 <div class="field" style="margin-top:10px;">
+<div style="background:#FAF6F3;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:10px;">
+  <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px;">Filter &amp; Classify Questions (Cross-Bank Pool)</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;">
+    <div>
+      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Chapter</label>
+      <input type="text" id="aChapterFilter" placeholder="e.g. Chapter 1" oninput="handleBatchSelectChange()" style="width:100%;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:6px;">
+    </div>
+    <div>
+      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Topic</label>
+      <input type="text" id="aTopicFilter" placeholder="e.g. Trees" oninput="handleBatchSelectChange()" style="width:100%;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:6px;">
+    </div>
+    <div>
+      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">Difficulty</label>
+      <select id="aDiffFilter" onchange="handleBatchSelectChange()" style="width:100%;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:6px;">
+        <option value="">All Levels</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>
+    </div>
+    <div>
+      <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:2px;">BTL Level</label>
+      <select id="aBtlFilter" onchange="handleBatchSelectChange()" style="width:100%;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:6px;">
+        <option value="">All BTL Levels</option>
+        <option value="BTL1">BTL 1 (Remember)</option>
+        <option value="BTL2">BTL 2 (Understand)</option>
+        <option value="BTL3">BTL 3 (Apply)</option>
+        <option value="BTL4">BTL 4 (Analyze)</option>
+        <option value="BTL5">BTL 5 (Evaluate)</option>
+        <option value="BTL6">BTL 6 (Create)</option>
+      </select>
+    </div>
+  </div>
+</div>
+
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
 <label style="margin:0;font-weight:700;color:var(--ink);">Select Questions to Include (<span id="qSelectCount">0</span> selected)</label>
 <div style="display:flex;gap:6px;">
@@ -359,7 +451,7 @@ transition:background .15s ease;
 <button type="button" class="btn-secondary" style="padding:3px 8px;font-size:11.5px;" onclick="toggleAllQuestionSelect(false)">Clear All</button>
 </div>
 </div>
-<div id="qPickerContainer" style="max-height:180px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:10px;background:#FAF6F3;">
+<div id="qPickerContainer" style="max-height:180px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff;">
 <div style="font-size:12.5px;color:var(--muted);text-align:center;padding:12px;">Select an approved question bank above to load questions.</div>
 </div>
 </div>
@@ -402,27 +494,65 @@ transition:background .15s ease;
 let currentSubmissionFilter = 'all';
 
 function logout(){
+  try {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const u = JSON.parse(userStr);
+      const userId = u.id || u.userId || 1;
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userId, username: u.name })
+      }).catch(err => console.error(err)).finally(() => {
+        localStorage.removeItem('currentUser');
+        sessionStorage.clear();
+        window.location.href = 'login.html?logout=true';
+      });
+      return;
+    }
+  } catch(e){}
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
-  window.location.href = '01-login-register.html?logout=true';
+  window.location.href = 'login.html?logout=true';
 }
 
 function filterSubmissions(filterType){
   currentSubmissionFilter = filterType;
+  const select = document.getElementById('subStatusFilter');
+  if(select) select.value = filterType;
   loadSubmissions();
   const elem = document.getElementById('submissions');
   if(elem) elem.scrollIntoView({ behavior: 'smooth' });
 }
 
-function loadSubmissions(){
-  const defaultSubmissions = [];
+let fetchedRemoteSubmissions = [];
 
+async function loadSubmissions(){
   let stored = [];
   try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
 
-  let allSubmissions = [...stored, ...defaultSubmissions];
+  try {
+    const res = await fetch('http://localhost:8080/api/question-banks');
+    if(res.ok){
+      fetchedRemoteSubmissions = await res.json();
+    }
+  } catch(e){}
+
+  const map = new Map();
+  // Local first, then backend REST API so backend database is the single source of truth
+  [...stored, ...fetchedRemoteSubmissions].forEach(s => {
+    if(s && s.id) map.set(String(s.id), s);
+  });
+
+  let allSubmissions = Array.from(map.values());
+  localStorage.setItem('submittedBatches', JSON.stringify(allSubmissions));
+  
   if(currentSubmissionFilter === 'returned'){
     allSubmissions = allSubmissions.filter(s => s.status === 'returned' || s.status === 'returned_for_edits');
+  } else if(currentSubmissionFilter === 'approved'){
+    allSubmissions = allSubmissions.filter(s => s.status === 'approved');
+  } else if(currentSubmissionFilter === 'pending'){
+    allSubmissions = allSubmissions.filter(s => !s.status || s.status === 'pending');
   }
 
   const tbody = document.getElementById('submissionsTableBody');
@@ -444,7 +574,7 @@ function loadSubmissions(){
 
       let assignBtn = '';
       if(sub.status === 'approved'){
-        assignBtn = `<button onclick="quickAssign(${sub.id})" class="btn-table-assign">Assign Quiz</button>`;
+        assignBtn = `<button onclick="quickAssign('${sub.id}')" class="btn-table-assign">Assign Quiz</button>`;
       }
 
       tr.innerHTML = `
@@ -456,7 +586,7 @@ function loadSubmissions(){
         <td style="text-align:right;">
           ${assignBtn}
           <a href="create-question-bank.html" style="font-size:12.5px;color:var(--maroon-hover);font-weight:600;margin-right:6px;">Edit/View</a>
-          <button onclick="deleteSubmission(${sub.id})" style="background:none;border:none;color:#B23A3A;cursor:pointer;font-size:13px;" title="Delete Draft">🗑</button>
+          <button onclick="deleteSubmission('${sub.id}')" style="background:none;border:none;color:#B23A3A;cursor:pointer;font-size:13px;" title="Delete Draft">🗑</button>
         </td>
       `;
       tbody.appendChild(tr);
@@ -474,7 +604,60 @@ function loadSubmissions(){
   document.getElementById('statNeedsRevQ').textContent = returnedQ;
 
   loadPublishedQuizzes();
+  loadQuizResults();
 }
+
+async function loadQuizResults(){
+  let results = [];
+
+  // Try to fetch from backend API first
+  try {
+    const res = await fetch('http://localhost:8080/api/quiz-results');
+    if(res.ok){
+      const data = await res.json();
+      if(Array.isArray(data)) results = data;
+    }
+  } catch(e){}
+
+  // Also include anything saved locally (offline fallback)
+  try {
+    const local = JSON.parse(localStorage.getItem('completedQuizzes') || '[]');
+    // Merge by id, backend wins
+    const map = new Map();
+    [...results, ...local].forEach(r => { if(r && (r.id || r.title)) map.set(String(r.id || r.title+r.dateTaken), r); });
+    results = Array.from(map.values());
+  } catch(e){}
+
+  const tbody = document.getElementById('quizResultsBody');
+  if(!tbody) return;
+
+  if(!results.length){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);">No student quiz results yet. Results will appear here after students complete quizzes.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = '';
+  results.forEach(r => {
+    const passed = (r.grade||'').toLowerCase().includes('pass') || (parseInt(r.scorePercent||r.score)||0) >= 60;
+    const gradeColor = passed ? 'var(--green)' : 'var(--maroon-hover)';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(r.studentName || 'Student')}</strong></td>
+      <td>${escapeHtml(r.title || '')}</td>
+      <td style="font-weight:700;color:${gradeColor};">${escapeHtml(String(r.score||r.scorePercent||'—'))}</td>
+      <td>${r.earnedMarks !== undefined ? `${r.earnedMarks}/${r.totalMarks}` : '—'}</td>
+      <td>${r.correctCount !== undefined ? `${r.correctCount}/${r.totalQuestions}` : '—'}</td>
+      <td><span style="font-weight:700;padding:3px 10px;border-radius:6px;font-size:12px;background:${passed?'#e8f5e9':'#fdecea'};color:${gradeColor};">${escapeHtml(r.grade || (passed?'Pass':'Fail'))}</span></td>
+      <td style="color:var(--muted);font-size:12.5px;">${escapeHtml(r.dateTaken || '—')}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Auto-refresh results every 10 seconds
+setInterval(loadQuizResults, 10000);
+
+
 
 function deleteSubmission(id){
   if(!confirm("Delete this question bank submission?")) return;
@@ -485,13 +668,26 @@ function deleteSubmission(id){
   loadSubmissions();
 }
 
-function loadPublishedQuizzes(){
-  const defaultQuizzes = [];
+let fetchedRemoteQuizzes = [];
 
+async function loadPublishedQuizzes(){
   let stored = [];
   try { stored = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
 
-  const allQuizzes = [...stored, ...defaultQuizzes];
+  try {
+    const res = await fetch('http://localhost:8080/api/quizzes');
+    if(res.ok){
+      fetchedRemoteQuizzes = await res.json();
+    }
+  } catch(e){}
+
+  const map = new Map();
+  // Local first, then backend REST API so backend database is the single source of truth
+  [...stored, ...fetchedRemoteQuizzes].forEach(q => {
+    if(q && q.id) map.set(String(q.id), q);
+  });
+
+  const allQuizzes = Array.from(map.values());
   const tbody = document.getElementById('publishedQuizzesBody');
   tbody.innerHTML = "";
 
@@ -499,22 +695,48 @@ function loadPublishedQuizzes(){
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--muted);">No published quizzes assigned to students yet.</td></tr>`;
   } else {
     allQuizzes.forEach(q => {
+      const now = new Date();
+      const durationMins = Number(q.duration) || 15;
+      
+      let quizStatus = 'Active';
+      let statusClass = 'approved';
+
+      const startTime = q.startDateTime ? new Date(q.startDateTime) : (q.createdTime ? new Date(q.createdTime) : null);
+      if(startTime){
+        const endTime = new Date(startTime.getTime() + durationMins * 60 * 1000);
+        if(now < startTime){
+          quizStatus = 'Scheduled';
+          statusClass = 'pending';
+        } else if(now >= startTime && now <= endTime){
+          quizStatus = 'Live';
+          statusClass = 'approved';
+        } else if(now > endTime){
+          quizStatus = 'Completed / Expired';
+          statusClass = 'returned';
+        }
+      } else if(q.dueDate && new Date(q.dueDate + 'T23:59:59') < now){
+        quizStatus = 'Expired';
+        statusClass = 'returned';
+      }
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><strong>${escapeHtml(q.title)}</strong></td>
+        <td><strong>${escapeHtml(q.title)}</strong><br><span style="font-size:11px;color:var(--muted);">Class: ${escapeHtml(q.targetClass || 'All')} · Max Attempts: ${q.maxAttempts || 1}</span></td>
         <td>${escapeHtml(q.dept || 'Computer Engineering')}</td>
         <td>${q.count || 10}</td>
         <td>${q.duration || 15} mins</td>
         <td>${escapeHtml(q.dueDate || '2026-08-20')}</td>
-        <td><span class="status-pill approved"><span class="dot"></span>Active</span></td>
+        <td><span class="status-pill ${statusClass}"><span class="dot"></span>${quizStatus}</span></td>
       `;
       tbody.appendChild(tr);
     });
   }
 }
 
-let approvedBatchesCache = [];
+// Auto-refresh quiz status every 5 seconds so status transitions live
+setInterval(loadPublishedQuizzes, 5000);
 
+let approvedBatchesCache = [];
 function openAssignModal(){
   const defaultSubmissions = [];
   let stored = [];
@@ -526,6 +748,12 @@ function openAssignModal(){
   if(!approvedBatchesCache.length){
     select.innerHTML = `<option value="">No approved question banks available</option>`;
   } else {
+    if(approvedBatchesCache.length > 1){
+      const allOpt = document.createElement('option');
+      allOpt.value = 'ALL';
+      allOpt.textContent = `⚡ All Approved Question Banks (${approvedBatchesCache.length} Banks Combined Pool)`;
+      select.appendChild(allOpt);
+    }
     approvedBatchesCache.forEach(b => {
       const opt = document.createElement('option');
       opt.value = b.id;
@@ -550,40 +778,81 @@ let currentBatchQuestions = [];
 
 function handleBatchSelectChange(){
   const selectedId = document.getElementById('aBatchSelect').value;
-  const found = approvedBatchesCache.find(b => String(b.id) === String(selectedId));
   const titleInput = document.getElementById('aTitle');
-  if(found && (!titleInput.value || titleInput.dataset.autoFilled === 'true')){
-    titleInput.value = `${found.title} Assessment`;
-    titleInput.dataset.autoFilled = 'true';
+
+  let rawPool = [];
+  if(selectedId === 'ALL'){
+    approvedBatchesCache.forEach(b => {
+      if(b.questions && b.questions.length){
+        rawPool.push(...b.questions);
+      }
+    });
+    if(titleInput && (!titleInput.value || titleInput.dataset.autoFilled === 'true')){
+      titleInput.value = `Combined Comprehensive Assessment`;
+      titleInput.dataset.autoFilled = 'true';
+    }
+  } else {
+    const found = approvedBatchesCache.find(b => String(b.id) === String(selectedId));
+    if(found){
+      rawPool = found.questions && found.questions.length ? found.questions : [];
+      if(titleInput && (!titleInput.value || titleInput.dataset.autoFilled === 'true')){
+        titleInput.value = `${found.title} Assessment`;
+        titleInput.dataset.autoFilled = 'true';
+      }
+    }
   }
 
+  // Fallback default questions if pool is empty
+  if(!rawPool.length && selectedId){
+    rawPool = [
+      { id: 1, type: "mcq", question: "Which data structure follows LIFO principle?", chapter: "Chapter 1", topic_name: "Stacks", difficulty: "Easy", btl: "BTL1", options: {A:"Queue", B:"Stack", C:"Array", D:"Tree"}, correct_answer: "B", marks: 2 },
+      { id: 2, type: "mcq", question: "What is time complexity of accessing an array element by index?", chapter: "Chapter 1", topic_name: "Arrays", difficulty: "Easy", btl: "BTL2", options: {A:"O(1)", B:"O(n)", C:"O(log n)", D:"O(n^2)"}, correct_answer: "A", marks: 2 },
+      { id: 3, type: "mcq", question: "Which algorithm is commonly used for finding shortest path in a graph?", chapter: "Chapter 2", topic_name: "Graphs", difficulty: "Medium", btl: "BTL3", options: {A:"Dijkstra's Algorithm", B:"Binary Search", C:"Bubble Sort", D:"Kruskal's Algorithm"}, correct_answer: "A", marks: 2 },
+      { id: 4, type: "mcq", question: "In a binary search tree, values in left subtree are always?", chapter: "Chapter 2", topic_name: "Trees", difficulty: "Medium", btl: "BTL2", options: {A:"Equal to root", B:"Greater than root", C:"Smaller than root", D:"Random"}, correct_answer: "C", marks: 2 },
+      { id: 5, type: "mcq", question: "What is worst-case time complexity of Quick Sort?", chapter: "Chapter 3", topic_name: "Sorting", difficulty: "Hard", btl: "BTL4", options: {A:"O(n log n)", B:"O(n^2)", C:"O(n)", D:"O(1)"}, correct_answer: "B", marks: 2 }
+    ];
+  }
+
+  // Read classification filter inputs
+  const chFilter = (document.getElementById('aChapterFilter')?.value || '').toLowerCase().trim();
+  const topFilter = (document.getElementById('aTopicFilter')?.value || '').toLowerCase().trim();
+  const diffFilter = document.getElementById('aDiffFilter')?.value || '';
+  const btlFilter = document.getElementById('aBtlFilter')?.value || '';
+
+  // Apply classification filter across question pool
+  let filteredPool = rawPool.filter(q => {
+    const qCh = (q.chapter || q.unit || '').toLowerCase();
+    const qTop = (q.topic_name || q.topic || '').toLowerCase();
+    const qDiff = (q.difficulty || '').toLowerCase();
+    const qBtl = (q.btl || '').toUpperCase();
+
+    const matchCh = !chFilter || qCh.includes(chFilter);
+    const matchTop = !topFilter || qTop.includes(topFilter);
+    const matchDiff = !diffFilter || qDiff === diffFilter.toLowerCase();
+    const matchBtl = !btlFilter || qBtl === btlFilter.toUpperCase();
+
+    return matchCh && matchTop && matchDiff && matchBtl;
+  });
+
+  currentBatchQuestions = filteredPool;
   const container = document.getElementById('qPickerContainer');
   container.innerHTML = '';
 
-  if(!found){
-    container.innerHTML = '<div style="font-size:12.5px;color:var(--muted);text-align:center;padding:12px;">Select an approved question bank above to load questions.</div>';
+  if(!currentBatchQuestions.length){
+    container.innerHTML = '<div style="font-size:12.5px;color:var(--muted);text-align:center;padding:12px;">No questions match your current Chapter, Topic, Difficulty, or BTL filters.</div>';
     document.getElementById('qSelectCount').textContent = '0';
-    currentBatchQuestions = [];
     return;
   }
-
-  // Populate questions array
-  currentBatchQuestions = found.questions && found.questions.length ? found.questions : [
-    { id: 1, type: "mcq", question: "Which data structure follows LIFO principle?", options: {A:"Queue", B:"Stack", C:"Array", D:"Tree"}, correct_answer: "B", marks: 2 },
-    { id: 2, type: "mcq", question: "What is time complexity of accessing an array element by index?", options: {A:"O(1)", B:"O(n)", C:"O(log n)", D:"O(n^2)"}, correct_answer: "A", marks: 2 },
-    { id: 3, type: "mcq", question: "Which algorithm is commonly used for finding shortest path in a graph?", options: {A:"Dijkstra's Algorithm", B:"Binary Search", C:"Bubble Sort", D:"Kruskal's Algorithm"}, correct_answer: "A", marks: 2 },
-    { id: 4, type: "mcq", question: "In a binary search tree, values in left subtree are always?", options: {A:"Equal to root", B:"Greater than root", C:"Smaller than root", D:"Random"}, correct_answer: "C", marks: 2 },
-    { id: 5, type: "mcq", question: "What is worst-case time complexity of Quick Sort?", options: {A:"O(n log n)", B:"O(n^2)", C:"O(n)", D:"O(1)"}, correct_answer: "B", marks: 2 }
-  ];
 
   currentBatchQuestions.forEach((q, idx) => {
     const item = document.createElement('div');
     item.style.cssText = 'display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);';
+    const tagInfo = `[${(q.type || 'MCQ').toUpperCase()} · ${q.difficulty||'Easy'} · ${q.btl||'BTL1'} · ${q.chapter||'Ch.1'} · ${q.marks || 2} Marks]`;
     item.innerHTML = `
       <input type="checkbox" class="q-assign-checkbox" data-idx="${idx}" checked onchange="updateQSelectCount()" style="margin-top:3px;accent-color:var(--maroon);cursor:pointer;">
       <span style="font-size:12.5px;color:var(--ink);line-height:1.4;">
         <strong>Q${idx+1}.</strong> ${escapeHtml(q.question)} 
-        <span style="font-size:11px;color:var(--muted);font-weight:600;margin-left:4px;">[${(q.type || 'MCQ').toUpperCase()} · ${q.marks || 2} Marks]</span>
+        <span style="font-size:11px;color:var(--muted);font-weight:600;margin-left:4px;">${escapeHtml(tagInfo)}</span>
       </span>
     `;
     container.appendChild(item);
@@ -639,15 +908,20 @@ function openAuthorActivityModal(){
   const appRate = storedBatches.length ? Math.round((approvedCount / storedBatches.length) * 100) : 100;
   document.getElementById('actAppRate').textContent = `${appRate}%`;
 
+  // Requirement 4: Only show THIS user's own activity
+  const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
   let logs = [];
   try { logs = JSON.parse(localStorage.getItem('auditLogs') || '[]'); } catch(e){}
-  // Filter out system account registration/admin management logs for Author view
-  logs = logs.filter(l => !/registration|registered|account approved|account rejected|role/i.test(l.action));
+  logs = logs.filter(l =>
+    (l.user_id && me.id && String(l.user_id) === String(me.id)) ||
+    (l.user_name && me.name && l.user_name === me.name) ||
+    (l.action && me.name && l.action.toLowerCase().includes(me.name.toLowerCase()))
+  );
 
   const container = document.getElementById('authorActivityLogList');
   container.innerHTML = '';
   if(!logs.length){
-    container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:12px;">No activity logs recorded yet.</div>';
+    container.innerHTML = '<div style="color:var(--muted);text-align:center;padding:12px;">No activity recorded for your account yet.</div>';
   } else {
     logs.forEach(l => {
       const item = document.createElement('div');
@@ -658,6 +932,16 @@ function openAuthorActivityModal(){
   }
 
   document.getElementById('authorActivityModal').classList.add('open');
+}
+
+
+function scrollToResults(){
+  const sec = document.getElementById('quizResultsSection');
+  if(sec){
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    sec.style.border = '2px solid var(--maroon)';
+    setTimeout(() => { sec.style.border = '1px solid var(--line)'; }, 2200);
+  }
 }
 
 function closeAuthorActivityModal(){
@@ -683,9 +967,45 @@ document.getElementById('assignForm').addEventListener('submit', function(e){
   const title = document.getElementById('aTitle').value.trim();
   const duration = document.getElementById('aDuration').value;
   const dueDate = document.getElementById('aDueDate').value;
+  const startDate = document.getElementById('aStartDate').value;
+  const startTime = document.getElementById('aStartTime').value || '00:00';
+  const startDateTime = startDate ? `${startDate}T${startTime}` : null;
 
   if(!batchId){
     alert("Select an approved question bank.");
+    return;
+  }
+
+  const now = new Date();
+  
+  // 1. Construct local start Date object
+  let startObj = null;
+  if(startDate){
+    const timePart = startTime ? startTime : '00:00';
+    startObj = new Date(`${startDate}T${timePart}:00`);
+  }
+
+  // 2. Construct local due Date object (end of due day)
+  let dueObj = null;
+  if(dueDate){
+    dueObj = dueDate.includes('T') ? new Date(dueDate) : new Date(`${dueDate}T23:59:59`);
+  }
+
+  // Check 1: Start Date & Time cannot be in the past (allow 2 min buffer for clock drift)
+  if(startObj && !isNaN(startObj.getTime()) && startObj.getTime() < (now.getTime() - 120000)){
+    alert("Start Date & Time cannot be in the past. Please select a current or future start time.");
+    return;
+  }
+
+  // Check 2: Due Date cannot be in the past
+  if(dueObj && !isNaN(dueObj.getTime()) && dueObj.getTime() < (now.getTime() - 60000)){
+    alert("Cannot assign quiz with a Due Date in the past. Please select a valid future date.");
+    return;
+  }
+
+  // Check 3: Due Date must be after Start Date & Time
+  if(startObj && dueObj && !isNaN(startObj.getTime()) && !isNaN(dueObj.getTime()) && dueObj.getTime() <= startObj.getTime()){
+    alert("Due Date must be later than the Start Date and Time.");
     return;
   }
 
@@ -704,15 +1024,21 @@ document.getElementById('assignForm').addEventListener('submit', function(e){
   try { storedBatches = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
   const batch = storedBatches.find(b => String(b.id) === String(batchId)) || { count: selectedQuestions.length, dept: 'Computer Engineering' };
 
+  const targetClass = document.getElementById('aTargetClass').value || 'All';
+  const maxAttempts = parseInt(document.getElementById('aMaxAttempts').value) || 1;
+
   const newQuiz = {
     id: Date.now(),
     batchId: batchId,
     title: title,
     dept: batch.dept || 'Computer Engineering',
+    targetClass: targetClass,
+    maxAttempts: maxAttempts,
     count: selectedQuestions.length,
     duration: duration,
+    startDateTime: startDateTime,
     dueDate: dueDate,
-    status: 'Active',
+    status: (startObj && startObj.getTime() > now.getTime()) ? 'Scheduled' : 'Active',
     questions: selectedQuestions
   };
 
@@ -720,6 +1046,14 @@ document.getElementById('assignForm').addEventListener('submit', function(e){
   try { storedQuizzes = JSON.parse(localStorage.getItem('assignedQuizzes') || '[]'); } catch(e){}
   storedQuizzes.unshift(newQuiz);
   localStorage.setItem('assignedQuizzes', JSON.stringify(storedQuizzes));
+
+  try {
+    fetch('http://localhost:8080/api/quizzes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newQuiz)
+    });
+  } catch(e){}
 
   // Audit log
   let logs = [];
@@ -738,6 +1072,40 @@ document.getElementById('assignForm').addEventListener('submit', function(e){
   loadSubmissions();
 });
 
+function openProfileModal(){
+  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  document.getElementById('profName').value = u.name || '';
+  document.getElementById('profEmail').value = u.email || '';
+  document.getElementById('profDept').value = u.dept || '';
+  document.getElementById('profContact').value = u.contact || '';
+  document.getElementById('profStatus').textContent = '';
+  document.getElementById('profileModal').style.display = 'flex';
+}
+
+async function saveProfile(){
+  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  u.name = document.getElementById('profName').value.trim() || u.name;
+  u.email = document.getElementById('profEmail').value.trim() || u.email;
+  u.dept = document.getElementById('profDept').value.trim();
+  u.contact = document.getElementById('profContact').value.trim();
+
+  try {
+    await fetch('http://localhost:8080/api/auth/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: u.id || 1, name: u.name, email: u.email, department: u.dept, contactNumber: u.contact, subject: u.subject || '' })
+    });
+  } catch(e) { console.log('REST API offline, saved profile locally.'); }
+
+  localStorage.setItem('currentUser', JSON.stringify(u));
+  const initials = (u.name || '').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('userAvatar').textContent = initials || 'AU';
+  document.getElementById('welcomeHeading').textContent = `Welcome back, ${u.name || 'Author'}`;
+  document.getElementById('profStatus').style.color = 'var(--green)';
+  document.getElementById('profStatus').textContent = 'Profile updated successfully!';
+  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1200);
+}
+
 function escapeHtml(str){
   return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
@@ -745,7 +1113,7 @@ function escapeHtml(str){
 window.addEventListener('DOMContentLoaded', () => {
   const userStr = localStorage.getItem('currentUser');
   if (!userStr) {
-    window.location.href = '01-login-register.html';
+    window.location.href = 'login.html';
     return;
   }
   try {
@@ -767,6 +1135,23 @@ window.addEventListener('DOMContentLoaded', () => {
   loadSubmissions();
 });
 </script>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;z-index:1000;padding:20px;">
+  <div style="background:#fff;border-radius:10px;width:100%;max-width:420px;padding:32px;box-shadow:0 20px 40px rgba(0,0,0,.18);border-top:4px solid var(--maroon);">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;">My Profile</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">Update your personal information.</div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Full Name</label><input type="text" id="profName" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Email</label><input type="email" id="profEmail" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Department</label><input type="text" id="profDept" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:20px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Contact Number</label><input type="tel" id="profContact" placeholder="Optional" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div id="profStatus" style="font-size:13px;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="document.getElementById('profileModal').style.display='none'" style="padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
+      <button onclick="saveProfile()" style="padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Save Changes</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
