@@ -180,6 +180,7 @@ border-top:4px solid var(--maroon);
 <div class="nav-group">
 <div class="nav-label">Moderation</div>
 <a href="moderator.html" class="nav-item active"><span class="dot"></span>Review Queue</a>
+<a href="author.html" class="nav-item"><span class="dot" style="background:var(--green);"></span>Author Portal</a>
 <a href="#approved" class="nav-item" onclick="filterByStatus('approved')"><span class="dot"></span>Approved Batches</a>
 <a href="#returned" class="nav-item" onclick="filterByStatus('returned')"><span class="dot"></span>Returned for Edits</a>
 </div>
@@ -202,7 +203,7 @@ border-top:4px solid var(--maroon);
 </div>
 <div class="topbar-right">
 <div id="topbarAdminBtn"></div>
-<div class="avatar" id="userAvatar">SK</div>
+<div class="avatar" id="userAvatar" onclick="openProfileModal()" style="cursor:pointer;" title="My Profile">SK</div>
 <button onclick="logout()" style="background:none;border:none;color:var(--maroon-hover);font-size:13px;font-weight:600;cursor:pointer;">Sign Out</button>
 </div>
 </div>
@@ -283,6 +284,51 @@ border-top:4px solid var(--maroon);
 </div>
 </div>
 
+<!-- EDIT QUESTION MODAL -->
+<div class="modal-overlay" id="editQuestionModal" onclick="if(event.target===this) closeEditQuestionModal()">
+<div class="modal" style="max-width:560px;">
+<div class="modal-title">Edit Question &amp; Options</div>
+<div class="modal-desc">Modify question text, options, correct answer, and explanation.</div>
+
+<form id="modEditQForm">
+<input type="hidden" id="eqId">
+<div class="field" style="margin-bottom:12px;">
+<label style="font-weight:600;font-size:12.5px;">Question Text</label>
+<textarea id="eqText" style="width:100%;min-height:70px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:Inter,sans-serif;" required></textarea>
+</div>
+
+<div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink);">Options &amp; Correct Answer</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+<div><label style="font-size:12px;font-weight:600;">Option A</label><input type="text" id="eqOptA" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;"></div>
+<div><label style="font-size:12px;font-weight:600;">Option B</label><input type="text" id="eqOptB" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;"></div>
+<div><label style="font-size:12px;font-weight:600;">Option C</label><input type="text" id="eqOptC" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;"></div>
+<div><label style="font-size:12px;font-weight:600;">Option D</label><input type="text" id="eqOptD" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;"></div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+<div>
+<label style="font-size:12px;font-weight:600;">Correct Answer (e.g. A or A,C)</label>
+<input type="text" id="eqCorrect" placeholder="e.g. A, B, or A,C" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" required>
+</div>
+<div>
+<label style="font-size:12px;font-weight:600;">Marks</label>
+<input type="number" id="eqMarks" min="1" step="0.5" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;" required>
+</div>
+</div>
+
+<div class="field" style="margin-bottom:12px;">
+<label style="font-weight:600;font-size:12.5px;">Explanation</label>
+<input type="text" id="eqExplanation" style="width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;font-size:13px;">
+</div>
+
+<div class="modal-actions" style="display:flex;justify-content:flex-end;gap:10px;margin-top:16px;">
+<button type="button" class="btn-secondary" onclick="closeEditQuestionModal()">Cancel</button>
+<button type="button" class="btn-primary" onclick="saveQuestionEdit()">Save Question Updates</button>
+</div>
+</form>
+</div>
+</div>
+
 <div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
 
 <!-- MODERATION ACTIVITY MODAL -->
@@ -301,6 +347,16 @@ border-top:4px solid var(--maroon);
 
 <script>
 let currentReviewBatchId = null;
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  const msgElem = document.getElementById('toastMsg');
+  if(msgElem) msgElem.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2600);
+}
 
 function openModActivityModal(){
   let logs = [];
@@ -333,25 +389,27 @@ function handleModActivityOverlayClick(e){
   }
 }
 
-const DEFAULT_BATCHES = [];
+let fetchedRemoteBatches = [];
 
 function getBatches(){
-  let stored = [];
-  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
-  return [...stored, ...DEFAULT_BATCHES];
+  // Server is single source of truth. LocalStorage only used as fallback when server offline.
+  if(fetchedRemoteBatches.length > 0) return fetchedRemoteBatches;
+  let localStored = [];
+  try { localStored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  return localStored;
 }
 
-function showToast(msg){
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(()=>t.classList.remove('show'), 2600);
-}
+async function renderQueue(){
+  try {
+    const res = await fetch('/api/question-banks');
+    if(res.ok){
+      fetchedRemoteBatches = await res.json();
+    }
+  } catch(e){}
 
-function renderQueue(){
+  const allBatches = getBatches();
   const filter = document.getElementById('statusFilter').value;
-  const batches = getBatches().filter(b => !filter || b.status === filter);
+  const batches = allBatches.filter(b => !filter || b.status === filter);
   const tbody = document.getElementById('queueTableBody');
   tbody.innerHTML = "";
 
@@ -375,7 +433,7 @@ function renderQueue(){
       <td>${escapeHtml(b.submittedDate)}</td>
       <td>${statusBadge}</td>
       <td style="text-align:right;">
-        <button class="btn-primary" style="padding:6px 12px;font-size:12px;" onclick="openReviewModal(${b.id})">Review Batch</button>
+        <button class="btn-primary" style="padding:6px 12px;font-size:12px;" onclick="openReviewModal('${b.id}')">Review Batch</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -394,7 +452,7 @@ function filterByStatus(val){
 
 function openReviewModal(batchId){
   currentReviewBatchId = batchId;
-  const batch = getBatches().find(b => b.id === batchId);
+  const batch = getBatches().find(b => String(b.id) === String(batchId));
   if(!batch) return;
 
   document.getElementById('mBatchTitle').textContent = `Review: ${batch.title}`;
@@ -413,26 +471,46 @@ function openReviewModal(batchId){
     qDiv.className = 'q-review-card';
     qDiv.id = `qCard_${q.id}`;
     
+    // Build options HTML — handle MCQ, T/F, and Descriptive
     let optsHtml = '';
-    if(q.type === 'mcq' && q.options){
-      optsHtml = `<div class="q-opts">
-        <div class="q-opt ${q.correct_answer === 'A' ? 'correct' : ''}">A) ${escapeHtml(q.options.A)}</div>
-        <div class="q-opt ${q.correct_answer === 'B' ? 'correct' : ''}">B) ${escapeHtml(q.options.B)}</div>
-        <div class="q-opt ${q.correct_answer === 'C' ? 'correct' : ''}">C) ${escapeHtml(q.options.C)}</div>
-        <div class="q-opt ${q.correct_answer === 'D' ? 'correct' : ''}">D) ${escapeHtml(q.options.D)}</div>
-      </div>`;
+    const diffColors = { Easy:'var(--green)', Medium:'var(--amber)', Hard:'var(--maroon-hover)' };
+    const diffColor = diffColors[q.difficulty] || 'var(--muted)';
+
+    if((q.type === 'mcq' || q.type === 'truefalse') && q.options){
+      const optKeys = q.type === 'truefalse' ? ['A','B'] : ['A','B','C','D'];
+      const correctList = String(q.correct_answer || '').split(',').map(x => x.trim());
+      optsHtml = `<div class="q-opts">`;
+      optKeys.forEach(k => {
+        if(q.options[k] !== undefined){
+          const isCorr = correctList.includes(k);
+          optsHtml += `<div class="q-opt ${isCorr ? 'correct' : ''}">${k}) ${escapeHtml(String(q.options[k]))}</div>`;
+        }
+      });
+      optsHtml += `</div>`;
+    } else if(q.type === 'descriptive' || q.type === 'short_answer') {
+      optsHtml = `<div style="font-size:12px;color:var(--muted);font-style:italic;padding:8px 0;">Open-ended / Short Answer — manually graded</div>`;
     }
+
+    // Metadata badges
+    const diffBadge = q.difficulty ? `<span style="font-size:11px;font-weight:700;color:${diffColor};border:1px solid ${diffColor};padding:1px 7px;border-radius:4px;">${q.difficulty}</span>` : '';
+    const chapterTag = q.chapter ? `<span style="font-size:11px;background:#f0f0f0;padding:1px 7px;border-radius:4px;">Ch: ${escapeHtml(q.chapter)}</span>` : '';
+    const typeTag = `<span style="font-size:11px;background:var(--tint);color:var(--maroon);padding:1px 7px;border-radius:4px;font-weight:700;">${q.type === 'mcq' ? 'MCQ' : q.type === 'truefalse' ? 'T/F' : 'Descriptive'}</span>`;
+
+    // Explanation & Reference
+    const explanationHtml = q.explanation ? `<div style="margin-top:8px;padding:7px 10px;background:#f0faf0;border-left:3px solid var(--green);border-radius:4px;font-size:12px;color:var(--green);"><strong>Explanation:</strong> ${escapeHtml(q.explanation)}</div>` : '';
+    const referenceHtml = q.reference ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;"><strong>Reference:</strong> ${escapeHtml(q.reference)}</div>` : '';
 
     qDiv.innerHTML = `
       <div class="q-review-header">
-        <span class="q-meta">Question ${idx+1} · Marks: ${q.marks || 2} · BTL: ${q.btl || 'BTL2'}</span>
+        <span class="q-meta">Q${idx+1} &middot; Marks: ${q.marks || 2} &middot; BTL: ${q.btl || 'BTL2'} &nbsp; ${typeTag} ${diffBadge} ${chapterTag}</span>
         <div class="q-actions">
-          <button class="icon-btn" title="Edit Question" onclick="editQuestionInline(${q.id})">✎</button>
-          <button class="icon-btn danger" title="Delete Question" onclick="deleteQuestionInline(${q.id})">🗑</button>
+          <button class="icon-btn" title="Edit Question" onclick="editQuestionInline('${q.id}')">&#9998;</button>
+          <button class="icon-btn danger" title="Delete Question" onclick="deleteQuestionInline('${q.id}')">&#128465;</button>
         </div>
       </div>
       <div class="q-body" id="qBody_${q.id}">${escapeHtml(q.question)}</div>
       ${optsHtml}
+      ${explanationHtml}${referenceHtml}
     `;
     container.appendChild(qDiv);
   });
@@ -444,12 +522,58 @@ function closeReviewModal(){
   document.getElementById('reviewModal').classList.remove('open');
 }
 
+let currentEditingQuestionObj = null;
+
 function editQuestionInline(qId){
-  const newBody = prompt("Edit Question Text:", document.getElementById(`qBody_${qId}`).textContent);
-  if(newBody !== null && newBody.trim()){
-    document.getElementById(`qBody_${qId}`).textContent = newBody.trim();
-    showToast("Question updated in draft review.");
+  const batch = getBatches().find(b => String(b.id) === String(currentReviewBatchId));
+  if(!batch || !batch.questions) return;
+  const q = batch.questions.find(item => String(item.id) === String(qId));
+  if(!q) return;
+
+  currentEditingQuestionObj = q;
+  document.getElementById('eqId').value = q.id;
+  document.getElementById('eqText').value = q.question || '';
+  document.getElementById('eqOptA').value = q.options ? (q.options.A || '') : '';
+  document.getElementById('eqOptB').value = q.options ? (q.options.B || '') : '';
+  document.getElementById('eqOptC').value = q.options ? (q.options.C || '') : '';
+  document.getElementById('eqOptD').value = q.options ? (q.options.D || '') : '';
+  document.getElementById('eqCorrect').value = q.correct_answer || 'A';
+  document.getElementById('eqMarks').value = q.marks || 2;
+  document.getElementById('eqExplanation').value = q.explanation || '';
+
+  document.getElementById('editQuestionModal').classList.add('open');
+}
+
+function closeEditQuestionModal(){
+  document.getElementById('editQuestionModal').classList.remove('open');
+}
+
+function saveQuestionEdit(){
+  if(!currentEditingQuestionObj) return;
+  currentEditingQuestionObj.question = document.getElementById('eqText').value.trim();
+  currentEditingQuestionObj.options = {
+    A: document.getElementById('eqOptA').value.trim(),
+    B: document.getElementById('eqOptB').value.trim(),
+    C: document.getElementById('eqOptC').value.trim(),
+    D: document.getElementById('eqOptD').value.trim()
+  };
+  currentEditingQuestionObj.correct_answer = document.getElementById('eqCorrect').value.trim().toUpperCase();
+  currentEditingQuestionObj.marks = Number(document.getElementById('eqMarks').value) || 2;
+  currentEditingQuestionObj.explanation = document.getElementById('eqExplanation').value.trim();
+
+  // Save updated batch questions back to stored batches
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  const idx = stored.findIndex(b => String(b.id) === String(currentReviewBatchId));
+  if(idx !== -1){
+    stored[idx].questions = getBatches().find(b => String(b.id) === String(currentReviewBatchId)).questions;
+    localStorage.setItem('submittedBatches', JSON.stringify(stored));
   }
+
+  // Re-render review modal question list
+  openReviewModal(currentReviewBatchId);
+  closeEditQuestionModal();
+  showToast("Question and options updated.");
 }
 
 function deleteQuestionInline(qId){
@@ -460,39 +584,62 @@ function deleteQuestionInline(qId){
   }
 }
 
-function performReviewAction(newStatus){
+async function performReviewAction(newStatus){
   if(!currentReviewBatchId) return;
   const notes = document.getElementById('mNotes').value.trim();
+  const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
 
   let stored = [];
   try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
 
-  const idx = stored.findIndex(b => b.id === currentReviewBatchId);
-  if(idx !== -1){
-    stored[idx].status = newStatus;
-    stored[idx].moderatorNotes = notes;
-    localStorage.setItem('submittedBatches', JSON.stringify(stored));
+  let batchIdx = stored.findIndex(b => String(b.id) === String(currentReviewBatchId));
+  let targetBatch = null;
+
+  if(batchIdx !== -1){
+    stored[batchIdx].status = newStatus;
+    stored[batchIdx].moderatorNotes = notes;
+    targetBatch = stored[batchIdx];
   } else {
-    // Modify default batch mock copy
-    const target = DEFAULT_BATCHES.find(b => b.id === currentReviewBatchId);
-    if(target){
-      target.status = newStatus;
-      target.moderatorNotes = notes;
-      stored.unshift(target);
-      localStorage.setItem('submittedBatches', JSON.stringify(stored));
+    targetBatch = getBatches().find(b => String(b.id) === String(currentReviewBatchId));
+    if(targetBatch){
+      targetBatch.status = newStatus;
+      targetBatch.moderatorNotes = notes;
+      stored.unshift(targetBatch);
     }
   }
 
-  // Audit Log
+  localStorage.setItem('submittedBatches', JSON.stringify(stored));
+
+  const logObj = {
+    log_id: Date.now(),
+    user_id: me.id || 3,
+    username: me.name || 'Moderator',
+    action: `Moderator ${me.name || ''} ${newStatus === 'approved' ? 'APPROVED' : 'RETURNED'} batch #${currentReviewBatchId}. Notes: ${notes || 'None'}`,
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  };
+
   let logs = [];
   try { logs = JSON.parse(localStorage.getItem('auditLogs') || '[]'); } catch(e){}
-  logs.unshift({
-    log_id: Date.now(),
-    user_id: 3,
-    action: `Moderator ${newStatus === 'approved' ? 'APPROVED' : 'RETURNED'} batch #${currentReviewBatchId}. Notes: ${notes || 'None'}`,
-    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
-  });
+  logs.unshift(logObj);
   localStorage.setItem('auditLogs', JSON.stringify(logs));
+
+  // Sync to REST API BEFORE re-rendering queue so server questionBankRegistry is updated first
+  if(targetBatch){
+    try {
+      await fetch('/api/question-banks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(targetBatch)
+      });
+    } catch(e){}
+  }
+  try {
+    await fetch('/api/audit-logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(logObj)
+    });
+  } catch(e){}
 
   showToast(`Question bank has been ${newStatus === 'approved' ? 'Approved' : 'Returned for Edits'}.`);
   closeReviewModal();
@@ -500,9 +647,59 @@ function performReviewAction(newStatus){
 }
 
 function logout(){
+  try {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const u = JSON.parse(userStr);
+      const userId = u.id || u.userId || 1;
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userId, username: u.name })
+      }).catch(err => console.error(err)).finally(() => {
+        localStorage.removeItem('currentUser');
+        sessionStorage.clear();
+        window.location.href = 'login.html?logout=true';
+      });
+      return;
+    }
+  } catch(e){}
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
-  window.location.href = '01-login-register.html?logout=true';
+  window.location.href = 'login.html?logout=true';
+}
+
+function openProfileModal(){
+  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  document.getElementById('profName').value = u.name || '';
+  document.getElementById('profEmail').value = u.email || '';
+  document.getElementById('profDept').value = u.dept || '';
+  document.getElementById('profContact').value = u.contact || '';
+  document.getElementById('profStatus').textContent = '';
+  document.getElementById('profileModal').style.display = 'flex';
+}
+
+async function saveProfile(){
+  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  u.name = document.getElementById('profName').value.trim() || u.name;
+  u.email = document.getElementById('profEmail').value.trim() || u.email;
+  u.dept = document.getElementById('profDept').value.trim();
+  u.contact = document.getElementById('profContact').value.trim();
+
+  try {
+    await fetch('http://localhost:8080/api/auth/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: u.id || 1, name: u.name, email: u.email, department: u.dept, contactNumber: u.contact, subject: u.subject || '' })
+    });
+  } catch(e) { console.log('REST API offline, saved profile locally.'); }
+
+  localStorage.setItem('currentUser', JSON.stringify(u));
+  const initials = (u.name || '').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('userAvatar').textContent = initials || 'MO';
+  document.getElementById('profStatus').style.color = 'var(--green)';
+  document.getElementById('profStatus').textContent = 'Profile updated successfully!';
+  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1200);
 }
 
 function escapeHtml(str){
@@ -512,7 +709,7 @@ function escapeHtml(str){
 window.addEventListener('DOMContentLoaded', () => {
   const userStr = localStorage.getItem('currentUser');
   if(!userStr){
-    window.location.href = '01-login-register.html';
+    window.location.href = 'login.html';
     return;
   }
   try {
@@ -534,6 +731,23 @@ window.addEventListener('DOMContentLoaded', () => {
   renderQueue();
 });
 </script>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;z-index:1000;padding:20px;">
+  <div style="background:#fff;border-radius:10px;width:100%;max-width:420px;padding:32px;box-shadow:0 20px 40px rgba(0,0,0,.18);border-top:4px solid var(--maroon);">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px;">My Profile</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;">Update your personal information.</div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Full Name</label><input type="text" id="profName" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Email</label><input type="email" id="profEmail" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:12px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Department</label><input type="text" id="profDept" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div style="margin-bottom:20px;"><label style="display:block;font-size:12.5px;font-weight:600;margin-bottom:6px;">Contact Number</label><input type="tel" id="profContact" placeholder="Optional" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-family:'Inter',sans-serif;"></div>
+    <div id="profStatus" style="font-size:13px;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="document.getElementById('profileModal').style.display='none'" style="padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
+      <button onclick="saveProfile()" style="padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Save Changes</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
