@@ -94,7 +94,7 @@ display:flex;align-items:center;justify-content:center;font-weight:700;font-size
 .stepper .sep{color:var(--line);}
 
 /* ---------- TYPE CARDS (step 1) ---------- */
-.type-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:760px;}
+.type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;}
 .type-card{
 background:#fff;border:1.5px solid var(--line);border-radius:var(--radius);
 padding:28px 26px;cursor:pointer;transition:border-color .15s ease, box-shadow .15s ease, transform .1s ease;
@@ -311,10 +311,16 @@ outline:3px solid var(--gold);outline-offset:1px;
 <p>Questions with four options where the author marks a single correct answer. Best for quick, auto-gradable checks.</p>
 <div class="tag-row"><span class="mini-tag">Auto-graded</span><span class="mini-tag">4 options</span></div>
 </div>
+<div class="type-card" tabindex="0" onclick="chooseType('truefalse')">
+<div class="icon" style="font-size:15px;">T/F</div>
+<h3>True / False</h3>
+<p>Binary-choice questions where students select True or False as the answer. Ideal for factual recall and concept checks.</p>
+<div class="tag-row"><span class="mini-tag">Auto-graded</span><span class="mini-tag">2 options</span></div>
+</div>
 <div class="type-card" tabindex="0" onclick="chooseType('descriptive')">
 <div class="icon">¶</div>
-<h3>Descriptive</h3>
-<p>Open-ended short answer or essay questions that a moderator or instructor grades manually against a rubric.</p>
+<h3>Descriptive / Short Answer</h3>
+<p>Open-ended or short-answer questions graded manually by a moderator or instructor against a rubric.</p>
 <div class="tag-row"><span class="mini-tag">Manually graded</span><span class="mini-tag">Rubric-based</span></div>
 </div>
 </div>
@@ -343,13 +349,25 @@ outline:3px solid var(--gold);outline-offset:1px;
 <input type="text" id="fSubject" placeholder="e.g. Data Structures" required>
 </div>
 <div class="field">
-<label for="fUnit">Unit <span class="req">*</span></label>
-<input type="text" id="fUnit" placeholder="e.g. Unit 3" required>
+<label for="fChapter">Chapter <span class="req">*</span></label>
+<input type="text" id="fChapter" placeholder="e.g. Chapter 1" required>
 </div>
+</div>
+<div class="field-grid">
 <div class="field">
 <label for="fTopic">Topic name <span class="req">*</span></label>
 <input type="text" id="fTopic" placeholder="e.g. Binary Trees" required>
 </div>
+<div class="field">
+<label for="fDifficulty">Difficulty <span class="req">*</span></label>
+<select id="fDifficulty" required>
+<option value="">Select difficulty</option>
+<option value="Easy">Easy</option>
+<option value="Medium">Medium</option>
+<option value="Hard">Hard</option>
+</select>
+</div>
+<div class="field"></div>
 </div>
 
 <div class="field full">
@@ -358,28 +376,48 @@ outline:3px solid var(--gold);outline-offset:1px;
 </div>
 
 <div id="mcqOptionsBlock" class="options-block" style="display:none;">
-<div class="options-block-title">Options — select the radio button next to the correct answer</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+  <div class="options-block-title" style="margin:0;">Options — select the check / radio button(s) for correct answer(s)</div>
+  <button type="button" class="btn-secondary" style="padding:4px 10px;font-size:11.5px;background:#f0faf0;border-color:var(--green);color:var(--green);font-weight:700;" onclick="presetMcqTrueFalse()">⚡ Quick True / False Preset</button>
+</div>
+<div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;font-size:12.5px;">
+  <input type="checkbox" id="allowMultipleCorrect" onchange="toggleMultipleCorrectMode(this.checked)">
+  <label for="allowMultipleCorrect" style="font-weight:600;cursor:pointer;margin:0;">Allow Multiple Correct Answers (MSQ)</label>
+</div>
 <div class="option-row">
-<input type="radio" name="correctOpt" value="A" class="opt-radio" id="rA">
+<input type="checkbox" name="correctOpt" value="A" class="opt-radio" id="rA">
 <span class="opt-label">A</span>
 <input type="text" id="optA" placeholder="Option A">
 </div>
 <div class="option-row">
-<input type="radio" name="correctOpt" value="B" class="opt-radio" id="rB">
+<input type="checkbox" name="correctOpt" value="B" class="opt-radio" id="rB">
 <span class="opt-label">B</span>
 <input type="text" id="optB" placeholder="Option B">
 </div>
 <div class="option-row">
-<input type="radio" name="correctOpt" value="C" class="opt-radio" id="rC">
+<input type="checkbox" name="correctOpt" value="C" class="opt-radio" id="rC">
 <span class="opt-label">C</span>
 <input type="text" id="optC" placeholder="Option C">
 </div>
 <div class="option-row">
-<input type="radio" name="correctOpt" value="D" class="opt-radio" id="rD">
+<input type="checkbox" name="correctOpt" value="D" class="opt-radio" id="rD">
 <span class="opt-label">D</span>
 <input type="text" id="optD" placeholder="Option D">
 </div>
-<div class="hint">Exactly one option must be marked correct before this question can be added.</div>
+<div class="hint">Check at least one option as correct. Check multiple if multiple answers are correct.</div>
+</div>
+
+<div id="tfOptionsBlock" class="options-block" style="display:none;">
+<div class="options-block-title">True / False — select the correct answer</div>
+<div class="option-row">
+<input type="radio" name="tfCorrectOpt" value="True" class="opt-radio" id="rTrue">
+<span class="opt-label" style="width:40px;">True</span>
+</div>
+<div class="option-row">
+<input type="radio" name="tfCorrectOpt" value="False" class="opt-radio" id="rFalse">
+<span class="opt-label" style="width:40px;">False</span>
+</div>
+<div class="hint">Select whether the statement is True or False.</div>
 </div>
 
 <div class="field-grid">
@@ -403,6 +441,15 @@ outline:3px solid var(--gold);outline-offset:1px;
 <option value="BTL6">BTL6 — Create</option>
 </select>
 </div>
+</div>
+
+<div class="field full">
+<label for="fExplanation">Explanation <span style="color:var(--muted);font-weight:400;">(shown to students after quiz)</span></label>
+<textarea id="fExplanation" placeholder="Explain why the answer is correct, or provide a hint..." style="min-height:60px;"></textarea>
+</div>
+<div class="field full">
+<label for="fReference">Reference / Source</label>
+<input type="text" id="fReference" placeholder="e.g. Textbook: Introduction to Algorithms, Chapter 5, Page 123">
 </div>
 
 <div class="form-actions">
@@ -450,8 +497,9 @@ outline:3px solid var(--gold);outline-offset:1px;
 <thead>
 <tr>
 <th>Type</th>
-<th>Subject / Unit / Topic</th>
+<th>Subject / Unit / Chapter / Topic</th>
 <th>Question</th>
+<th>Difficulty</th>
 <th>Marks</th>
 <th>BTL</th>
 <th>Author</th>
@@ -468,6 +516,7 @@ outline:3px solid var(--gold);outline-offset:1px;
 </div>
 <div class="form-actions" style="margin-top:18px;">
 <button class="btn-secondary" id="clearBatchBtn" onclick="clearBatch()">Clear batch</button>
+<button class="btn-secondary" id="exportBatchBtn" onclick="exportBatchCsv()" style="margin-right:auto;">⬇ Export CSV</button>
 <button class="btn-primary" id="submitBatchBtn" onclick="submitBatch()">Submit batch for moderation</button>
 </div>
 </div>
@@ -488,8 +537,9 @@ let parsedCsvRows = []; // rows parsed from uploaded CSV, awaiting import
 
 const BTL_LABELS = {BTL1:"Remember",BTL2:"Understand",BTL3:"Apply",BTL4:"Analyze",BTL5:"Evaluate",BTL6:"Create"};
 
-const MANUAL_FIELDS_DESC = ['subject_name','Question','unit','topic_name','author','marks','BTL'];
-const MANUAL_FIELDS_MCQ = ['subject_name','Question','unit','topic_name','author','marks','BTL','option_a','option_b','option_c','option_d','correct_answer'];
+const MANUAL_FIELDS_DESC = ['subject_name','Question','chapter','topic_name','difficulty','author','marks','BTL','explanation','reference'];
+const MANUAL_FIELDS_MCQ = ['subject_name','Question','chapter','topic_name','difficulty','author','marks','BTL','option_a','option_b','option_c','option_d','correct_answer','explanation','reference'];
+const MANUAL_FIELDS_TF  = ['subject_name','Question','chapter','topic_name','difficulty','author','marks','BTL','correct_answer','explanation','reference'];
 
 function showToast(msg){
 const t = document.getElementById('toast');
@@ -520,16 +570,18 @@ document.getElementById('pageSub').textContent = "Add questions manually or impo
 }
 
 function chooseType(type){
-currentType = type;
-const chip = document.getElementById('typeChip');
-chip.className = "type-chip " + (type === 'mcq' ? 'mcq' : 'desc');
-chip.innerHTML = `<span class="dot"></span>${type === 'mcq' ? 'Multiple Choice (MCQ)' : 'Descriptive'}`;
-document.getElementById('mcqOptionsBlock').style.display = type === 'mcq' ? 'block' : 'none';
-document.getElementById('csvFieldsNote').textContent = "Required columns: " +
-(type === 'mcq' ? MANUAL_FIELDS_MCQ.join(', ') : MANUAL_FIELDS_DESC.join(', '));
-resetCsvState();
-switchMode('manual');
-goToStep(2);
+  currentType = type;
+  const chip = document.getElementById('typeChip');
+  const labels = { mcq: 'Multiple Choice (MCQ)', truefalse: 'True / False', descriptive: 'Descriptive / Short Answer' };
+  chip.className = "type-chip " + (type === 'mcq' ? 'mcq' : type === 'truefalse' ? 'mcq' : 'desc');
+  chip.innerHTML = `<span class="dot"></span>${labels[type] || type}`;
+  document.getElementById('mcqOptionsBlock').style.display = type === 'mcq' ? 'block' : 'none';
+  document.getElementById('tfOptionsBlock').style.display = type === 'truefalse' ? 'block' : 'none';
+  const fields = type === 'mcq' ? MANUAL_FIELDS_MCQ : type === 'truefalse' ? MANUAL_FIELDS_TF : MANUAL_FIELDS_DESC;
+  document.getElementById('csvFieldsNote').textContent = "Required columns: " + fields.join(', ');
+  resetCsvState();
+  switchMode('manual');
+  goToStep(2);
 }
 
 function switchMode(mode){
@@ -544,47 +596,82 @@ goToStep(1);
 
 // ---------- MANUAL FORM ----------
 document.getElementById('qForm').addEventListener('submit', function(e){
-e.preventDefault();
+  e.preventDefault();
 
-const q = {
-type: currentType,
-subject_name: document.getElementById('fSubject').value.trim(),
-question: document.getElementById('fQuestion').value.trim(),
-unit: document.getElementById('fUnit').value.trim(),
-topic_name: document.getElementById('fTopic').value.trim(),
-author: document.getElementById('fAuthor').value.trim(),
-marks: document.getElementById('fMarks').value,
-btl: document.getElementById('fBtl').value
-};
+  const q = {
+    type: currentType,
+    subject_name: document.getElementById('fSubject').value.trim(),
+    question: document.getElementById('fQuestion').value.trim(),
+    chapter: document.getElementById('fChapter').value.trim(),
+    topic_name: document.getElementById('fTopic').value.trim(),
+    difficulty: document.getElementById('fDifficulty').value,
+    author: document.getElementById('fAuthor').value.trim(),
+    marks: document.getElementById('fMarks').value,
+    btl: document.getElementById('fBtl').value,
+    explanation: document.getElementById('fExplanation').value.trim(),
+    reference: document.getElementById('fReference').value.trim()
+  };
 
-if(currentType === 'mcq'){
-const opts = {
-A: document.getElementById('optA').value.trim(),
-B: document.getElementById('optB').value.trim(),
-C: document.getElementById('optC').value.trim(),
-D: document.getElementById('optD').value.trim()
-};
-const correct = document.querySelector('input[name="correctOpt"]:checked');
-if(!opts.A || !opts.B || !opts.C || !opts.D){
-showToast("Fill in all four options before adding this question.");
-return;
-}
-if(!correct){
-showToast("Select which option is correct.");
-return;
-}
-q.options = opts;
-q.correct_answer = correct.value;
-}
+  if(!q.difficulty){
+    showToast("Please select a difficulty level.");
+    return;
+  }
 
-BATCH.push({ id: nextBatchId++, ...q });
-resetForm();
-renderBatch();
-showToast("Question added to batch.");
+  if(currentType === 'mcq'){
+    const opts = {
+      A: document.getElementById('optA').value.trim(),
+      B: document.getElementById('optB').value.trim(),
+      C: document.getElementById('optC').value.trim(),
+      D: document.getElementById('optD').value.trim()
+    };
+    const checkedOpts = Array.from(document.querySelectorAll('input[name="correctOpt"]:checked')).map(c => c.value);
+    if(!opts.A || !opts.B){
+      showToast("Fill in at least Option A and Option B before adding this question.");
+      return;
+    }
+    if(!checkedOpts.length){
+      showToast("Select at least one option as correct.");
+      return;
+    }
+    q.options = opts;
+    q.correct_answer = checkedOpts.join(',');
+    q.is_multiple = checkedOpts.length > 1;
+    q.correct_answers = checkedOpts;
+  } else if(currentType === 'truefalse'){
+    const correct = document.querySelector('input[name="tfCorrectOpt"]:checked');
+    if(!correct){
+      showToast("Select True or False as the correct answer.");
+      return;
+    }
+    q.options = { A: 'True', B: 'False' };
+    q.correct_answer = correct.value === 'True' ? 'A' : 'B';
+    q.correct_answers = [q.correct_answer];
+  }
+
+  BATCH.push({ id: nextBatchId++, ...q });
+  resetForm();
+  renderBatch();
+  showToast("Question added to batch.");
 });
 
+function presetMcqTrueFalse(){
+  document.getElementById('optA').value = 'True';
+  document.getElementById('optB').value = 'False';
+  document.getElementById('optC').value = 'N/A';
+  document.getElementById('optD').value = 'N/A';
+  showToast("True/False options pre-filled into MCQ!");
+}
+
+function toggleMultipleCorrectMode(isMultiple){
+  // Checkbox inputs allow selecting 1 or multiple
+}
+
 function resetForm(){
-document.getElementById('qForm').reset();
+  const savedSubject = document.getElementById('fSubject').value;
+  const savedAuthor = document.getElementById('fAuthor').value;
+  document.getElementById('qForm').reset();
+  if(savedSubject) document.getElementById('fSubject').value = savedSubject;
+  if(savedAuthor) document.getElementById('fAuthor').value = savedAuthor;
 }
 
 // ---------- CSV UPLOAD ----------
@@ -628,32 +715,41 @@ document.getElementById('fileChip').textContent = "📄 " + file.name;
 }
 
 function validateAndStageCsv(rows, headers){
-const required = currentType === 'mcq' ? MANUAL_FIELDS_MCQ : MANUAL_FIELDS_DESC;
-const missing = required.filter(f => !headers.includes(f));
-if(missing.length){
-showCsvErrors(["Missing required column(s): " + missing.join(', '), "Download the template above to see the exact headers expected."]);
-document.getElementById('csvImportBtn').disabled = true;
-return;
-}
+  const required = currentType === 'mcq' ? MANUAL_FIELDS_MCQ : currentType === 'truefalse' ? MANUAL_FIELDS_TF : MANUAL_FIELDS_DESC;
+  // Only check truly required fields (exclude optional ones)
+  const coreRequired = required.filter(f => !['explanation','reference'].includes(f));
+  const missing = coreRequired.filter(f => !headers.includes(f));
+  if(missing.length){
+    showCsvErrors(["Missing required column(s): " + missing.join(', '), "Download the template above to see the exact headers expected."]);
+    document.getElementById('csvImportBtn').disabled = true;
+    return;
+  }
 
-const errors = [];
-const valid = [];
-rows.forEach((row, i) => {
-const lineNo = i + 2; // account for header row
-const missingFields = required.filter(f => !row[f] || !String(row[f]).trim());
-if(missingFields.length){
-errors.push(`Row ${lineNo}: missing ${missingFields.join(', ')}`);
-return;
-}
-if(currentType === 'mcq'){
-const ca = String(row.correct_answer).trim().toUpperCase();
-if(!['A','B','C','D'].includes(ca)){
-errors.push(`Row ${lineNo}: correct_answer must be A, B, C, or D`);
-return;
-}
-}
-valid.push(row);
-});
+  const errors = [];
+  const valid = [];
+  rows.forEach((row, i) => {
+    const lineNo = i + 2;
+    const missingFields = coreRequired.filter(f => !row[f] || !String(row[f]).trim());
+    if(missingFields.length){
+      errors.push(`Row ${lineNo}: missing ${missingFields.join(', ')}`);
+      return;
+    }
+    if(currentType === 'mcq'){
+      const ca = String(row.correct_answer).trim().toUpperCase();
+      if(!['A','B','C','D'].includes(ca)){
+        errors.push(`Row ${lineNo}: correct_answer must be A, B, C, or D`);
+        return;
+      }
+    }
+    if(currentType === 'truefalse'){
+      const ca = String(row.correct_answer).trim();
+      if(!['True','False','TRUE','FALSE'].includes(ca)){
+        errors.push(`Row ${lineNo}: correct_answer must be True or False`);
+        return;
+      }
+    }
+    valid.push(row);
+  });
 
 parsedCsvRows = valid;
 
@@ -676,41 +772,69 @@ box.style.display = 'block';
 }
 
 function importCsvRows(){
-parsedCsvRows.forEach(row => {
-const q = {
-type: currentType,
-subject_name: row.subject_name.trim(),
-question: row.Question ? row.Question.trim() : (row.question || '').trim(),
-unit: row.unit.trim(),
-topic_name: row.topic_name.trim(),
-author: row.author.trim(),
-marks: row.marks,
-btl: row.BTL
-};
-if(currentType === 'mcq'){
-q.options = { A: row.option_a, B: row.option_b, C: row.option_c, D: row.option_d };
-q.correct_answer = String(row.correct_answer).trim().toUpperCase();
-}
-BATCH.push({ id: nextBatchId++, ...q });
-});
-showToast(`${parsedCsvRows.length} question(s) added to batch.`);
-resetCsvState();
-renderBatch();
+  parsedCsvRows.forEach(row => {
+    const q = {
+      type: currentType,
+      subject_name: (row.subject_name || '').trim(),
+      question: row.Question ? row.Question.trim() : (row.question || '').trim(),
+      unit: (row.unit || '').trim(),
+      chapter: (row.chapter || '').trim(),
+      topic_name: (row.topic_name || '').trim(),
+      difficulty: (row.difficulty || 'Medium').trim(),
+      author: (row.author || '').trim(),
+      marks: row.marks,
+      btl: row.BTL || row.btl,
+      explanation: (row.explanation || '').trim(),
+      reference: (row.reference || '').trim()
+    };
+    if(currentType === 'mcq'){
+      q.options = { A: row.option_a, B: row.option_b, C: row.option_c, D: row.option_d };
+      q.correct_answer = String(row.correct_answer).trim().toUpperCase();
+    } else if(currentType === 'truefalse'){
+      q.options = { A: 'True', B: 'False' };
+      const ca = String(row.correct_answer).trim();
+      q.correct_answer = (ca === 'True' || ca === 'TRUE') ? 'A' : 'B';
+    }
+    BATCH.push({ id: nextBatchId++, ...q });
+  });
+  showToast(`${parsedCsvRows.length} question(s) added to batch.`);
+  resetCsvState();
+  renderBatch();
 }
 
 function downloadTemplate(){
-const cols = currentType === 'mcq' ? MANUAL_FIELDS_MCQ : MANUAL_FIELDS_DESC;
-const sampleMcq = ['Data Structures','Which data structure uses FIFO order?','Unit 2','Queues','Author Name','2','BTL1','Stack','Queue','Tree','Graph','B'];
-const sampleDesc = ['Operating Systems','Explain the difference between a process and a thread.','Unit 1','Process Management','Author Name','5','BTL2'];
-const sample = currentType === 'mcq' ? sampleMcq : sampleDesc;
-const csv = cols.join(',') + "\n" + sample.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
-const blob = new Blob([csv], {type:'text/csv'});
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = (currentType === 'mcq' ? 'mcq' : 'descriptive') + '_question_template.csv';
-a.click();
-URL.revokeObjectURL(url);
+  const cols = currentType === 'mcq' ? MANUAL_FIELDS_MCQ : currentType === 'truefalse' ? MANUAL_FIELDS_TF : MANUAL_FIELDS_DESC;
+  const sampleMcq = ['Data Structures','Which data structure uses FIFO order?','Unit 2','Chapter 3','Queues','Medium','Author Name','2','BTL1','Stack','Queue','Tree','Graph','B','Queue processes elements in FIFO order.','Textbook: DSA, Ch.3'];
+  const sampleTF  = ['Operating Systems','A process and a thread always share the same memory space.','Unit 1','Chapter 1','Process Management','Easy','Author Name','1','BTL1','False','A process has its own memory; threads share process memory.','OS Concepts, Ch.1'];
+  const sampleDesc = ['Operating Systems','Explain the difference between a process and a thread.','Unit 1','Chapter 1','Process Management','Medium','Author Name','5','BTL2','A process is an independent program; a thread is a lightweight process.','OS Concepts, Ch.1'];
+  const sample = currentType === 'mcq' ? sampleMcq : currentType === 'truefalse' ? sampleTF : sampleDesc;
+  const csv = cols.join(',') + "\n" + sample.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (currentType || 'question') + '_template.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportBatchCsv(){
+  if(!BATCH.length){ showToast('No questions in batch to export.'); return; }
+  const headers = ['type','subject_name','unit','chapter','topic_name','difficulty','marks','btl','question','option_a','option_b','option_c','option_d','correct_answer','explanation','reference'];
+  const rows = BATCH.map(q => [
+    q.type, q.subject_name, q.unit, q.chapter||'', q.topic_name,
+    q.difficulty||'', q.marks, q.btl, q.question,
+    q.options ? q.options.A||'' : '', q.options ? q.options.B||'' : '',
+    q.options ? q.options.C||'' : '', q.options ? q.options.D||'' : '',
+    q.correct_answer||'', q.explanation||'', q.reference||''
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url;
+  a.download = 'question_batch_export.csv'; a.click();
+  URL.revokeObjectURL(url);
+  showToast(`${BATCH.length} question(s) exported to CSV.`);
 }
 
 // ---------- BATCH TABLE ----------
@@ -720,29 +844,35 @@ tbody.innerHTML = "";
 document.getElementById('batchEmpty').style.display = BATCH.length ? 'none' : 'block';
 document.getElementById('batchCount').textContent = `${BATCH.length} question${BATCH.length === 1 ? '' : 's'} staged`;
 
-BATCH.forEach(q => {
-const tr = document.createElement('tr');
-const correctText = q.type === 'mcq' ? `<div class="correct-tag">Correct: ${q.correct_answer} — ${escapeHtml(q.options[q.correct_answer] || '')}</div>` : '';
-tr.innerHTML = `
-<td><span class="type-pill ${q.type === 'mcq' ? 'mcq' : 'desc'}">${q.type === 'mcq' ? 'MCQ' : 'Descriptive'}</span></td>
-<td style="font-size:12.5px;color:var(--muted);">${escapeHtml(q.subject_name)}<br>${escapeHtml(q.unit)} · ${escapeHtml(q.topic_name)}</td>
-<td class="q-text">${escapeHtml(q.question)}${correctText}</td>
-<td>${escapeHtml(String(q.marks))}</td>
-<td>${escapeHtml(q.btl || '')}${q.btl && BTL_LABELS[q.btl] ? ` <span style="color:var(--muted);font-size:11.5px;">(${BTL_LABELS[q.btl]})</span>` : ''}</td>
-<td>${escapeHtml(q.author)}</td>
-<td>
-<div class="row-actions" style="justify-content:flex-end;">
-<button class="icon-btn danger" title="Remove" onclick="removeFromBatch(${q.id})">🗑</button>
-</div>
-</td>
-`;
-tbody.appendChild(tr);
-});
+  const DIFF_COLORS = { Easy: 'var(--green)', Medium: 'var(--amber)', Hard: 'var(--maroon-hover)' };
+  BATCH.forEach(q => {
+    const tr = document.createElement('tr');
+    const typePill = q.type === 'mcq' ? 'MCQ' : q.type === 'truefalse' ? 'T/F' : 'DESC';
+    const typeClass = q.type === 'mcq' || q.type === 'truefalse' ? 'mcq' : 'desc';
+    const correctLabel = q.correct_answer && q.options ? `${q.correct_answer}: ${escapeHtml(q.options[q.correct_answer]||'')}` : (q.correct_answer || '');
+    const correctText = (q.type === 'mcq' || q.type === 'truefalse') ? `<div class="correct-tag">✓ ${correctLabel}</div>` : '';
+    const diffColor = DIFF_COLORS[q.difficulty] || 'var(--muted)';
+    tr.innerHTML = `
+      <td><span class="type-pill ${typeClass}">${typePill}</span></td>
+      <td style="font-size:12px;color:var(--muted);">${escapeHtml(q.subject_name)}<br>${escapeHtml(q.unit)} ${q.chapter?'· '+escapeHtml(q.chapter):''}<br>${escapeHtml(q.topic_name)}</td>
+      <td class="q-text">${escapeHtml(q.question)}${correctText}</td>
+      <td><span style="font-size:12px;font-weight:700;color:${diffColor};">${escapeHtml(q.difficulty||'—')}</span></td>
+      <td>${escapeHtml(String(q.marks))}</td>
+      <td>${escapeHtml(q.btl || '')}${q.btl && BTL_LABELS[q.btl] ? ` <span style="color:var(--muted);font-size:11px;">(${BTL_LABELS[q.btl]})</span>` : ''}</td>
+      <td>${escapeHtml(q.author)}</td>
+      <td>
+        <div class="row-actions" style="justify-content:flex-end;">
+          <button class="icon-btn danger" title="Remove" onclick="removeFromBatch(${q.id})">🗑</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
 
-document.getElementById('statBatch').textContent = BATCH.length;
-document.getElementById('statMcq').textContent = BATCH.filter(q => q.type === 'mcq').length;
-document.getElementById('statDesc').textContent = BATCH.filter(q => q.type === 'descriptive').length;
-document.getElementById('statSubjects').textContent = new Set(BATCH.map(q => q.subject_name.toLowerCase())).size;
+  document.getElementById('statBatch').textContent = BATCH.length;
+  document.getElementById('statMcq').textContent = BATCH.filter(q => q.type === 'mcq' || q.type === 'truefalse').length;
+  document.getElementById('statDesc').textContent = BATCH.filter(q => q.type === 'descriptive').length;
+  document.getElementById('statSubjects').textContent = new Set(BATCH.map(q => q.subject_name.toLowerCase())).size;
 }
 
 function removeFromBatch(id){
@@ -757,7 +887,7 @@ BATCH = [];
 renderBatch();
 }
 
-function submitBatch(){
+async function submitBatch(){
   if(!BATCH.length){
     showToast("Add at least one question before submitting.");
     return;
@@ -778,6 +908,24 @@ function submitBatch(){
     questions: [...BATCH]
   };
 
+  // Auto-assign same-subject teacher as moderator for this batch
+  const batchSubject = (firstQ.subject_name || '').toLowerCase();
+  if(batchSubject){
+    try {
+      const allUsers = JSON.parse(localStorage.getItem('usersList') || '[]');
+      const currentEmail = currentUser ? (currentUser.email || '').toLowerCase() : '';
+      const sameSubjectTeacher = allUsers.find(u =>
+        u.email && u.email.toLowerCase() !== currentEmail &&
+        (u.role === 'Question Author' || u.role === 'Moderator') &&
+        u.subject && (u.subject.toLowerCase().includes(batchSubject) || batchSubject.includes(u.subject.toLowerCase()))
+      );
+      if(sameSubjectTeacher){
+        newSubmission.assignedModerator = sameSubjectTeacher.name;
+        newSubmission.assignedModeratorEmail = sameSubjectTeacher.email;
+      }
+    } catch(e){}
+  }
+
   let stored = [];
   try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
   stored.unshift(newSubmission);
@@ -785,20 +933,37 @@ function submitBatch(){
 
   let logs = [];
   try { logs = JSON.parse(localStorage.getItem('auditLogs') || '[]'); } catch(e){}
-  logs.unshift({
+  const logObj = {
     log_id: Date.now(),
     user_id: currentUser ? currentUser.id : 2,
+    username: currentUser ? currentUser.name : 'Author',
     action: `Submitted question bank batch (${BATCH.length} questions): ${newSubmission.title}`,
     timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
-  });
+  };
+  logs.unshift(logObj);
   localStorage.setItem('auditLogs', JSON.stringify(logs));
+
+  try {
+    await fetch('http://localhost:8080/api/question-banks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newSubmission)
+    });
+    await fetch('http://localhost:8080/api/audit-logs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(logObj)
+    });
+  } catch(err) {
+    console.log('REST API offline, submitted locally.');
+  }
 
   showToast(`${BATCH.length} question(s) submitted for moderation. Redirecting to dashboard...`);
   BATCH = [];
   renderBatch();
   setTimeout(() => {
     window.location.href = 'author.html#submissions';
-  }, 1200);
+  }, 1500);
 }
 
 function escapeHtml(str){
@@ -806,15 +971,32 @@ function escapeHtml(str){
 }
 
 function logout(){
+  try {
+    const userStr = localStorage.getItem('currentUser');
+    if (userStr) {
+      const u = JSON.parse(userStr);
+      const userId = u.id || u.userId || 1;
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: userId, username: u.name })
+      }).catch(err => console.error(err)).finally(() => {
+        localStorage.removeItem('currentUser');
+        sessionStorage.clear();
+        window.location.href = 'login.html?logout=true';
+      });
+      return;
+    }
+  } catch(e){}
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
-  window.location.href = '01-login-register.html?logout=true';
+  window.location.href = 'login.html?logout=true';
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   const userStr = localStorage.getItem('currentUser');
   if (!userStr) {
-    window.location.href = '01-login-register.html';
+    window.location.href = 'login.html';
     return;
   }
   try {
@@ -823,6 +1005,33 @@ window.addEventListener('DOMContentLoaded', () => {
       const authorInput = document.getElementById('fAuthor');
       if(authorInput) authorInput.value = user.name;
     }
+
+    // Requirement 1: Auto-fill subject from teacher's assigned subject
+    if(user.subject){
+      const subjectInput = document.getElementById('fSubject');
+      if(subjectInput){
+        subjectInput.value = user.subject;
+        const note = document.createElement('div');
+        note.style.cssText = 'font-size:11.5px;color:var(--green);margin-top:4px;font-weight:600;';
+        note.textContent = `✓ Auto-filled from your profile (${user.subject})`;
+        subjectInput.parentNode.appendChild(note);
+        subjectInput.style.background = '#f0faf0';
+        subjectInput.style.borderColor = 'var(--green)';
+        subjectInput.readOnly = true;
+      }
+    }
+
+    // Auto-fill author name from user profile
+    if(user.name){
+      const authorInput = document.getElementById('fAuthor');
+      if(authorInput){
+        authorInput.value = user.name;
+        authorInput.style.background = '#f0faf0';
+        authorInput.style.borderColor = 'var(--green)';
+        authorInput.readOnly = true;
+      }
+    }
+
     const initials = (user.name || 'Author').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
     document.getElementById('userAvatar').textContent = initials || 'AU';
 
