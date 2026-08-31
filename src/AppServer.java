@@ -18,11 +18,6 @@ import service.QuizAttemptService;
 import service.QuizAttemptServiceImpl;
 import service.QuizService;
 import service.QuizServiceImpl;
-import service.SyllabusService;
-import service.SyllabusServiceImpl;
-import model.Subject;
-import model.Unit;
-import model.Topic;
 import util.PasswordUtil;
 
 import java.io.InputStream;
@@ -46,6 +41,7 @@ public class AppServer {
         server.createContext("/api/auth/reset-password", new ResetPasswordHandler());
         server.createContext("/api/auth/profile", new ProfileHandler());
         server.createContext("/api/auth/logout", new LogoutHandler());
+        server.createContext("/api/profile-requests", new ProfileRequestsHandler());
 
         server.createContext("/api/admin/users", new AdminUsersHandler());
         server.createContext("/api/audit-logs", new AuditLogsHandler());
@@ -53,8 +49,8 @@ public class AppServer {
         server.createContext("/api/question-banks", new QuestionBankHandler());
         server.createContext("/api/quizzes", new QuizHandler());
         server.createContext("/api/quiz-results", new QuizResultsHandler());
+        server.createContext("/api/subjects", new SubjectsHandler());
         server.createContext("/api/reset", new ResetHandler());
-        server.createContext("/api/syllabus/", new SyllabusHandler());
 
         // Static Web Server for Frontend (http://localhost:8080/)
         String frontendPath = System.getProperty("user.dir");
@@ -217,13 +213,17 @@ public class AppServer {
             }
             try {
                 String body = readRequestBody(ex);
-                int userId = Integer.parseInt(extractJsonField(body, "userId"));
+                String userIdStr = extractJsonField(body, "userId");
+                int userId = (userIdStr != null && !userIdStr.isEmpty()) ? Integer.parseInt(userIdStr) : 0;
                 String email = extractJsonField(body, "email");
                 String department = extractJsonField(body, "department");
+                if (department == null || department.isEmpty()) department = extractJsonField(body, "dept");
+                if (department == null || department.isEmpty()) department = extractJsonField(body, "division");
                 String contactNumber = extractJsonField(body, "contactNumber");
+                if (contactNumber == null || contactNumber.isEmpty()) contactNumber = extractJsonField(body, "contact");
                 String subject = extractJsonField(body, "subject");
                 String name = extractJsonField(body, "name");
-                if (name == null) name = extractJsonField(body, "username");
+                if (name == null || name.isEmpty()) name = extractJsonField(body, "username");
 
                 UserDTO user = authService.updateProfileFull(userId, email, department, contactNumber, subject, name);
                 sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Profile updated successfully\"}");
@@ -234,6 +234,7 @@ public class AppServer {
     }
 
     static class LogoutHandler implements HttpHandler {
+        private final AuditLogDAO auditLogDao = new AuditLogDAOImpl();
 
         @Override
         public void handle(HttpExchange ex) throws IOException {
@@ -249,37 +250,96 @@ public class AppServer {
             try {
                 String body = readRequestBody(ex);
                 String userIdStr = extractJsonField(body, "userId");
-                if (userIdStr == null) {
-                    userIdStr = extractJsonField(body, "user_id");
+                String username = extractJsonField(body, "username");
+                if (username == null || username.isEmpty()) {
+                    username = extractJsonField(body, "name");
                 }
-                if (userIdStr == null || userIdStr.isEmpty()) {
-                    sendJsonResponse(ex, 400, "{\"status\":\"error\",\"message\":\"User ID is required\"}");
+                if (username == null || username.isEmpty()) {
+                    username = "User";
+                }
+
+                String sessionActiveTime = extractJsonField(body, "sessionActiveTime");
+                if (sessionActiveTime == null || sessionActiveTime.isEmpty()) {
+                    sessionActiveTime = extractJsonField(body, "sessionDuration");
+                }
+                if (sessionActiveTime == null || sessionActiveTime.isEmpty()) {
+                    sessionActiveTime = "5 mins";
+                }
+
+                int userId = 0;
+                if (userIdStr != null && !userIdStr.isEmpty()) {
+                    try {
+                        userId = Integer.parseInt(userIdStr);
+                    } catch (NumberFormatException e) {}
+                }
+
+                String actionText = "LOGOUT - User \"" + username + "\" signed out (Session Active: " + sessionActiveTime + ")";
+
+                // 1. Insert ONE record into PostgreSQL audit_log using existing AuditLogDAO
+                try {
+                    auditLogDao.logAction(userId, actionText);
+                } catch (Exception e) {}
+
+                // 2. Add entry to in-memory audit log registry for live UI synchronization
+                String timestampStr = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+                String memJson = String.format("{\"logId\":%d,\"userId\":%d,\"username\":\"%s\",\"action\":\"%s\",\"sessionActiveTime\":\"%s\",\"session_info\":\"%s\",\"timestamp\":\"%s\"}",
+                        System.currentTimeMillis(), userId, escapeJson(username), escapeJson(actionText), escapeJson(sessionActiveTime), escapeJson("Session Active: " + sessionActiveTime), timestampStr);
+                auditLogMemoryRegistry.add(0, memJson);
+
+                sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"LOGOUT audit record logged\"}");
+            } catch (Throwable t) {
+                sendJsonResponse(ex, 500, "{\"status\":\"error\",\"message\":\"" + escapeJson(t.getMessage()) + "\"}");
+            }
+        }
+    }
+
+    static class ProfileRequestsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange ex) throws IOException {
+            enableCORS(ex);
+            if ("OPTIONS".equalsIgnoreCase(ex.getRequestMethod())) {
+                ex.sendResponseHeaders(204, -1);
+                return;
+            }
+            try {
+                if ("POST".equalsIgnoreCase(ex.getRequestMethod())) {
+                    String body = readRequestBody(ex);
+                    String reqId = extractJsonField(body, "id");
+                    if (reqId != null) {
+                        final String targetId = reqId;
+                        profileRequestsRegistry.removeIf(item -> item.contains("\"id\":" + targetId) || item.contains("\"id\":\"" + targetId + "\""));
+                    }
+                    profileRequestsRegistry.add(0, body);
+                    sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Profile update request submitted\"}");
                     return;
                 }
-                int userId = Integer.parseInt(userIdStr);
-
-                String username = extractJsonField(body, "username");
-                if (username == null) username = extractJsonField(body, "user_name");
-                if (username == null) username = "User";
-
-                boolean loggedInDb = false;
-                try {
-                    dao.AuditLogDAO auditLogDAO = new dao.AuditLogDAOImpl();
-                    auditLogDAO.logAction(userId, "LOGOUT");
-                    loggedInDb = true;
-                } catch (Exception ignored) {}
-
-                if (!loggedInDb) {
-                    String memJson = String.format("{\"logId\":%d,\"userId\":%d,\"username\":\"%s\",\"action\":\"LOGOUT\",\"timestamp\":\"%s\"}",
-                            System.currentTimeMillis(), userId,
-                            escapeJson(username),
-                            java.time.LocalDateTime.now().toString().replace('T', ' ').substring(0, 16));
-                    auditLogMemoryRegistry.add(0, memJson);
+                if ("PUT".equalsIgnoreCase(ex.getRequestMethod())) {
+                    String body = readRequestBody(ex);
+                    String reqId = extractJsonField(body, "id");
+                    String status = extractJsonField(body, "status");
+                    if (reqId != null) {
+                        for (int i = 0; i < profileRequestsRegistry.size(); i++) {
+                            String item = profileRequestsRegistry.get(i);
+                            if (item.contains("\"id\":" + reqId) || item.contains("\"id\":\"" + reqId + "\"")) {
+                                String updatedItem = item.replaceAll("\"status\":\"[^\"]+\"", "\"status\":\"" + status + "\"");
+                                profileRequestsRegistry.set(i, updatedItem);
+                                break;
+                            }
+                        }
+                    }
+                    sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Profile request status updated\"}");
+                    return;
                 }
-
-                sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Logged out successfully\"}");
-            } catch (Exception e) {
-                sendJsonResponse(ex, 400, String.format("{\"status\":\"error\",\"message\":\"%s\"}", escapeJson(e.getMessage())));
+                // GET — returns all profile update requests
+                StringBuilder json = new StringBuilder("[");
+                for (int i = 0; i < profileRequestsRegistry.size(); i++) {
+                    json.append(profileRequestsRegistry.get(i));
+                    if (i < profileRequestsRegistry.size() - 1) json.append(",");
+                }
+                json.append("]");
+                sendJsonResponse(ex, 200, json.toString());
+            } catch (Throwable t) {
+                sendJsonResponse(ex, 200, "[]");
             }
         }
     }
@@ -383,20 +443,16 @@ public class AppServer {
                     if (username == null) username = extractJsonField(body, "user_name");
 
                     if (action != null && !action.isEmpty()) {
-                        boolean loggedInDb = false;
                         try {
                             auditLogDAO.logAction(userId, (username != null ? username + ": " : "") + action);
-                            loggedInDb = true;
                         } catch (Exception ignored) {}
 
-                        if (!loggedInDb) {
-                            String memJson = String.format("{\"logId\":%d,\"userId\":%d,\"username\":\"%s\",\"action\":\"%s\",\"timestamp\":\"%s\"}",
-                                    System.currentTimeMillis(), userId,
-                                    escapeJson(username != null ? username : "User"),
-                                    escapeJson(action),
-                                    java.time.LocalDateTime.now().toString().replace('T', ' ').substring(0, 16));
-                            auditLogMemoryRegistry.add(0, memJson);
-                        }
+                        String memJson = String.format("{\"logId\":%d,\"userId\":%d,\"username\":\"%s\",\"action\":\"%s\",\"timestamp\":\"%s\"}",
+                                System.currentTimeMillis(), userId,
+                                escapeJson(username != null ? username : "User"),
+                                escapeJson(action),
+                                java.time.LocalDateTime.now().toString().replace('T', ' ').substring(0, 16));
+                        auditLogMemoryRegistry.add(0, memJson);
                     }
                     sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Audit log created\"}");
                     return;
@@ -437,6 +493,8 @@ public class AppServer {
     private static final List<String> quizRegistry = new java.util.concurrent.CopyOnWriteArrayList<>();
     private static final List<String> quizResultsRegistry = new java.util.concurrent.CopyOnWriteArrayList<>();
     private static final List<String> auditLogMemoryRegistry = new java.util.concurrent.CopyOnWriteArrayList<>();
+    private static final List<String> subjectRegistry = new java.util.concurrent.CopyOnWriteArrayList<>();
+    private static final List<String> profileRequestsRegistry = new java.util.concurrent.CopyOnWriteArrayList<>();
 
     static {
         auditLogMemoryRegistry.add("{\"logId\":100,\"userId\":1,\"username\":\"System Admin\",\"action\":\"User \\\"System Admin\\\" signed in\",\"timestamp\":\"2026-08-12 09:30\"}");
@@ -449,6 +507,55 @@ public class AppServer {
         auditLogMemoryRegistry.add("{\"logId\":107,\"userId\":5,\"username\":\"Dr. Geetha R. Chillarge\",\"action\":\"Approved Question Bank \\\"Data Science and Machine Learning — Unit 1\\\"\",\"timestamp\":\"2026-08-12 11:20\"}");
         auditLogMemoryRegistry.add("{\"logId\":108,\"userId\":30,\"username\":\"Tushar Borate (Student)\",\"action\":\"User \\\"Tushar Borate\\\" signed in\",\"timestamp\":\"2026-08-12 14:00\"}");
         auditLogMemoryRegistry.add("{\"logId\":109,\"userId\":30,\"username\":\"Tushar Borate (Student)\",\"action\":\"Submitted Quiz Attempt for Data Science (Score: 100%)\",\"timestamp\":\"2026-08-12 14:30\"}");
+
+        initSubjectDefaults();
+    }
+
+    private static void initSubjectDefaults() {
+        if (!subjectRegistry.isEmpty()) return;
+        subjectRegistry.add("{"
+            + "\"id\":\"CS301\","
+            + "\"code\":\"CS301\","
+            + "\"name\":\"Data Science and Machine Learning\","
+            + "\"dept\":\"Computer Engineering\","
+            + "\"version\":\"v2026.1\","
+            + "\"description\":\"Core course covering Data Preprocessing, Regression, Classification, Clustering, and Neural Networks.\","
+            + "\"chapters\":["
+            + "{\"chapter\":\"Chapter 1: Introduction & Data Preprocessing\",\"quota\":10,\"topics\":[\"Exploratory Data Analysis\",\"Feature Scaling\",\"Outlier Detection\"]},"
+            + "{\"chapter\":\"Chapter 2: Supervised Learning - Regression\",\"quota\":10,\"topics\":[\"Linear Regression\",\"Regularization (L1/L2)\",\"Polynomial Regression\"]},"
+            + "{\"chapter\":\"Chapter 3: Supervised Learning - Classification\",\"quota\":10,\"topics\":[\"Logistic Regression\",\"Decision Trees\",\"Support Vector Machines\",\"Naive Bayes\"]},"
+            + "{\"chapter\":\"Chapter 4: Unsupervised Learning & Clustering\",\"quota\":10,\"topics\":[\"K-Means Clustering\",\"Hierarchical Clustering\",\"PCA\",\"DBSCAN\"]},"
+            + "{\"chapter\":\"Chapter 5: Model Evaluation & Neural Networks\",\"quota\":10,\"topics\":[\"Classification Metrics\",\"Ensemble Methods\",\"Bias-Variance\",\"Artificial Neural Networks\"]}"
+            + "]"
+            + "}");
+
+        subjectRegistry.add("{"
+            + "\"id\":\"CS302\","
+            + "\"code\":\"CS302\","
+            + "\"name\":\"Database Management Systems\","
+            + "\"dept\":\"Computer Engineering\","
+            + "\"version\":\"v2026.1\","
+            + "\"description\":\"Relational Database Concepts, SQL Queries, Normalization, and Transaction Processing.\","
+            + "\"chapters\":["
+            + "{\"chapter\":\"Chapter 1: Relational Model & SQL\",\"quota\":10,\"topics\":[\"DDL/DML Commands\",\"Joins & Subqueries\",\"Views & Constraints\"]},"
+            + "{\"chapter\":\"Chapter 2: Database Design & Normalization\",\"quota\":10,\"topics\":[\"ER Diagrams\",\"Functional Dependencies\",\"1NF / 2NF / 3NF / BCNF\"]},"
+            + "{\"chapter\":\"Chapter 3: Transaction Processing & Concurrency\",\"quota\":10,\"topics\":[\"ACID Properties\",\"Two-Phase Locking\",\"Deadlock Handling\"]}"
+            + "]"
+            + "}");
+
+        subjectRegistry.add("{"
+            + "\"id\":\"CS303\","
+            + "\"code\":\"CS303\","
+            + "\"name\":\"Data Structures & Algorithms\","
+            + "\"dept\":\"Computer Engineering\","
+            + "\"version\":\"v2026.1\","
+            + "\"description\":\"Fundamental Data Structures, Trees, Graphs, Sorting, and Algorithm Complexity.\","
+            + "\"chapters\":["
+            + "{\"chapter\":\"Chapter 1: Linear Data Structures\",\"quota\":10,\"topics\":[\"Arrays\",\"Stacks\",\"Queues\",\"Linked Lists\"]},"
+            + "{\"chapter\":\"Chapter 2: Non-Linear Data Structures\",\"quota\":10,\"topics\":[\"Binary Search Trees\",\"AVL Trees\",\"Graph Traversal (BFS/DFS)\"]},"
+            + "{\"chapter\":\"Chapter 3: Sorting & Searching Algorithms\",\"quota\":10,\"topics\":[\"Quick Sort\",\"Merge Sort\",\"Binary Search\",\"Hashing\"]}"
+            + "]"
+            + "}");
     }
 
     static class QuestionBankHandler implements HttpHandler {
@@ -554,6 +661,63 @@ public class AppServer {
         }
     }
 
+    static class SubjectsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange ex) throws IOException {
+            enableCORS(ex);
+            if ("OPTIONS".equalsIgnoreCase(ex.getRequestMethod())) {
+                ex.sendResponseHeaders(204, -1);
+                return;
+            }
+            try {
+                if ("POST".equalsIgnoreCase(ex.getRequestMethod()) || "PUT".equalsIgnoreCase(ex.getRequestMethod())) {
+                    String body = readRequestBody(ex);
+                    String code = extractJsonField(body, "code");
+                    if (code == null) code = extractJsonField(body, "id");
+                    String name = extractJsonField(body, "name");
+                    String dept = extractJsonField(body, "dept");
+                    String version = extractJsonField(body, "version");
+                    String description = extractJsonField(body, "description");
+
+                    if (code != null) {
+                        final String targetCode = code;
+                        subjectRegistry.removeIf(item -> item.contains("\"code\":\"" + targetCode + "\"") || item.contains("\"id\":\"" + targetCode + "\""));
+                    }
+                    subjectRegistry.add(0, body);
+
+                    // PostgreSQL DB Sync
+                    try (java.sql.Connection con = util.DBConnection.getConnection();
+                         java.sql.PreparedStatement pstmt = con.prepareStatement(
+                             "INSERT INTO subject (subject_code, subject_name, department, syllabus_version, description, updated_at) " +
+                             "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP) " +
+                             "ON CONFLICT (subject_code) DO UPDATE SET " +
+                             "subject_name = EXCLUDED.subject_name, department = EXCLUDED.department, " +
+                             "syllabus_version = EXCLUDED.syllabus_version, description = EXCLUDED.description, updated_at = CURRENT_TIMESTAMP")) {
+                        pstmt.setString(1, code != null ? code : "SUB01");
+                        pstmt.setString(2, name != null ? name : "Subject");
+                        pstmt.setString(3, dept != null ? dept : "Computer Engineering");
+                        pstmt.setString(4, version != null ? version : "v2026.1");
+                        pstmt.setString(5, description != null ? description : "");
+                        pstmt.executeUpdate();
+                    } catch (Throwable t) {}
+
+                    sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Subject & syllabus saved\"}");
+                    return;
+                }
+                // GET — returns all subject syllabus definitions & quotas
+                StringBuilder json = new StringBuilder("[");
+                for (int i = 0; i < subjectRegistry.size(); i++) {
+                    json.append(subjectRegistry.get(i));
+                    if (i < subjectRegistry.size() - 1) json.append(",");
+                }
+                json.append("]");
+                sendJsonResponse(ex, 200, json.toString());
+            } catch (Throwable t) {
+                sendJsonResponse(ex, 200, "[]");
+            }
+        }
+    }
+
     static class ResetHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange ex) throws IOException {
@@ -562,8 +726,25 @@ public class AppServer {
             quizRegistry.clear();
             quizResultsRegistry.clear();
             auditLogMemoryRegistry.clear();
+            subjectRegistry.clear();
+            profileRequestsRegistry.clear();
+
+            // Re-init defaults
             auditLogMemoryRegistry.add("{\"logId\":100,\"userId\":1,\"username\":\"System Admin\",\"action\":\"User \\\"System Admin\\\" signed in\",\"timestamp\":\"2026-08-12 09:30\"}");
-            sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Server state reset cleanly\"}");
+            initSubjectDefaults();
+
+            // PostgreSQL Database Cleanup if connected
+            try (java.sql.Connection con = util.DBConnection.getConnection();
+                 java.sql.Statement stmt = con.createStatement()) {
+                stmt.executeUpdate("DELETE FROM student_answer");
+                stmt.executeUpdate("DELETE FROM quiz_attempt");
+                stmt.executeUpdate("DELETE FROM quiz");
+                stmt.executeUpdate("DELETE FROM question");
+                stmt.executeUpdate("DELETE FROM question_bank");
+                stmt.executeUpdate("DELETE FROM audit_log WHERE log_id > 109");
+            } catch (Throwable t) {}
+
+            sendJsonResponse(ex, 200, "{\"status\":\"success\",\"message\":\"Server state and test entries reset cleanly\"}");
         }
     }
 
@@ -644,137 +825,5 @@ public class AppServer {
     private static String escapeJson(String input) {
         if (input == null) return "";
         return input.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
-    }
-
-    static class SyllabusHandler implements HttpHandler {
-        private final SyllabusService syllabusService = new SyllabusServiceImpl();
-
-        @Override
-        public void handle(HttpExchange ex) throws IOException {
-            enableCORS(ex);
-            String path = ex.getRequestURI().getPath();
-            String method = ex.getRequestMethod();
-
-            if ("OPTIONS".equalsIgnoreCase(method)) {
-                ex.sendResponseHeaders(204, -1);
-                return;
-            }
-
-            try {
-                if ("GET".equalsIgnoreCase(method)) {
-                    if (path.endsWith("/subjects")) {
-                        List<Subject> subjects = syllabusService.getAllSubjects();
-                        StringBuilder json = new StringBuilder("[");
-                        for (int i = 0; i < subjects.size(); i++) {
-                            Subject s = subjects.get(i);
-                            json.append(String.format("{\"id\":%d,\"name\":\"%s\",\"version\":\"%s\",\"isActive\":%b}",
-                                    s.getSubjectId(), escapeJson(s.getSubjectName()), escapeJson(s.getVersion()), s.isActive()));
-                            if (i < subjects.size() - 1) json.append(",");
-                        }
-                        json.append("]");
-                        sendJsonResponse(ex, 200, json.toString());
-                        return;
-                    } else if (path.endsWith("/units")) {
-                        String query = ex.getRequestURI().getQuery();
-                        int subjectId = 0;
-                        if (query != null && query.contains("subjectId=")) {
-                            subjectId = Integer.parseInt(query.split("subjectId=")[1].split("&")[0]);
-                        }
-                        List<Unit> units = syllabusService.getUnitsBySubjectId(subjectId);
-                        StringBuilder json = new StringBuilder("[");
-                        for (int i = 0; i < units.size(); i++) {
-                            Unit u = units.get(i);
-                            json.append(String.format("{\"id\":%d,\"subjectId\":%d,\"name\":\"%s\",\"questionQuota\":%d}",
-                                    u.getUnitId(), u.getSubjectId(), escapeJson(u.getUnitName()), u.getQuestionQuota()));
-                            if (i < units.size() - 1) json.append(",");
-                        }
-                        json.append("]");
-                        sendJsonResponse(ex, 200, json.toString());
-                        return;
-                    } else if (path.endsWith("/topics")) {
-                        String query = ex.getRequestURI().getQuery();
-                        int unitId = 0;
-                        if (query != null && query.contains("unitId=")) {
-                            unitId = Integer.parseInt(query.split("unitId=")[1].split("&")[0]);
-                        }
-                        List<Topic> topics = syllabusService.getTopicsByUnitId(unitId);
-                        StringBuilder json = new StringBuilder("[");
-                        for (int i = 0; i < topics.size(); i++) {
-                            Topic t = topics.get(i);
-                            json.append(String.format("{\"id\":%d,\"unitId\":%d,\"name\":\"%s\",\"questionQuota\":%d}",
-                                    t.getTopicId(), t.getUnitId(), escapeJson(t.getTopicName()), t.getQuestionQuota()));
-                            if (i < topics.size() - 1) json.append(",");
-                        }
-                        json.append("]");
-                        sendJsonResponse(ex, 200, json.toString());
-                        return;
-                    }
-                } else if ("POST".equalsIgnoreCase(method)) {
-                    String body = readRequestBody(ex);
-                    if (path.endsWith("/subjects/clone")) {
-                        int oldSubjectId = Integer.parseInt(extractJsonField(body, "subjectId"));
-                        String newVersion = extractJsonField(body, "version");
-                        int newId = syllabusService.cloneSubjectVersion(oldSubjectId, newVersion);
-                        sendJsonResponse(ex, 200, "{\"status\":\"success\",\"newSubjectId\":" + newId + "}");
-                        return;
-                    } else if (path.endsWith("/subjects/active")) {
-                        int subjectId = Integer.parseInt(extractJsonField(body, "subjectId"));
-                        boolean isActive = Boolean.parseBoolean(extractJsonField(body, "isActive"));
-                        syllabusService.setSubjectActive(subjectId, isActive);
-                        sendJsonResponse(ex, 200, "{\"status\":\"success\"}");
-                        return;
-                    } else if (path.endsWith("/subjects")) {
-                        String name = extractJsonField(body, "name");
-                        String version = extractJsonField(body, "version");
-                        Subject s = new Subject();
-                        s.setSubjectName(name);
-                        s.setVersion(version);
-                        s.setActive(true);
-                        s = syllabusService.createSubject(s);
-                        if (s == null) {
-                            sendJsonResponse(ex, 500, "{\"status\":\"error\",\"message\":\"Failed to save subject. Database may be offline.\"}");
-                            return;
-                        }
-                        sendJsonResponse(ex, 200, "{\"status\":\"success\",\"id\":" + s.getSubjectId() + "}");
-                        return;
-                    } else if (path.endsWith("/units")) {
-                        int subjectId = Integer.parseInt(extractJsonField(body, "subjectId"));
-                        String name = extractJsonField(body, "name");
-                        String quotaStr = extractJsonField(body, "questionQuota");
-                        int quota = (quotaStr != null && !quotaStr.isEmpty()) ? Integer.parseInt(quotaStr) : 0;
-                        Unit u = new Unit();
-                        u.setSubjectId(subjectId);
-                        u.setUnitName(name);
-                        u.setQuestionQuota(quota);
-                        u = syllabusService.createUnit(u);
-                        if (u == null) {
-                            sendJsonResponse(ex, 500, "{\"status\":\"error\",\"message\":\"Failed to save unit. Database may be offline.\"}");
-                            return;
-                        }
-                        sendJsonResponse(ex, 200, "{\"status\":\"success\",\"id\":" + u.getUnitId() + "}");
-                        return;
-                    } else if (path.endsWith("/topics")) {
-                        int unitId = Integer.parseInt(extractJsonField(body, "unitId"));
-                        String name = extractJsonField(body, "name");
-                        String quotaStr = extractJsonField(body, "questionQuota");
-                        int quota = (quotaStr != null && !quotaStr.isEmpty()) ? Integer.parseInt(quotaStr) : 0;
-                        Topic t = new Topic();
-                        t.setUnitId(unitId);
-                        t.setTopicName(name);
-                        t.setQuestionQuota(quota);
-                        t = syllabusService.createTopic(t);
-                        if (t == null) {
-                            sendJsonResponse(ex, 500, "{\"status\":\"error\",\"message\":\"Failed to save topic. Database may be offline.\"}");
-                            return;
-                        }
-                        sendJsonResponse(ex, 200, "{\"status\":\"success\",\"id\":" + t.getTopicId() + "}");
-                        return;
-                    }
-                }
-                sendJsonResponse(ex, 404, "{\"status\":\"error\",\"message\":\"Not Found\"}");
-            } catch (Exception e) {
-                sendJsonResponse(ex, 400, "{\"status\":\"error\",\"message\":\"" + escapeJson(e.getMessage()) + "\"}");
-            }
-        }
     }
 }
