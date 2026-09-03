@@ -270,12 +270,38 @@ border-top:4px solid var(--maroon);
 <tr>
 <th>Quiz Title</th>
 <th>Date Taken</th>
+<th>Time Duration</th>
 <th>Score</th>
 <th>Grade</th>
 <th>Status</th>
 </tr>
 </thead>
 <tbody id="completedQuizzesBody"></tbody>
+</table>
+</div>
+
+<!-- LIVE QUESTION BANKS (DESCRIPTIVE & PRACTICE) -->
+<div class="card-header" id="liveQBsSection" style="margin-top:32px;">
+<div style="display:flex;align-items:center;gap:10px;">
+  <div class="card-title">📚 Live Question Banks (Descriptive &amp; Practice)</div>
+  <span style="font-size:11.5px;font-weight:700;background:#e8f5e9;color:#1b5e20;padding:3px 10px;border-radius:12px;border:1px solid #a5d6a7;">🟢 Live Practice</span>
+</div>
+</div>
+
+<div class="table-card" style="margin-bottom:32px;">
+<table>
+<thead>
+<tr>
+<th>Subject / Question Bank Title</th>
+<th>Chapter / Section</th>
+<th>Questions</th>
+<th>Type</th>
+<th style="text-align:right;">Action</th>
+</tr>
+</thead>
+<tbody id="liveQBsTableBody">
+<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted);">Loading live question banks...</td></tr>
+</tbody>
 </table>
 </div>
 
@@ -489,6 +515,7 @@ async function loadStudentDashboard(){
       tr.innerHTML = `
         <td><strong>${escapeHtml(c.title)}</strong></td>
         <td>${escapeHtml(c.dateTaken || c.date || 'Today')}</td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;">${escapeHtml(c.durationStr || c.timeSpent || '04m 12s')}</td>
         <td><strong>${escapeHtml(c.score)}</strong></td>
         <td><span class="status-pill approved"><span class="dot"></span>${escapeHtml(c.grade || 'Pass')}</span></td>
         <td><span style="font-size:12px;color:var(--muted);">${escapeHtml(c.status || 'Completed')}</span></td>
@@ -513,6 +540,7 @@ async function loadStudentDashboard(){
     document.getElementById('statAvgScore').textContent = `0%`;
     document.getElementById('statPassRate').textContent = `100%`;
   }
+  loadLiveQuestionBanks();
 }
 
 function startQuiz(quizId){
@@ -553,6 +581,7 @@ function startQuiz(quizId){
   activeQuizData = target;
   currentQIdx = 0;
   userAnswers = {};
+  quizStartTime = Date.now();
   secondsRemaining = (Number(target.duration) || 15) * 60;
 
   document.getElementById('runnerTitle').textContent = target.title;
@@ -773,7 +802,13 @@ async function submitQuizAnswers(){
   document.getElementById('scoreMsg').textContent = passed ? "You passed the assessment successfully." : "You scored below passing criteria (60%).";
   document.getElementById('scoreCorrect').textContent = `${correctCount} / ${qList.length}`;
   document.getElementById('scoreMarks').textContent = `${earnedMarks} / ${totalMarks}`;
-  document.getElementById('scoreTime').textContent = `Just now`;
+  const totalDurationSecs = (Number(activeQuizData.duration) || 15) * 60;
+  const elapsedSecs = Math.max(1, Math.min(totalDurationSecs, Math.round((Date.now() - (quizStartTime || Date.now())) / 1000)));
+  const mins = Math.floor(elapsedSecs / 60);
+  const secs = elapsedSecs % 60;
+  const durationStr = `${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`;
+
+  document.getElementById('scoreTime').textContent = durationStr;
 
   const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
 
@@ -790,6 +825,8 @@ async function submitQuizAnswers(){
     totalMarks,
     correctCount,
     totalQuestions: qList.length,
+    durationStr: durationStr,
+    timeSpent: durationStr,
     grade: passed ? "Pass (A)" : "Fail",
     status: "Completed"
   };
@@ -802,7 +839,7 @@ async function submitQuizAnswers(){
 
   // POST result to backend so teacher can see grades
   try {
-    await fetch('http://localhost:8080/api/quiz-results', {
+    await fetch('/api/quiz-results', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(resultRecord)
@@ -856,65 +893,293 @@ function handlePerfOverlayClick(e){
   }
 }
 
-function logout(){
+async function logout(){
   try {
     const userStr = localStorage.getItem('currentUser');
+    const sessionStart = parseInt(sessionStorage.getItem('sessionStartTime') || (Date.now() - 300000).toString());
+    const elapsedSecs = Math.max(1, Math.round((Date.now() - sessionStart) / 1000));
+    const mins = Math.floor(elapsedSecs / 60);
+    const secs = elapsedSecs % 60;
+    const activeDurationStr = mins >= 1 ? `${mins} mins` : `${secs} secs`;
+
     if (userStr) {
       const u = JSON.parse(userStr);
-      const userId = u.id || u.userId || 1;
-      fetch('/api/auth/logout', {
+      await fetch('/api/auth/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userId, username: u.name })
-      }).catch(err => console.error(err)).finally(() => {
-        localStorage.removeItem('currentUser');
-        sessionStorage.clear();
-        window.location.href = 'login.html?logout=true';
+        body: JSON.stringify({ userId: u.id || 30, username: u.name || 'Student', sessionActiveTime: activeDurationStr })
       });
-      return;
     }
   } catch(e){}
+
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
   window.location.href = 'login.html?logout=true';
 }
 
 function openProfileModal(){
-  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  document.getElementById('profName').value = u.name || '';
-  document.getElementById('profEmail').value = u.email || '';
-  document.getElementById('profDept').value = u.dept || '';
-  document.getElementById('profContact').value = u.contact || '';
-  document.getElementById('profStatus').textContent = '';
+  let u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+  try {
+    const users = JSON.parse(localStorage.getItem('usersList') || '[]');
+    const match = users.find(x => String(x.id) === String(u.id) || (x.email && u.email && x.email.toLowerCase() === u.email.toLowerCase()));
+    if(match){
+      u.name = match.name || u.name;
+      u.email = match.email || u.email;
+      u.dept = match.dept || u.dept;
+      u.contact = match.contact || u.contact;
+      u.subject = match.subject || u.subject;
+      localStorage.setItem('currentUser', JSON.stringify(u));
+    }
+  } catch(e){}
+
+  const nameEl = document.getElementById('profName');
+  const emailEl = document.getElementById('profEmail');
+  const deptEl = document.getElementById('profDept');
+  const contactEl = document.getElementById('profContact');
+  const statusEl = document.getElementById('profStatus');
+  const saveBtn = document.getElementById('saveProfBtn') || document.querySelector('#profileModal button[onclick="saveProfile()"]');
+
+  if(nameEl) nameEl.value = u.name || '';
+  if(emailEl) emailEl.value = u.email || '';
+  if(deptEl) deptEl.value = u.dept || u.department || 'Computer Engineering';
+  if(contactEl) contactEl.value = u.contact || u.contactNumber || '';
+  if(statusEl) statusEl.textContent = '';
+
+  const isSysAdmin = u.role === 'Administrator' || (u.email && u.email.toLowerCase() === 'admin@mmcoe.edu.in') || u.id === 1;
+
+  if(nameEl) nameEl.readOnly = isSysAdmin;
+  if(emailEl) emailEl.readOnly = isSysAdmin;
+  if(deptEl) deptEl.readOnly = isSysAdmin;
+  if(contactEl) contactEl.readOnly = isSysAdmin;
+
+  if(saveBtn){
+    if(isSysAdmin){
+      saveBtn.disabled = true;
+      saveBtn.style.opacity = '0.5';
+      saveBtn.style.cursor = 'not-allowed';
+      saveBtn.textContent = '🔒 System Admin Locked';
+      if(statusEl){
+        statusEl.style.color = 'var(--maroon)';
+        statusEl.textContent = '🔒 System Administrator credentials are locked and read-only.';
+      }
+    } else {
+      saveBtn.disabled = false;
+      saveBtn.style.opacity = '1';
+      saveBtn.style.cursor = 'pointer';
+      saveBtn.textContent = 'Save Changes';
+    }
+  }
+
   document.getElementById('profileModal').style.display = 'flex';
 }
 
 async function saveProfile(){
   const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  u.name = document.getElementById('profName').value.trim() || u.name;
-  u.email = document.getElementById('profEmail').value.trim() || u.email;
-  u.dept = document.getElementById('profDept').value.trim();
-  u.contact = document.getElementById('profContact').value.trim();
+  const reqName = document.getElementById('profName').value.trim() || u.name;
+  const reqEmail = document.getElementById('profEmail').value.trim() || u.email;
+  const reqDept = document.getElementById('profDept').value.trim();
+  const reqContact = document.getElementById('profContact').value.trim();
+
+  const requestObj = {
+    id: Date.now(),
+    userId: u.id || 30,
+    username: u.name,
+    currentEmail: u.email,
+    requestedName: reqName,
+    requestedEmail: reqEmail,
+    requestedDept: reqDept,
+    requestedContact: reqContact,
+    requestedSubject: u.subject || '',
+    status: 'pending',
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  };
 
   try {
-    await fetch('http://localhost:8080/api/auth/profile', {
+    await fetch('/api/profile-requests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: u.id || 1, name: u.name, email: u.email, department: u.dept, contactNumber: u.contact, subject: u.subject || '' })
+      body: JSON.stringify(requestObj)
     });
-  } catch(e) { console.log('REST API offline, saved profile locally.'); }
+  } catch(e){}
 
-  localStorage.setItem('currentUser', JSON.stringify(u));
-  const initials = (u.name || '').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('userAvatar').textContent = initials || 'SU';
-  document.getElementById('welcomeHeading').textContent = `Welcome, ${u.name || 'Student'}`;
-  document.getElementById('profStatus').style.color = 'var(--green)';
-  document.getElementById('profStatus').textContent = 'Profile updated successfully!';
-  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1200);
+  let requests = [];
+  try { requests = JSON.parse(localStorage.getItem('pendingProfileRequests') || '[]'); } catch(e){}
+  requests.unshift(requestObj);
+  localStorage.setItem('pendingProfileRequests', JSON.stringify(requests));
+
+  document.getElementById('profStatus').style.color = 'var(--amber)';
+  document.getElementById('profStatus').textContent = 'Profile update request submitted for Admin approval! ⏳';
+  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1800);
+}
+
+async function loadLiveQuestionBanks(){
+  let batches = [];
+  try {
+    const res = await fetch('/api/question-banks');
+    if(res.ok){
+      const data = await res.json();
+      if(Array.isArray(data)) batches = data;
+    }
+  } catch(e){}
+
+  try {
+    const local = JSON.parse(localStorage.getItem('submittedBatches') || '[]');
+    const map = new Map();
+    [...batches, ...local].forEach(b => { if(b && b.id) map.set(String(b.id), b); });
+    batches = Array.from(map.values());
+  } catch(e){}
+
+  const liveList = batches.filter(b => b && (b.status === 'approved' || b.status === 'live') && (b.isLive || (b.type || '').toLowerCase() === 'descriptive' || (b.questions && b.questions.some(q => q.type === 'descriptive'))));
+
+  const tbody = document.getElementById('liveQBsTableBody');
+  if(!tbody) return;
+
+  if(!liveList.length){
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted);">No live descriptive question banks available at present.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = '';
+  liveList.forEach(b => {
+    const qCount = b.questions ? b.questions.length : (b.count || '10');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${escapeHtml(b.title || b.subject_name || 'Descriptive Bank')}</strong><br><span style="font-size:11.5px;color:var(--muted);">${escapeHtml(b.subject_name || '')}</span></td>
+      <td>${escapeHtml(b.chapter || 'All Chapters')}</td>
+      <td><strong>${qCount} Qs</strong></td>
+      <td><span style="font-size:11.5px;font-weight:700;background:#e8f5e9;color:#1b5e20;padding:2px 8px;border-radius:4px;">Descriptive / Live</span></td>
+      <td style="text-align:right;">
+        <button onclick="openDescriptiveViewer('${b.id}')" style="padding:6px 14px;font-size:12px;background:var(--maroon);color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;">👁️ Practice Questions</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openDescriptiveViewer(id){
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
+  const qb = stored.find(b => String(b.id) === String(id));
+  if(!qb) return;
+
+  document.getElementById('dViewerTitle').textContent = qb.title || 'Descriptive Question Bank';
+  document.getElementById('dViewerMeta').textContent = `${qb.subject_name || ''} · ${qb.chapter || ''} · ${qb.questions ? qb.questions.length : 0} Questions`;
+
+  const container = document.getElementById('dViewerQuestionsList');
+  container.innerHTML = '';
+
+  const qList = qb.questions || [];
+  if(!qList.length){
+    container.innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted);">No questions found in this question bank.</div>`;
+  } else {
+    qList.forEach((q, i) => {
+      const card = document.createElement('div');
+      card.style.cssText = 'background:#fcfcfc;border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:12px;';
+      const markHtml = q.marks ? `<span style="font-size:11.5px;font-weight:700;background:#f0f0f0;padding:2px 8px;border-radius:4px;color:var(--muted);">${q.marks} Marks</span>` : '';
+      const diffHtml = q.difficulty ? `<span style="font-size:11.5px;font-weight:700;color:var(--amber);">${q.difficulty}</span>` : '';
+      const explanationHtml = q.explanation ? `<div style="margin-top:10px;padding:10px 14px;background:#e8f5e9;border-left:3px solid var(--green);border-radius:4px;font-size:13px;color:#1b5e20;"><strong>💡 Model Answer & Explanation:</strong><br>${escapeHtml(q.explanation)}</div>` : '';
+      const refHtml = q.reference ? `<div style="font-size:12px;color:var(--muted);margin-top:6px;">📖 Reference: ${escapeHtml(q.reference)}</div>` : '';
+
+      card.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+          <div style="font-weight:700;font-size:14px;color:var(--ink);">Question ${i+1}</div>
+          <div style="display:flex;gap:6px;align-items:center;">${diffHtml}${markHtml}</div>
+        </div>
+        <div style="font-size:14px;line-height:1.5;color:var(--ink);font-weight:600;">${escapeHtml(q.question)}</div>
+        ${explanationHtml}
+        ${refHtml}
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  document.getElementById('descriptiveViewerModal').style.display = 'flex';
 }
 
 function escapeHtml(str){
   return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+async function syncApprovedProfile(user){
+  if(!user || (!user.id && !user.email)) return user;
+
+  const emailNorm = (user.email || '').toLowerCase();
+  const nameNorm = (user.name || '').toLowerCase();
+
+  // 1. Sync from backend /api/admin/users
+  try {
+    const res = await fetch('/api/admin/users');
+    if(res.ok){
+      const allUsers = await res.json();
+      if(Array.isArray(allUsers)){
+        const match = allUsers.find(u => String(u.userId) === String(user.id) || (u.email && u.email.toLowerCase() === emailNorm) || (u.username && u.username.toLowerCase() === nameNorm));
+        if(match){
+          user.name = match.username || user.name;
+          user.email = match.email || user.email;
+          user.dept = match.department || match.division || user.dept;
+          user.contact = match.contactNumber || user.contact;
+          user.subject = match.subject || user.subject;
+        }
+      }
+    }
+  } catch(e){}
+
+  // 2. Sync from localStorage usersList / users / usersData
+  try {
+    const users = JSON.parse(localStorage.getItem('usersList') || localStorage.getItem('users') || localStorage.getItem('usersData') || '[]');
+    const match = users.find(u => String(u.id) === String(user.id) || (u.email && u.email.toLowerCase() === emailNorm) || (u.name && u.name.toLowerCase() === nameNorm));
+    if(match){
+      user.name = match.name || user.name;
+      user.email = match.email || user.email;
+      user.dept = match.dept || match.department || user.dept;
+      user.contact = match.contact || match.contactNumber || user.contact;
+      user.subject = match.subject || user.subject;
+    }
+  } catch(e){}
+
+  // 3. Sync from pendingProfileRequests status === 'approved'
+  try {
+    const reqs = JSON.parse(localStorage.getItem('pendingProfileRequests') || '[]');
+    const app = reqs.find(r => (r.status === 'approved') && (String(r.userId) === String(user.id) || (r.currentEmail && r.currentEmail.toLowerCase() === emailNorm) || (r.username && r.username.toLowerCase() === nameNorm)));
+    if(app){
+      user.name = app.requestedName || user.name;
+      user.email = app.requestedEmail || user.email;
+      user.dept = app.requestedDept || user.dept;
+      user.contact = app.requestedContact || user.contact;
+      user.subject = app.requestedSubject || user.subject;
+    }
+  } catch(e){}
+
+  // 4. Sync from remote /api/profile-requests status === 'approved'
+  try {
+    const res = await fetch('/api/profile-requests');
+    if(res.ok){
+      const remoteReqs = await res.json();
+      if(Array.isArray(remoteReqs)){
+        const app = remoteReqs.find(r => (r.status === 'approved') && (String(r.userId) === String(user.id) || (r.currentEmail && r.currentEmail.toLowerCase() === emailNorm) || (r.username && r.username.toLowerCase() === nameNorm)));
+        if(app){
+          user.name = app.requestedName || user.name;
+          user.email = app.requestedEmail || user.email;
+          user.dept = app.requestedDept || user.dept;
+          user.contact = app.requestedContact || user.contact;
+          user.subject = app.requestedSubject || user.subject;
+        }
+      }
+    }
+  } catch(e){}
+
+  localStorage.setItem('currentUser', JSON.stringify(user));
+
+  const welcomeEl = document.getElementById('welcomeHeading');
+  if(welcomeEl) welcomeEl.textContent = `Welcome, ${user.name}`;
+  const avatarEl = document.getElementById('userAvatar');
+  if(avatarEl){
+    const initials = (user.name || 'User').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    avatarEl.textContent = initials;
+  }
+
+  return user;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -924,7 +1189,8 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
   try {
-    const user = JSON.parse(userStr);
+    let user = JSON.parse(userStr);
+    user = syncApprovedProfile(user);
     document.getElementById('welcomeHeading').textContent = `Welcome, ${user.name || 'Student'}`;
     const initials = (user.name || 'Student User').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
     document.getElementById('userAvatar').textContent = initials || 'SU';
@@ -956,6 +1222,23 @@ window.addEventListener('DOMContentLoaded', () => {
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button onclick="document.getElementById('profileModal').style.display='none'" style="padding:10px 18px;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Cancel</button>
       <button onclick="saveProfile()" style="padding:10px 18px;background:var(--maroon);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- DESCRIPTIVE QUESTION BANK VIEWER MODAL -->
+<div id="descriptiveViewerModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.55);backdrop-filter:blur(6px);align-items:center;justify-content:center;z-index:1000;padding:20px;">
+  <div style="background:#fff;border-radius:12px;width:100%;max-width:760px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 20px 40px rgba(0,0,0,.2);border-top:4px solid var(--maroon);overflow:hidden;">
+    <div style="padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:#fafafa;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--ink);" id="dViewerTitle">Question Bank Title</div>
+        <div style="font-size:12.5px;color:var(--muted);margin-top:2px;" id="dViewerMeta">Subject · Chapter</div>
+      </div>
+      <button onclick="document.getElementById('descriptiveViewerModal').style.display='none'" style="background:none;border:none;font-size:24px;cursor:pointer;color:var(--muted);">&times;</button>
+    </div>
+    <div style="padding:20px 24px;overflow-y:auto;flex:1;" id="dViewerQuestionsList"></div>
+    <div style="padding:14px 24px;border-top:1px solid var(--line);background:#fafafa;display:flex;justify-content:flex-end;">
+      <button onclick="document.getElementById('descriptiveViewerModal').style.display='none'" class="btn-secondary" style="padding:8px 18px;font-size:13px;">Close</button>
     </div>
   </div>
 </div>
