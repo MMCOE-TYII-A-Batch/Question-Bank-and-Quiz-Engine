@@ -268,6 +268,7 @@ border-top:4px solid var(--maroon);
 <div class="modal">
 <div class="modal-title" id="mBatchTitle">Review Batch</div>
 <div class="modal-desc" id="mBatchSub">Author details &amp; question breakdown</div>
+<div id="mSelfAuthoredAlert"></div>
 
 <div id="mQuestionsContainer"></div>
 
@@ -278,8 +279,8 @@ border-top:4px solid var(--maroon);
 
 <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px;">
 <button type="button" class="btn-secondary" onclick="closeReviewModal()">Cancel</button>
-<button type="button" class="btn-warning" onclick="performReviewAction('returned')">Return for Edits</button>
-<button type="button" class="btn-success" onclick="performReviewAction('approved')">✓ Approve Question Bank</button>
+<button type="button" class="btn-warning" id="btnReturn" onclick="performReviewAction('returned')">Return for Edits</button>
+<button type="button" class="btn-success" id="btnApprove" onclick="performReviewAction('approved')">✓ Approve Question Bank</button>
 </div>
 </div>
 </div>
@@ -399,6 +400,26 @@ function getBatches(){
   return localStored;
 }
 
+function isBatchSelfAuthored(b) {
+  const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  const myEmail = (me.email || '').toLowerCase().trim();
+  const myName = (me.name || '').toLowerCase().trim();
+
+  if (!myEmail && !myName) return false;
+
+  const firstQ = (b.questions && b.questions.length) ? b.questions[0] : {};
+  const authorEmail = (b.authorEmail || b.author_email || '').toLowerCase().trim();
+  const authorName = (b.author || b.author_name || firstQ.author || '').toLowerCase().trim();
+
+  if (myEmail && authorEmail && myEmail === authorEmail) return true;
+  if (myName && authorName && (myName.includes(authorName) || authorName.includes(myName))) return true;
+
+  if (myEmail.includes('kirtisatpute') && (authorEmail.includes('kirtisatpute') || authorName.includes('kirti'))) return true;
+  if (myEmail.includes('sankirti') && (authorEmail.includes('sankirti') || authorName.includes('sankirti'))) return true;
+
+  return false;
+}
+
 async function renderQueue(){
   try {
     const res = await fetch('/api/question-banks');
@@ -425,9 +446,11 @@ async function renderQueue(){
     if(b.status === 'returned' || b.status === 'returned_for_edits') statusBadge = `<span class="status-pill returned"><span class="dot"></span>Needs Revision</span>`;
 
     const typeColor = b.type === 'MCQ' ? 'var(--blue)' : 'var(--amber)';
+    const selfAuthored = isBatchSelfAuthored(b);
+    const selfBadge = selfAuthored ? `<span style="font-size:11px;font-weight:700;background:#fff3cd;color:#856404;padding:2px 7px;border-radius:4px;border:1px solid #ffeeba;margin-left:6px;">🔒 Self-Authored</span>` : '';
 
     tr.innerHTML = `
-      <td><strong>${escapeHtml(b.title)}</strong><br><span style="font-size:12px;color:var(--muted);">${escapeHtml(b.dept)}</span></td>
+      <td><strong>${escapeHtml(b.title)}</strong> ${selfBadge}<br><span style="font-size:12px;color:var(--muted);">${escapeHtml(b.dept)}</span></td>
       <td>${b.count}</td>
       <td><span style="font-size:12px;font-weight:600;color:${typeColor};">${escapeHtml(b.type)}</span></td>
       <td>${escapeHtml(b.submittedDate)}</td>
@@ -458,6 +481,48 @@ function openReviewModal(batchId){
   document.getElementById('mBatchTitle').textContent = `Review: ${batch.title}`;
   document.getElementById('mBatchSub').textContent = `Department: ${batch.dept} | Total Questions: ${batch.count} | Type: ${batch.type}`;
   document.getElementById('mNotes').value = "";
+
+  const selfAuthored = isBatchSelfAuthored(batch);
+  const alertContainer = document.getElementById('mSelfAuthoredAlert');
+  const btnApprove = document.getElementById('btnApprove');
+  const btnReturn = document.getElementById('btnReturn');
+
+  if (selfAuthored) {
+    const assignedMod = batch.assignedModerator || 'Co-Teacher / Assigned Moderator';
+    if (alertContainer) {
+      alertContainer.innerHTML = `
+        <div style="background:#fff3cd;border:1px solid #ffeeba;color:#856404;padding:12px 16px;border-radius:8px;margin-bottom:14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;">
+          🔒 <span><strong>Self-Moderation Restricted:</strong> You authored this question bank. Faculty members are not allowed to moderate their own question banks. It must be reviewed by your co-teacher / assigned moderator (<strong>${escapeHtml(assignedMod)}</strong>).</span>
+        </div>
+      `;
+    }
+    if (btnApprove) {
+      btnApprove.disabled = true;
+      btnApprove.style.opacity = '0.45';
+      btnApprove.style.cursor = 'not-allowed';
+      btnApprove.title = "Self-authored batch cannot be approved by author.";
+    }
+    if (btnReturn) {
+      btnReturn.disabled = true;
+      btnReturn.style.opacity = '0.45';
+      btnReturn.style.cursor = 'not-allowed';
+      btnReturn.title = "Self-authored batch cannot be returned by author.";
+    }
+  } else {
+    if (alertContainer) alertContainer.innerHTML = '';
+    if (btnApprove) {
+      btnApprove.disabled = false;
+      btnApprove.style.opacity = '1';
+      btnApprove.style.cursor = 'pointer';
+      btnApprove.title = "";
+    }
+    if (btnReturn) {
+      btnReturn.disabled = false;
+      btnReturn.style.opacity = '1';
+      btnReturn.style.cursor = 'pointer';
+      btnReturn.title = "";
+    }
+  }
 
   const container = document.getElementById('mQuestionsContainer');
   container.innerHTML = "";
@@ -494,6 +559,8 @@ function openReviewModal(batchId){
     // Metadata badges
     const diffBadge = q.difficulty ? `<span style="font-size:11px;font-weight:700;color:${diffColor};border:1px solid ${diffColor};padding:1px 7px;border-radius:4px;">${q.difficulty}</span>` : '';
     const chapterTag = q.chapter ? `<span style="font-size:11px;background:#f0f0f0;padding:1px 7px;border-radius:4px;">Ch: ${escapeHtml(q.chapter)}</span>` : '';
+    const verBadge = q.syllabus_version ? `<span style="font-size:11px;background:#e8f4fd;color:#0284c7;padding:1px 7px;border-radius:4px;font-weight:700;">Syllabus: ${escapeHtml(q.syllabus_version)}</span>` : '';
+    const secBadge = q.syllabus_section ? `<span style="font-size:11px;background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:4px;">Section: ${escapeHtml(q.syllabus_section)}</span>` : '';
     const typeTag = `<span style="font-size:11px;background:var(--tint);color:var(--maroon);padding:1px 7px;border-radius:4px;font-weight:700;">${q.type === 'mcq' ? 'MCQ' : q.type === 'truefalse' ? 'T/F' : 'Descriptive'}</span>`;
 
     // Explanation & Reference
@@ -502,7 +569,7 @@ function openReviewModal(batchId){
 
     qDiv.innerHTML = `
       <div class="q-review-header">
-        <span class="q-meta">Q${idx+1} &middot; Marks: ${q.marks || 2} &middot; BTL: ${q.btl || 'BTL2'} &nbsp; ${typeTag} ${diffBadge} ${chapterTag}</span>
+        <span class="q-meta">Q${idx+1} &middot; Marks: ${q.marks || 2} &middot; BTL: ${q.btl || 'BTL2'} &nbsp; ${typeTag} ${diffBadge} ${chapterTag} ${verBadge} ${secBadge}</span>
         <div class="q-actions">
           <button class="icon-btn" title="Edit Question" onclick="editQuestionInline('${q.id}')">&#9998;</button>
           <button class="icon-btn danger" title="Delete Question" onclick="deleteQuestionInline('${q.id}')">&#128465;</button>
@@ -586,6 +653,11 @@ function deleteQuestionInline(qId){
 
 async function performReviewAction(newStatus){
   if(!currentReviewBatchId) return;
+  const batchObj = getBatches().find(b => String(b.id) === String(currentReviewBatchId));
+  if (batchObj && isBatchSelfAuthored(batchObj)) {
+    alert("Action blocked: A faculty member is not allowed to moderate or approve their own question bank. It must be reviewed by your co-teacher / assigned moderator.");
+    return;
+  }
   const notes = document.getElementById('mNotes').value.trim();
   const me = JSON.parse(localStorage.getItem('currentUser') || '{}');
 
@@ -646,60 +718,189 @@ async function performReviewAction(newStatus){
   renderQueue();
 }
 
-function logout(){
+async function logout(){
   try {
     const userStr = localStorage.getItem('currentUser');
+    const sessionStart = parseInt(sessionStorage.getItem('sessionStartTime') || (Date.now() - 300000).toString());
+    const elapsedSecs = Math.max(1, Math.round((Date.now() - sessionStart) / 1000));
+    const mins = Math.floor(elapsedSecs / 60);
+    const secs = elapsedSecs % 60;
+    const activeDurationStr = mins >= 1 ? `${mins} mins` : `${secs} secs`;
+
     if (userStr) {
       const u = JSON.parse(userStr);
-      const userId = u.id || u.userId || 1;
-      fetch('/api/auth/logout', {
+      await fetch('/api/auth/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userId, username: u.name })
-      }).catch(err => console.error(err)).finally(() => {
-        localStorage.removeItem('currentUser');
-        sessionStorage.clear();
-        window.location.href = 'login.html?logout=true';
+        body: JSON.stringify({ userId: u.id || 5, username: u.name || 'Moderator', sessionActiveTime: activeDurationStr })
       });
-      return;
     }
   } catch(e){}
+
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
   window.location.href = 'login.html?logout=true';
 }
 
-function openProfileModal(){
-  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  document.getElementById('profName').value = u.name || '';
-  document.getElementById('profEmail').value = u.email || '';
-  document.getElementById('profDept').value = u.dept || '';
-  document.getElementById('profContact').value = u.contact || '';
-  document.getElementById('profStatus').textContent = '';
+async function syncApprovedProfile(user){
+  if(!user || (!user.id && !user.email)) return user;
+
+  const emailNorm = (user.email || '').toLowerCase();
+  const nameNorm = (user.name || '').toLowerCase();
+
+  try {
+    const res = await fetch('/api/admin/users');
+    if(res.ok){
+      const allUsers = await res.json();
+      if(Array.isArray(allUsers)){
+        const match = allUsers.find(u => String(u.userId) === String(user.id) || (u.email && u.email.toLowerCase() === emailNorm) || (u.username && u.username.toLowerCase() === nameNorm));
+        if(match){
+          user.name = match.username || user.name;
+          user.email = match.email || user.email;
+          user.dept = match.department || match.division || user.dept;
+          user.contact = match.contactNumber || user.contact;
+          user.subject = match.subject || user.subject;
+        }
+      }
+    }
+  } catch(e){}
+
+  try {
+    const users = JSON.parse(localStorage.getItem('usersList') || localStorage.getItem('users') || localStorage.getItem('usersData') || '[]');
+    const match = users.find(u => String(u.id) === String(user.id) || (u.email && u.email.toLowerCase() === emailNorm) || (u.name && u.name.toLowerCase() === nameNorm));
+    if(match){
+      user.name = match.name || user.name;
+      user.email = match.email || user.email;
+      user.dept = match.dept || match.department || user.dept;
+      user.contact = match.contact || match.contactNumber || user.contact;
+      user.subject = match.subject || user.subject;
+    }
+  } catch(e){}
+
+  try {
+    const reqs = JSON.parse(localStorage.getItem('pendingProfileRequests') || '[]');
+    const app = reqs.find(r => (r.status === 'approved') && (String(r.userId) === String(user.id) || (r.currentEmail && r.currentEmail.toLowerCase() === emailNorm) || (r.username && r.username.toLowerCase() === nameNorm)));
+    if(app){
+      user.name = app.requestedName || user.name;
+      user.email = app.requestedEmail || user.email;
+      user.dept = app.requestedDept || user.dept;
+      user.contact = app.requestedContact || user.contact;
+      user.subject = app.requestedSubject || user.subject;
+    }
+  } catch(e){}
+
+  try {
+    const res = await fetch('/api/profile-requests');
+    if(res.ok){
+      const remoteReqs = await res.json();
+      if(Array.isArray(remoteReqs)){
+        const app = remoteReqs.find(r => (r.status === 'approved') && (String(r.userId) === String(user.id) || (r.currentEmail && r.currentEmail.toLowerCase() === emailNorm) || (r.username && r.username.toLowerCase() === nameNorm)));
+        if(app){
+          user.name = app.requestedName || user.name;
+          user.email = app.requestedEmail || user.email;
+          user.dept = app.requestedDept || user.dept;
+          user.contact = app.requestedContact || user.contact;
+          user.subject = app.requestedSubject || user.subject;
+        }
+      }
+    }
+  } catch(e){}
+
+  localStorage.setItem('currentUser', JSON.stringify(user));
+
+  const welcomeEl = document.getElementById('welcomeHeading');
+  if(welcomeEl) welcomeEl.textContent = `Welcome, ${user.name}`;
+  const avatarEl = document.getElementById('userAvatar');
+  if(avatarEl){
+    const initials = (user.name || 'User').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    avatarEl.textContent = initials;
+  }
+
+  return user;
+}
+
+async function openProfileModal(){
+  let u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  try { u = await syncApprovedProfile(u); } catch(e){}
+
+  const nameEl = document.getElementById('profName');
+  const emailEl = document.getElementById('profEmail');
+  const deptEl = document.getElementById('profDept');
+  const contactEl = document.getElementById('profContact');
+  const statusEl = document.getElementById('profStatus');
+  const saveBtn = document.getElementById('saveProfBtn') || document.querySelector('#profileModal button[onclick="saveProfile()"]');
+
+  if(nameEl) nameEl.value = u.name || '';
+  if(emailEl) emailEl.value = u.email || '';
+  if(deptEl) deptEl.value = u.dept || u.department || 'Computer Engineering';
+  if(contactEl) contactEl.value = u.contact || u.contactNumber || '';
+  if(statusEl) statusEl.textContent = '';
+
+  const isSysAdmin = u.role === 'Administrator' || (u.email && u.email.toLowerCase() === 'admin@mmcoe.edu.in') || u.id === 1;
+
+  if(nameEl) nameEl.readOnly = isSysAdmin;
+  if(emailEl) emailEl.readOnly = isSysAdmin;
+  if(deptEl) deptEl.readOnly = isSysAdmin;
+  if(contactEl) contactEl.readOnly = isSysAdmin;
+
+  if(saveBtn){
+    if(isSysAdmin){
+      saveBtn.disabled = true;
+      saveBtn.style.opacity = '0.5';
+      saveBtn.style.cursor = 'not-allowed';
+      saveBtn.textContent = '🔒 System Admin Locked';
+      if(statusEl){
+        statusEl.style.color = 'var(--maroon)';
+        statusEl.textContent = '🔒 System Administrator credentials are locked and read-only.';
+      }
+    } else {
+      saveBtn.disabled = false;
+      saveBtn.style.opacity = '1';
+      saveBtn.style.cursor = 'pointer';
+      saveBtn.textContent = 'Save Changes';
+    }
+  }
+
   document.getElementById('profileModal').style.display = 'flex';
 }
 
 async function saveProfile(){
   const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  u.name = document.getElementById('profName').value.trim() || u.name;
-  u.email = document.getElementById('profEmail').value.trim() || u.email;
-  u.dept = document.getElementById('profDept').value.trim();
-  u.contact = document.getElementById('profContact').value.trim();
+  const reqName = document.getElementById('profName').value.trim() || u.name;
+  const reqEmail = document.getElementById('profEmail').value.trim() || u.email;
+  const reqDept = document.getElementById('profDept').value.trim();
+  const reqContact = document.getElementById('profContact').value.trim();
+
+  const requestObj = {
+    id: Date.now(),
+    userId: u.id || 5,
+    username: u.name,
+    currentEmail: u.email,
+    requestedName: reqName,
+    requestedEmail: reqEmail,
+    requestedDept: reqDept,
+    requestedContact: reqContact,
+    requestedSubject: u.subject || '',
+    status: 'pending',
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  };
 
   try {
-    await fetch('http://localhost:8080/api/auth/profile', {
+    await fetch('/api/profile-requests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: u.id || 1, name: u.name, email: u.email, department: u.dept, contactNumber: u.contact, subject: u.subject || '' })
+      body: JSON.stringify(requestObj)
     });
-  } catch(e) { console.log('REST API offline, saved profile locally.'); }
+  } catch(e){}
 
-  localStorage.setItem('currentUser', JSON.stringify(u));
-  const initials = (u.name || '').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('userAvatar').textContent = initials || 'MO';
-  document.getElementById('profStatus').style.color = 'var(--green)';
-  document.getElementById('profStatus').textContent = 'Profile updated successfully!';
-  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1200);
+  let requests = [];
+  try { requests = JSON.parse(localStorage.getItem('pendingProfileRequests') || '[]'); } catch(e){}
+  requests.unshift(requestObj);
+  localStorage.setItem('pendingProfileRequests', JSON.stringify(requests));
+
+  document.getElementById('profStatus').style.color = 'var(--amber)';
+  document.getElementById('profStatus').textContent = 'Profile update request submitted for Admin approval! ⏳';
+  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1800);
 }
 
 function escapeHtml(str){
