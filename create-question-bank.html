@@ -346,11 +346,15 @@ outline:3px solid var(--gold);outline-offset:1px;
 <div class="field-grid">
 <div class="field">
 <label for="fSubject">Subject name <span class="req">*</span></label>
-<input type="text" id="fSubject" placeholder="e.g. Data Structures" required>
+<input type="text" id="fSubject" placeholder="e.g. Data Science and Machine Learning" required>
 </div>
 <div class="field">
-<label for="fChapter">Chapter <span class="req">*</span></label>
-<input type="text" id="fChapter" placeholder="e.g. Chapter 1" required>
+<label for="fChapter">Chapter / Unit <span class="req">*</span></label>
+<input type="text" id="fChapter" placeholder="e.g. Chapter 1: Introduction" required>
+</div>
+<div class="field">
+<label for="fSyllabusVer">Syllabus Version</label>
+<input type="text" id="fSyllabusVer" value="v2026.1" placeholder="e.g. v2026.1">
 </div>
 </div>
 <div class="field-grid">
@@ -367,7 +371,10 @@ outline:3px solid var(--gold);outline-offset:1px;
 <option value="Hard">Hard</option>
 </select>
 </div>
-<div class="field"></div>
+<div class="field">
+<label for="fSyllabusSection">Syllabus Section Mapping</label>
+<input type="text" id="fSyllabusSection" placeholder="e.g. Section 1.2: Feature Scaling">
+</div>
 </div>
 
 <div class="field full">
@@ -604,6 +611,8 @@ document.getElementById('qForm').addEventListener('submit', function(e){
     question: document.getElementById('fQuestion').value.trim(),
     chapter: document.getElementById('fChapter').value.trim(),
     topic_name: document.getElementById('fTopic').value.trim(),
+    syllabus_version: document.getElementById('fSyllabusVer').value.trim() || 'v2026.1',
+    syllabus_section: document.getElementById('fSyllabusSection').value.trim() || '',
     difficulty: document.getElementById('fDifficulty').value,
     author: document.getElementById('fAuthor').value.trim(),
     marks: document.getElementById('fMarks').value,
@@ -696,22 +705,49 @@ csvInput.value = '';
 }
 
 function handleCsvFile(file){
-if(!file.name.toLowerCase().endsWith('.csv')){
-showCsvErrors(["Please upload a .csv file."]);
-return;
-}
-Papa.parse(file, {
-header: true,
-skipEmptyLines: true,
-complete: function(results){
-validateAndStageCsv(results.data, results.meta.fields || []);
-},
-error: function(err){
-showCsvErrors(["Could not read the file: " + err.message]);
-}
-});
-document.getElementById('fileChip').style.display = 'inline-flex';
-document.getElementById('fileChip').textContent = "📄 " + file.name;
+  if(!file.name.toLowerCase().endsWith('.csv') && !file.name.toLowerCase().endsWith('.tsv') && !file.name.toLowerCase().endsWith('.txt')){
+    showCsvErrors(["Please upload a .csv or .tsv file."]);
+    return;
+  }
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: 'greedy',
+    delimiter: "", // Auto-detect tabs, commas, semicolons
+    complete: function(results){
+      const rawData = results.data || [];
+      const normalizedData = rawData.map(row => {
+        const nRow = {};
+        Object.keys(row).forEach(k => {
+          const kNorm = k.trim().toLowerCase().replace(/[\s_\-]+/g, '');
+          if(kNorm.includes('subject')) nRow['subject_name'] = row[k];
+          else if(kNorm === 'question' || kNorm === 'q') nRow['Question'] = row[k];
+          else if(kNorm.includes('chapter') || kNorm.includes('unit')) nRow['chapter'] = row[k];
+          else if(kNorm.includes('topic')) nRow['topic_name'] = row[k];
+          else if(kNorm.includes('diff')) nRow['difficulty'] = row[k];
+          else if(kNorm.includes('author')) nRow['author'] = row[k];
+          else if(kNorm.includes('mark')) nRow['marks'] = row[k];
+          else if(kNorm.includes('btl')) nRow['BTL'] = row[k];
+          else if(kNorm.includes('explain') || kNorm.includes('explanation')) nRow['explanation'] = row[k];
+          else if(kNorm.includes('ref')) nRow['reference'] = row[k];
+          else if(kNorm.includes('optiona') || kNorm === 'opta') nRow['option_a'] = row[k];
+          else if(kNorm.includes('optionb') || kNorm === 'optb') nRow['option_b'] = row[k];
+          else if(kNorm.includes('optionc') || kNorm === 'optc') nRow['option_c'] = row[k];
+          else if(kNorm.includes('optiond') || kNorm === 'optd') nRow['option_d'] = row[k];
+          else if(kNorm.includes('correct')) nRow['correct_answer'] = row[k];
+          else nRow[k.trim()] = row[k];
+        });
+        return nRow;
+      });
+
+      const fields = Object.keys(normalizedData[0] || {});
+      validateAndStageCsv(normalizedData, fields);
+    },
+    error: function(err){
+      showCsvErrors(["Could not read the file: " + err.message]);
+    }
+  });
+  document.getElementById('fileChip').style.display = 'inline-flex';
+  document.getElementById('fileChip').textContent = "📄 " + file.name;
 }
 
 function validateAndStageCsv(rows, headers){
@@ -897,31 +933,82 @@ async function submitBatch(){
   try { currentUser = JSON.parse(localStorage.getItem('currentUser')); } catch(e){}
 
   const firstQ = BATCH[0] || {};
+  const subName = firstQ.subject_name || 'Data Science and Machine Learning';
+  const authorNameStr = currentUser ? (currentUser.name || 'Ms. Kirti B. Satpute') : (firstQ.author || 'Ms. Kirti B. Satpute');
+  const authorEmailStr = currentUser ? (currentUser.email || 'kirtisatpute@mmcoe.edu.in') : 'kirtisatpute@mmcoe.edu.in';
+
   const newSubmission = {
     id: Date.now(),
-    title: `${firstQ.subject_name || 'Subject'} — ${firstQ.unit || 'Unit'} (${firstQ.topic_name || 'Batch'})`,
+    title: `${subName} — ${firstQ.chapter || firstQ.unit || 'Unit'} (${firstQ.topic_name || 'Batch'})`,
+    subject_name: subName,
+    subject: subName,
+    chapter: firstQ.chapter || '',
+    topic: firstQ.topic_name || '',
     dept: currentUser ? (currentUser.dept || 'Computer Engineering') : 'Computer Engineering',
     count: BATCH.length,
     type: firstQ.type === 'mcq' ? 'MCQ' : 'Descriptive',
     submittedDate: new Date().toISOString().slice(0,10),
     status: 'pending',
+    author: authorNameStr,
+    authorName: authorNameStr,
+    author_name: authorNameStr,
+    authorEmail: authorEmailStr,
+    author_email: authorEmailStr,
+    author_id: currentUser ? (currentUser.id || 20) : 20,
     questions: [...BATCH]
   };
 
-  // Auto-assign same-subject teacher as moderator for this batch
+  // Auto-assign co-teacher / assigned moderator for this batch
   const batchSubject = (firstQ.subject_name || '').toLowerCase();
+  const currentEmail = currentUser ? (currentUser.email || '').toLowerCase() : '';
+  const currentName = currentUser ? (currentUser.name || '').toLowerCase() : '';
+
   if(batchSubject){
     try {
+      const subjectsList = JSON.parse(localStorage.getItem('subjectsList') || '[]');
       const allUsers = JSON.parse(localStorage.getItem('usersList') || '[]');
-      const currentEmail = currentUser ? (currentUser.email || '').toLowerCase() : '';
-      const sameSubjectTeacher = allUsers.find(u =>
-        u.email && u.email.toLowerCase() !== currentEmail &&
-        (u.role === 'Question Author' || u.role === 'Moderator') &&
-        u.subject && (u.subject.toLowerCase().includes(batchSubject) || batchSubject.includes(u.subject.toLowerCase()))
+
+      const subMatch = subjectsList.find(s => 
+        s && (s.name.toLowerCase().includes(batchSubject) || batchSubject.includes(s.name.toLowerCase()) || (s.code && batchSubject.includes(s.code.toLowerCase())))
       );
-      if(sameSubjectTeacher){
-        newSubmission.assignedModerator = sameSubjectTeacher.name;
-        newSubmission.assignedModeratorEmail = sameSubjectTeacher.email;
+
+      let assignedModName = '';
+      let assignedModEmail = '';
+
+      if (subMatch && subMatch.assignedAuthors && subMatch.assignedAuthors.length > 1) {
+        const coTeacherName = subMatch.assignedAuthors.find(authorName => {
+          const nameNorm = authorName.toLowerCase();
+          return !currentName.includes(nameNorm) && !nameNorm.includes(currentName);
+        });
+
+        if (coTeacherName) {
+          const userMatch = allUsers.find(u => u.name && u.name.toLowerCase().includes(coTeacherName.toLowerCase()));
+          assignedModName = coTeacherName;
+          assignedModEmail = userMatch ? userMatch.email : '';
+        }
+      }
+
+      if (!assignedModName && subMatch && subMatch.assignedModerator) {
+        assignedModName = subMatch.assignedModerator;
+        const userMatch = allUsers.find(u => u.name && u.name.toLowerCase().includes(assignedModName.toLowerCase()));
+        assignedModEmail = userMatch ? userMatch.email : '';
+      }
+
+      if (!assignedModName) {
+        const sameSubjectTeacher = allUsers.find(u =>
+          u.email && u.email.toLowerCase() !== currentEmail &&
+          (u.role === 'Question Author' || u.role === 'Teacher' || u.role === 'Moderator') &&
+          u.subject && (u.subject.toLowerCase().includes(batchSubject) || batchSubject.includes(u.subject.toLowerCase()))
+        );
+        if(sameSubjectTeacher){
+          assignedModName = sameSubjectTeacher.name;
+          assignedModEmail = sameSubjectTeacher.email;
+        }
+      }
+
+      if(assignedModName){
+        newSubmission.assignedModerator = assignedModName;
+        newSubmission.assignedModeratorEmail = assignedModEmail;
       }
     } catch(e){}
   }
@@ -944,12 +1031,12 @@ async function submitBatch(){
   localStorage.setItem('auditLogs', JSON.stringify(logs));
 
   try {
-    await fetch('http://localhost:8080/api/question-banks', {
+    await fetch('/api/question-banks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newSubmission)
     });
-    await fetch('http://localhost:8080/api/audit-logs', {
+    await fetch('/api/audit-logs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(logObj)
@@ -970,24 +1057,19 @@ function escapeHtml(str){
   return String(str || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
-function logout(){
+async function logout(){
   try {
     const userStr = localStorage.getItem('currentUser');
     if (userStr) {
       const u = JSON.parse(userStr);
-      const userId = u.id || u.userId || 1;
-      fetch('/api/auth/logout', {
+      await fetch('/api/auth/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userId, username: u.name })
-      }).catch(err => console.error(err)).finally(() => {
-        localStorage.removeItem('currentUser');
-        sessionStorage.clear();
-        window.location.href = 'login.html?logout=true';
+        body: JSON.stringify({ userId: u.id || 2, username: u.name || 'User' })
       });
-      return;
     }
   } catch(e){}
+
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
   window.location.href = 'login.html?logout=true';
