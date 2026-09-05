@@ -352,19 +352,6 @@
           <button type="submit" class="btn-primary">Sign In</button>
           <div class="status-msg" id="loginStatus"></div>
         </form>
-
-        <div style="margin-top:16px;padding:12px 14px;background:#FAF6F3;border:1px dashed var(--line);border-radius:8px;font-size:12.5px;color:var(--ink);">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-weight:700;color:var(--maroon);font-family:'IBM Plex Mono',monospace;font-size:12px;">System Admin Demo Login</span>
-            <button type="button" onclick="quickFill('admin@mmcoe.edu.in', 'admin123')" style="background:var(--maroon);color:#fff;border:none;padding:4px 10px;border-radius:5px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Auto Fill</button>
-          </div>
-          <div>Email: <code style="font-family:'IBM Plex Mono',monospace;color:var(--maroon-hover);font-weight:600;">admin@mmcoe.edu.in</code></div>
-          <div>Password: <code style="font-family:'IBM Plex Mono',monospace;font-weight:600;">admin123</code></div>
-        </div>
-
-        <div class="role-note" style="margin-top:12px;">
-          Only administrators can create user accounts. Please contact your system administrator if you require an account.
-        </div>
       </div>
 
     </div>
@@ -397,30 +384,30 @@
 
 <script>
   const DEFAULT_USERS = [
-  { id: 1, name: "System Admin", email: "admin@mmcoe.edu.in", username: "admin", password: "mmcoeadmin@123", altPassword: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active" },
-  { id: 2, name: "Dr. Sankirti S. Shiravale", email: "sankirtishiravale@mmcoe.edu.in", subject: "Data Science and Machine Learning", username: "sankirtishiravale", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 3, name: "Dr. Kalpana S. Thakre", email: "kalpanathakre@mmcoe.edu.in", subject: "Database Management System", username: "kalpanathakre", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 4, name: "Dr. Girija G. Chiddarwar", email: "girijachiddarwar@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "girijachiddarwar", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 5, name: "Dr. Swati N. Shekapure", email: "swatishekapure@mmcoe.edu.in", subject: "Information Security", username: "swatishekapure", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 6, name: "Dr. Geetha R. Chillarge", email: "geethasb@mmcoe.edu.in", subject: "Computer Networks Security and Software Engineering", username: "geethasb", password: "mmcoe@123", role: "Moderator", dept: "Computer Engineering", status: "active" },
-  { id: 7, name: "Dr. Smita M. Chaudhari", email: "smitachaudhari@mmcoe.edu.in", subject: "Computer Networks Security", username: "smitachaudhari", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 8, name: "Dr. Neha Jain", email: "nehajain17@mmcoe.edu.in", subject: "Database Management System and System Programming and Operating System", username: "nehajain17", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 9, name: "Dr. Anita V. Shinde", email: "anitashinde@mmcoe.edu.in", subject: "Object Oriented Programming", username: "anitashinde", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 10, name: "Dr. Shailaja B. Jadhav", email: "jadhavsb@mmcoe.edu.in", subject: "Operating System", username: "jadhavsb", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 11, name: "Ms. Rupali M. Dalvi", email: "rupalidalvi@mmcoe.edu.in", subject: "Digital Electronics and Computer Organisation and Operating System Workshop", username: "rupalidalvi", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 12, name: "Ms. Shubhada P. Mone", email: "shubhadamone@mmcoe.edu.in", subject: "Data Structures and Principles of Programming Language", username: "shubhadamone", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 13, name: "Ms. Jagruti A. Wagh", email: "jagrutiwagh@mmcoe.edu.in", subject: "Principles of Programming Language", username: "jagrutiwagh", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 14, name: "Dr. Sarita D. Sapkal", email: "saritasapkal@mmcoe.edu.in", subject: "Digital Marketing and IoT", username: "saritasapkal", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 15, name: "Ms. Vandana S. Rupnar", email: "vandanarupnar@mmcoe.edu.in", subject: "Software Engineering, EDI and Cloud Computing", username: "vandanarupnar", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 16, name: "Ms. Swarupa M. Deshpande", email: "swarupadeshpande@mmcoe.edu.in", subject: "Data Structures", username: "swarupadeshpande", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 17, name: "Mr. Rudragouda G. Patil", email: "rudragoudapatil@mmcoe.edu.in", subject: "Cloud Computing and EDI", username: "rudragoudapatil", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 18, name: "Ms. Aishwarya S. Mane", email: "aishwaryamane@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "aishwaryamane", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 19, name: "Ms. Mayuri S. Shelke", email: "mayurishelke@mmcoe.edu.in", subject: "Digital Marketing", username: "mayurishelke", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 20, name: "Ms. Kirti B. Satpute", email: "kirtisatpute@mmcoe.edu.in", subject: "Data Science and Machine Learning", username: "kirtisatpute", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 21, name: "Ms. Suvarna K. Patil", email: "suvarnapatil@mmcoe.edu.in", subject: "Web Technology", username: "suvarnapatil", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 22, name: "Ms. Reshma D. Kapadi", email: "reshmakapadi@mmcoe.edu.in", subject: "System Programming and Operating System", username: "reshmakapadi", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 23, name: "Ms. Mayuri G. Narkhede", email: "mayurinarkhede@mmcoe.edu.in", subject: "Programming Problem Solving", username: "mayurinarkhede", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
-  { id: 24, name: "Ms. Snehal H. Kuche", email: "snehalkuchee@mmcoe.edu.in", subject: "Database Management System", username: "snehalkuchee", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 7, name: "System Admin", email: "admin@mmcoe.edu.in", username: "admin", password: "mmcoeadmin@123", altPassword: "admin123", role: "Administrator", dept: "Computer Engineering", status: "active" },
+  { id: 8, name: "Dr. Sankirti S. Shiravale", email: "sankirtishiravale@mmcoe.edu.in", subject: "Data Science and Machine Learning", username: "sankirtishiravale", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 9, name: "Dr. Kalpana S. Thakre", email: "kalpanathakre@mmcoe.edu.in", subject: "Database Management System", username: "kalpanathakre", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 10, name: "Dr. Girija G. Chiddarwar", email: "girijachiddarwar@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "girijachiddarwar", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 11, name: "Dr. Swati N. Shekapure", email: "swatishekapure@mmcoe.edu.in", subject: "Information Security", username: "swatishekapure", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 12, name: "Dr. Geetha R. Chillarge", email: "geethasb@mmcoe.edu.in", subject: "Computer Networks Security and Software Engineering", username: "geethasb", password: "mmcoe@123", role: "Moderator", dept: "Computer Engineering", status: "active" },
+  { id: 13, name: "Dr. Smita M. Chaudhari", email: "smitachaudhari@mmcoe.edu.in", subject: "Computer Networks Security", username: "smitachaudhari", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 14, name: "Dr. Neha Jain", email: "nehajain17@mmcoe.edu.in", subject: "Database Management System and System Programming and Operating System", username: "nehajain17", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 15, name: "Dr. Anita V. Shinde", email: "anitashinde@mmcoe.edu.in", subject: "Object Oriented Programming", username: "anitashinde", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 16, name: "Dr. Shailaja B. Jadhav", email: "jadhavsb@mmcoe.edu.in", subject: "Operating System", username: "jadhavsb", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 17, name: "Ms. Rupali M. Dalvi", email: "rupalidalvi@mmcoe.edu.in", subject: "Digital Electronics and Computer Organisation and Operating System Workshop", username: "rupalidalvi", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 18, name: "Ms. Shubhada P. Mone", email: "shubhadamone@mmcoe.edu.in", subject: "Data Structures and Principles of Programming Language", username: "shubhadamone", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 19, name: "Ms. Jagruti A. Wagh", email: "jagrutiwagh@mmcoe.edu.in", subject: "Principles of Programming Language", username: "jagrutiwagh", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 20, name: "Dr. Sarita D. Sapkal", email: "saritasapkal@mmcoe.edu.in", subject: "Digital Marketing and IoT", username: "saritasapkal", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 21, name: "Ms. Vandana S. Rupnar", email: "vandanarupnar@mmcoe.edu.in", subject: "Software Engineering, EDI and Cloud Computing", username: "vandanarupnar", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 22, name: "Ms. Swarupa M. Deshpande", email: "swarupadeshpande@mmcoe.edu.in", subject: "Data Structures", username: "swarupadeshpande", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 23, name: "Mr. Rudragouda G. Patil", email: "rudragoudapatil@mmcoe.edu.in", subject: "Cloud Computing and EDI", username: "rudragoudapatil", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 24, name: "Ms. Aishwarya S. Mane", email: "aishwaryamane@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "aishwaryamane", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 25, name: "Ms. Mayuri S. Shelke", email: "mayurishelke@mmcoe.edu.in", subject: "Digital Marketing", username: "mayurishelke", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 26, name: "Ms. Kirti B. Satpute", email: "kirtisatpute@mmcoe.edu.in", subject: "Data Science and Machine Learning", username: "kirtisatpute", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 27, name: "Ms. Suvarna K. Patil", email: "suvarnapatil@mmcoe.edu.in", subject: "Web Technology", username: "suvarnapatil", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 28, name: "Ms. Reshma D. Kapadi", email: "reshmakapadi@mmcoe.edu.in", subject: "System Programming and Operating System", username: "reshmakapadi", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 29, name: "Ms. Mayuri G. Narkhede", email: "mayurinarkhede@mmcoe.edu.in", subject: "Programming Problem Solving", username: "mayurinarkhede", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
+  { id: 30, name: "Ms. Snehal H. Kuche", email: "snehalkuchee@mmcoe.edu.in", subject: "Database Management System", username: "snehalkuchee", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
   { id: 25, name: "Ms. Nikita D. Kolambe", email: "nikitakolambe21@mmcoe.edu.in", subject: "Fundamentals of Programming Language and Engineering Exploration Lab 1 and Lab 2", username: "nikitakolambe21", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
   { id: 26, name: "Ms. Yashashree V. Belkhede", email: "yashashreebelkhede@mmcoe.edu.in", subject: "Fundamentals of Programming Language and Engineering Exploration Lab 1 and Lab 2", username: "yashashreebelkhede", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
   { id: 27, name: "Ms. Vidya Jaykumar Menoki", email: "vidyamenoki@mmcoe.edu.in", subject: "Mathematical Foundation Of GenAI", username: "vidyamenoki", password: "mmcoe@123", role: "Question Author", dept: "Computer Engineering", status: "active" },
@@ -506,6 +493,64 @@
     document.getElementById(fieldId).classList.toggle('invalid', isInvalid);
   }
 
+  function checkLocalLockout(emailStr) {
+    try {
+      const lockouts = JSON.parse(localStorage.getItem('clientLockouts') || '{}');
+      const rec = lockouts[emailStr.toLowerCase().trim()];
+      if (rec) {
+        const now = Date.now();
+        if (rec.lockoutUntil && now < rec.lockoutUntil) {
+          const remSecs = Math.ceil((rec.lockoutUntil - now) / 1000);
+          return { locked: true, remainingSeconds: remSecs };
+        }
+        if (now - rec.lastAttempt > 15 * 60 * 1000) {
+          delete lockouts[emailStr.toLowerCase().trim()];
+          localStorage.setItem('clientLockouts', JSON.stringify(lockouts));
+          return { locked: false, attemptsLeft: 5 };
+        }
+        return { locked: false, attemptsLeft: Math.max(0, 5 - (rec.attempts || 0)) };
+      }
+    } catch(e){}
+    return { locked: false, attemptsLeft: 5 };
+  }
+
+  function recordLocalFailedAttempt(emailStr) {
+    try {
+      const lockouts = JSON.parse(localStorage.getItem('clientLockouts') || '{}');
+      const key = emailStr.toLowerCase().trim();
+      const rec = lockouts[key] || { attempts: 0, lastAttempt: Date.now() };
+      const now = Date.now();
+
+      if (now - rec.lastAttempt > 15 * 60 * 1000) {
+        rec.attempts = 0;
+      }
+
+      rec.attempts = (rec.attempts || 0) + 1;
+      rec.lastAttempt = now;
+
+      if (rec.attempts >= 5) {
+        rec.lockoutUntil = now + 15 * 60 * 1000;
+        lockouts[key] = rec;
+        localStorage.setItem('clientLockouts', JSON.stringify(lockouts));
+        return { locked: true, remainingSeconds: 900 };
+      }
+
+      lockouts[key] = rec;
+      localStorage.setItem('clientLockouts', JSON.stringify(lockouts));
+      return { locked: false, attemptsLeft: 5 - rec.attempts };
+    } catch(e){}
+    return { locked: false, attemptsLeft: 4 };
+  }
+
+  function clearLocalLockout(emailStr) {
+    try {
+      const lockouts = JSON.parse(localStorage.getItem('clientLockouts') || '{}');
+      if (emailStr) delete lockouts[emailStr.toLowerCase().trim()];
+      else localStorage.removeItem('clientLockouts');
+      localStorage.setItem('clientLockouts', JSON.stringify(lockouts));
+    } catch(e){}
+  }
+
   // ---------- LOGIN ----------
   document.getElementById('loginForm').addEventListener('submit', async function(e){
     e.preventDefault();
@@ -514,6 +559,7 @@
     const statusBox = document.getElementById('loginStatus');
     statusBox.className = 'status-msg';
     statusBox.textContent = '';
+    statusBox.style.display = 'none';
 
     let valid = true;
     const emailOk = email.length > 0;
@@ -525,17 +571,53 @@
 
     if(!valid) return;
 
+    // Pre-check if client is already locked out locally
+    const initialLock = checkLocalLockout(email);
+    if (initialLock.locked) {
+      startLockoutCountdown(initialLock.remainingSeconds);
+      return;
+    }
+
+    let backendSuccess = false;
+
     // Try backend REST API login
     try {
-      const apiRes = await fetch('http://localhost:8080/api/auth/login', {
+      const apiRes = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ identifier: email, password: pass })
       });
+
+      if (apiRes.status === 429) {
+        const data = await apiRes.json().catch(() => ({}));
+        startLockoutCountdown(data.remainingSeconds || 900);
+        return;
+      }
+
+      if (apiRes.status === 401 || apiRes.status === 400) {
+        const data = await apiRes.json().catch(() => ({}));
+        const failRes = recordLocalFailedAttempt(email);
+        if (failRes.locked) {
+          startLockoutCountdown(failRes.remainingSeconds);
+          return;
+        }
+
+        showWrongPasswordPopup(failRes.attemptsLeft);
+        statusBox.className = 'status-msg error';
+        statusBox.style.display = 'block';
+        statusBox.innerHTML = `
+          <div style="font-weight:700;font-size:13.5px;margin-bottom:3px;">⚠️ Invalid Credentials</div>
+          <div style="font-size:12.5px;">Invalid email/username or password. <strong style="color:#c0392b;">${failRes.attemptsLeft} attempt(s) remaining</strong> before 15-minute account lockout.</div>
+        `;
+        return;
+      }
+
       if (apiRes.ok) {
         const data = await apiRes.json();
         if (data.status === 'success') {
+          clearLocalLockout(email);
           statusBox.className = 'status-msg success';
+          statusBox.style.display = 'block';
           statusBox.textContent = `Welcome, ${data.username}! Redirecting to dashboard...`;
           
           const sessionUser = {
@@ -547,6 +629,7 @@
             status: 'ACTIVE'
           };
           localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+          sessionStorage.setItem('sessionStartTime', Date.now().toString());
 
           setTimeout(() => {
             const r = (data.role || '').toLowerCase();
@@ -568,11 +651,8 @@
     }
 
     // Local Storage Fallback — always authenticate against DEFAULT_USERS (which have passwords)
-    // Then check localStorage for any status changes made by admin
     const inputClean = email.toLowerCase();
     
-    // First find in DEFAULT_USERS (which has passwords)
-    // Also check passwordOverrides saved by the forgot-password flow
     let passOverrides = {};
     try { passOverrides = JSON.parse(localStorage.getItem('passwordOverrides') || '{}'); } catch(e){}
     
@@ -585,11 +665,10 @@
       return matchId && matchPw;
     });
 
-    // Also check stored users (for users added by admin) — if they have a password field
     if(!user) {
       const storedList = JSON.parse(localStorage.getItem('usersList') || '[]');
       user = storedList.find(u => {
-        if(!u.password) return false; // skip passwordless entries
+        if(!u.password) return false;
         const matchId = (u.email && u.email.toLowerCase() === inputClean) || 
                         (u.username && u.username.toLowerCase() === inputClean);
         const matchPw = u.password === pass || u.altPassword === pass;
@@ -598,22 +677,38 @@
     }
 
     if(!user){
+      const failRes = recordLocalFailedAttempt(email);
+      if (failRes.locked) {
+        startLockoutCountdown(failRes.remainingSeconds);
+        return;
+      }
+
+      showWrongPasswordPopup(failRes.attemptsLeft);
       statusBox.className = 'status-msg error';
-      statusBox.textContent = 'Invalid username/email or password. Please verify credentials.';
+      statusBox.style.display = 'block';
+      statusBox.innerHTML = `
+        <div style="font-weight:700;font-size:13.5px;margin-bottom:3px;">⚠️ Invalid Credentials</div>
+        <div style="font-size:12.5px;">Invalid email/username or password. <strong style="color:#c0392b;">${failRes.attemptsLeft} attempt(s) remaining</strong> before 15-minute account lockout.</div>
+      `;
       return;
     }
+
     if(user.status === 'pending'){
       statusBox.className = 'status-msg error';
+      statusBox.style.display = 'block';
       statusBox.textContent = 'Account pending administrator approval. Please check back later.';
       return;
     }
     if(user.status === 'inactive'){
       statusBox.className = 'status-msg error';
+      statusBox.style.display = 'block';
       statusBox.textContent = 'This account has been deactivated. Please contact an administrator.';
       return;
     }
 
+    clearLocalLockout(email);
     statusBox.className = 'status-msg success';
+    statusBox.style.display = 'block';
     statusBox.textContent = `Welcome, ${user.name}! Redirecting to dashboard...`;
 
     sessionStorage.setItem('sessionStartTime', Date.now().toString());
@@ -649,6 +744,7 @@
       subject: user.subject || ''
     };
     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+    sessionStorage.setItem('sessionStartTime', Date.now().toString());
 
     setTimeout(() => {
       const r = (user.role || '').toLowerCase();
@@ -701,7 +797,7 @@
 
     // Send password update to PostgreSQL Backend REST API
     try {
-      await fetch('http://localhost:8080/api/auth/force-change-password', {
+      await fetch('/api/auth/force-change-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: u.id || 1, newPassword: newPass })
@@ -743,6 +839,7 @@
       const statusBox = document.getElementById('loginStatus');
       if (statusBox) {
         statusBox.className = 'status-msg success';
+        statusBox.style.display = 'block';
         statusBox.textContent = '⚡ All local and server data has been reset cleanly for fresh testing!';
       }
     } else if (params.get('logout') === 'true') {
@@ -751,11 +848,126 @@
       const statusBox = document.getElementById('loginStatus');
       if (statusBox) {
         statusBox.className = 'status-msg success';
+        statusBox.style.display = 'block';
         statusBox.textContent = 'You have been signed out successfully.';
       }
     }
   });
+
+  function showWrongPasswordPopup(attemptsLeft) {
+    const modal = document.getElementById('wrongPasswordModal');
+    const attElem = document.getElementById('wpModalAttempts');
+    if (attElem) attElem.textContent = `${attemptsLeft} attempt(s) remaining before 15-minute account lockout.`;
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeWrongPasswordModal() {
+    const modal = document.getElementById('wrongPasswordModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  let lockoutTimerInterval = null;
+  function startLockoutCountdown(seconds) {
+    closeWrongPasswordModal();
+    const modal = document.getElementById('lockoutModal');
+    if (modal) modal.style.display = 'flex';
+
+    const statusBox = document.getElementById('loginStatus');
+    const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+
+    clearInterval(lockoutTimerInterval);
+    let remSecs = seconds || 900;
+
+    function updateDisplay() {
+      const mins = Math.floor(remSecs / 60);
+      const secs = remSecs % 60;
+      const timeStr = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+      
+      const timerDisplay = document.getElementById('lockoutModalTimer');
+      if (timerDisplay) timerDisplay.textContent = timeStr;
+
+      if (statusBox) {
+        statusBox.className = 'status-msg error';
+        statusBox.style.display = 'block';
+        statusBox.innerHTML = `
+          <div style="font-weight:700;margin-bottom:4px;">🔒 Account Temporarily Locked</div>
+          <div>Too many failed login attempts (5 limit reached). Please try again in <strong style="font-size:15px;color:#c0392b;">${timeStr}</strong>.</div>
+          <button type="button" onclick="clearLockoutDemo()" style="margin-top:8px;padding:4px 10px;font-size:11px;background:#c0392b;color:#fff;border:none;border-radius:4px;cursor:pointer;">🧹 Clear Lockout (Demo)</button>
+        `;
+      }
+
+      if (remSecs <= 0) {
+        clearInterval(lockoutTimerInterval);
+        if (submitBtn) submitBtn.disabled = false;
+        if (modal) modal.style.display = 'none';
+        if (statusBox) {
+          statusBox.className = 'status-msg success';
+          statusBox.style.display = 'block';
+          statusBox.textContent = 'Lockout duration expired. You may attempt login now.';
+        }
+      }
+      remSecs--;
+    }
+
+    updateDisplay();
+    lockoutTimerInterval = setInterval(updateDisplay, 1000);
+  }
+
+  async function clearLockoutDemo() {
+    try {
+      await fetch('/api/auth/reset-rate-limit', { method: 'POST' });
+    } catch(e){}
+    try {
+      localStorage.removeItem('clientLockouts');
+    } catch(e){}
+
+    clearInterval(lockoutTimerInterval);
+    const modal = document.getElementById('lockoutModal');
+    if (modal) modal.style.display = 'none';
+    closeWrongPasswordModal();
+
+    const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = false;
+    const statusBox = document.getElementById('loginStatus');
+    if (statusBox) {
+      statusBox.className = 'status-msg success';
+      statusBox.style.display = 'block';
+      statusBox.textContent = 'Lockout cleared for demo evaluation. Please enter correct credentials.';
+    }
+  }
 </script>
+
+<!-- WRONG PASSWORD POPUP MODAL -->
+<div id="wrongPasswordModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:3000;padding:20px;">
+  <div style="background:#fff;border-radius:14px;width:100%;max-width:420px;padding:32px;box-shadow:0 24px 60px rgba(0,0,0,.3);border-top:6px solid #c0392b;text-align:center;">
+    <div style="font-size:44px;margin-bottom:8px;">⚠️</div>
+    <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:#c0392b;margin-bottom:8px;">Invalid Credentials</div>
+    <div style="font-size:13.5px;color:#2c3e50;margin-bottom:16px;line-height:1.5;">
+      Invalid email/username or password. Please verify your login credentials.
+    </div>
+    <div style="background:#fff3cd;border:1px solid #ffeeba;color:#856404;padding:12px 14px;border-radius:8px;font-size:13px;font-weight:700;margin-bottom:24px;" id="wpModalAttempts">
+      4 attempt(s) remaining before 15-minute lockout.
+    </div>
+    <button type="button" onclick="closeWrongPasswordModal()" style="width:100%;padding:12px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">OK, Try Again</button>
+  </div>
+</div>
+
+<!-- LOCKOUT TIMEOUT POPUP MODAL -->
+<div id="lockoutModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.85);backdrop-filter:blur(10px);align-items:center;justify-content:center;z-index:3500;padding:20px;">
+  <div style="background:#fff;border-radius:14px;width:100%;max-width:440px;padding:32px;box-shadow:0 24px 60px rgba(0,0,0,.35);border-top:6px solid #881337;text-align:center;">
+    <div style="font-size:48px;margin-bottom:6px;">🔒</div>
+    <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:800;color:#881337;margin-bottom:6px;">Account Temporarily Locked</div>
+    <div style="font-size:13.5px;color:#555;margin-bottom:16px;">
+      Too many failed login attempts (5 limit reached). Your client account has been locked for 15 minutes for security.
+    </div>
+    <div style="background:#fff1f2;border:1px solid #fecdd3;padding:16px;border-radius:10px;margin-bottom:20px;">
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:#9f1239;margin-bottom:4px;">Time Remaining Until Unlock</div>
+      <div id="lockoutModalTimer" style="font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:800;color:#881337;">14:59</div>
+    </div>
+    <button type="button" onclick="clearLockoutDemo()" style="width:100%;padding:12px;background:#881337;color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">🧹 Clear Lockout (Demo Reset)</button>
+  </div>
+</div>
 
 <!-- FORCE CHANGE PASSWORD MODAL (shown to teachers/students on first login) -->
 <div id="forceChangeModal" style="display:none;position:fixed;inset:0;background:rgba(43,35,32,.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;z-index:2000;padding:20px;">
