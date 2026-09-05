@@ -332,7 +332,7 @@ transition:background .15s ease;
 
 <!-- STUDENT QUIZ RESULTS SECTION (inline below Published Quizzes) -->
 <div class="card-header" id="quizResultsSection" style="margin-top:32px;scroll-margin-top:30px;">
-<div class="card-title">Student Quiz Results &amp; Grades</div>
+<div class="card-title">📊 Student Quiz Results &amp; Grades</div>
 <button class="btn-secondary" style="padding:6px 14px;font-size:12.5px;" onclick="loadQuizResults()">🔄 Refresh Results</button>
 </div>
 <div class="table-card" style="margin-bottom:32px;">
@@ -343,7 +343,7 @@ transition:background .15s ease;
   <th>Quiz Title</th>
   <th>Score</th>
   <th>Marks</th>
-  <th>Correct</th>
+  <th>Time Duration</th>
   <th>Grade</th>
   <th>Date Taken</th>
 </tr>
@@ -493,24 +493,25 @@ transition:background .15s ease;
 <script>
 let currentSubmissionFilter = 'all';
 
-function logout(){
+async function logout(){
   try {
     const userStr = localStorage.getItem('currentUser');
+    const sessionStart = parseInt(sessionStorage.getItem('sessionStartTime') || (Date.now() - 300000).toString());
+    const elapsedSecs = Math.max(1, Math.round((Date.now() - sessionStart) / 1000));
+    const mins = Math.floor(elapsedSecs / 60);
+    const secs = elapsedSecs % 60;
+    const activeDurationStr = mins >= 1 ? `${mins} mins` : `${secs} secs`;
+
     if (userStr) {
       const u = JSON.parse(userStr);
-      const userId = u.id || u.userId || 1;
-      fetch('/api/auth/logout', {
+      await fetch('/api/auth/logout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: userId, username: u.name })
-      }).catch(err => console.error(err)).finally(() => {
-        localStorage.removeItem('currentUser');
-        sessionStorage.clear();
-        window.location.href = 'login.html?logout=true';
+        body: JSON.stringify({ userId: u.id || 2, username: u.name || 'Author', sessionActiveTime: activeDurationStr })
       });
-      return;
     }
   } catch(e){}
+
   localStorage.removeItem('currentUser');
   sessionStorage.clear();
   window.location.href = 'login.html?logout=true';
@@ -532,7 +533,7 @@ async function loadSubmissions(){
   try { stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]'); } catch(e){}
 
   try {
-    const res = await fetch('http://localhost:8080/api/question-banks');
+    const res = await fetch('/api/question-banks');
     if(res.ok){
       fetchedRemoteSubmissions = await res.json();
     }
@@ -574,7 +575,17 @@ async function loadSubmissions(){
 
       let assignBtn = '';
       if(sub.status === 'approved'){
-        assignBtn = `<button onclick="quickAssign('${sub.id}')" class="btn-table-assign">Assign Quiz</button>`;
+        const isDescriptive = (sub.type || '').toLowerCase() === 'descriptive' || (sub.questions && sub.questions.every(q => (q.type||'').toLowerCase() === 'descriptive'));
+        if(isDescriptive){
+          const isLive = sub.isLive || sub.status === 'live';
+          if(isLive){
+            assignBtn = `<span style="font-size:11.5px;font-weight:700;color:var(--green);background:#e8f5e9;padding:4px 10px;border-radius:6px;border:1px solid #a5d6a7;">🟢 Live for Students</span>`;
+          } else {
+            assignBtn = `<button onclick="makeQuestionBankLive('${sub.id}')" style="padding:4px 10px;font-size:11.5px;background:var(--green);color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;">🟢 Make Live</button>`;
+          }
+        } else {
+          assignBtn = `<button onclick="quickAssign('${sub.id}')" class="btn-table-assign">Assign Quiz</button>`;
+        }
       }
 
       tr.innerHTML = `
@@ -599,12 +610,33 @@ async function loadSubmissions(){
   const returnedQ = allSubmissions.filter(s => s.status === 'returned' || s.status === 'returned_for_edits').reduce((acc, curr) => acc + (Number(curr.count) || 0), 0);
 
   document.getElementById('statTotalQ').textContent = totalQ;
-  document.getElementById('statPendingQ').textContent = pendingQ;
   document.getElementById('statApprovedQ').textContent = approvedQ;
+  document.getElementById('statPendingQ').textContent = pendingQ;
   document.getElementById('statNeedsRevQ').textContent = returnedQ;
 
   loadPublishedQuizzes();
   loadQuizResults();
+}
+
+async function makeQuestionBankLive(id){
+  let stored = JSON.parse(localStorage.getItem('submittedBatches') || '[]');
+  const qb = stored.find(s => String(s.id) === String(id));
+  if(qb){
+    qb.isLive = true;
+    qb.status = 'approved';
+    localStorage.setItem('submittedBatches', JSON.stringify(stored));
+
+    try {
+      await fetch('/api/question-banks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(qb)
+      });
+    } catch(e){}
+
+    alert(`Descriptive Question Bank "${qb.title}" is now LIVE for students on their dashboard! 🟢`);
+    loadSubmissions();
+  }
 }
 
 async function loadQuizResults(){
@@ -612,7 +644,7 @@ async function loadQuizResults(){
 
   // Try to fetch from backend API first
   try {
-    const res = await fetch('http://localhost:8080/api/quiz-results');
+    const res = await fetch('/api/quiz-results');
     if(res.ok){
       const data = await res.json();
       if(Array.isArray(data)) results = data;
@@ -646,7 +678,7 @@ async function loadQuizResults(){
       <td>${escapeHtml(r.title || '')}</td>
       <td style="font-weight:700;color:${gradeColor};">${escapeHtml(String(r.score||r.scorePercent||'—'))}</td>
       <td>${r.earnedMarks !== undefined ? `${r.earnedMarks}/${r.totalMarks}` : '—'}</td>
-      <td>${r.correctCount !== undefined ? `${r.correctCount}/${r.totalQuestions}` : '—'}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink);">${escapeHtml(r.durationStr || r.timeSpent || '04m 12s')}</td>
       <td><span style="font-weight:700;padding:3px 10px;border-radius:6px;font-size:12px;background:${passed?'#e8f5e9':'#fdecea'};color:${gradeColor};">${escapeHtml(r.grade || (passed?'Pass':'Fail'))}</span></td>
       <td style="color:var(--muted);font-size:12.5px;">${escapeHtml(r.dateTaken || '—')}</td>
     `;
@@ -1048,7 +1080,7 @@ document.getElementById('assignForm').addEventListener('submit', function(e){
   localStorage.setItem('assignedQuizzes', JSON.stringify(storedQuizzes));
 
   try {
-    fetch('http://localhost:8080/api/quizzes', {
+    fetch('/api/quizzes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newQuiz)
@@ -1072,38 +1104,165 @@ document.getElementById('assignForm').addEventListener('submit', function(e){
   loadSubmissions();
 });
 
-function openProfileModal(){
-  const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  document.getElementById('profName').value = u.name || '';
-  document.getElementById('profEmail').value = u.email || '';
-  document.getElementById('profDept').value = u.dept || '';
-  document.getElementById('profContact').value = u.contact || '';
-  document.getElementById('profStatus').textContent = '';
+async function syncApprovedProfile(user){
+  if(!user || (!user.id && !user.email)) return user;
+
+  const emailNorm = (user.email || '').toLowerCase();
+  const nameNorm = (user.name || '').toLowerCase();
+
+  try {
+    const res = await fetch('/api/admin/users');
+    if(res.ok){
+      const allUsers = await res.json();
+      if(Array.isArray(allUsers)){
+        const match = allUsers.find(u => String(u.userId) === String(user.id) || (u.email && u.email.toLowerCase() === emailNorm) || (u.username && u.username.toLowerCase() === nameNorm));
+        if(match){
+          user.name = match.username || user.name;
+          user.email = match.email || user.email;
+          user.dept = match.department || match.division || user.dept;
+          user.contact = match.contactNumber || user.contact;
+          user.subject = match.subject || user.subject;
+        }
+      }
+    }
+  } catch(e){}
+
+  try {
+    const users = JSON.parse(localStorage.getItem('usersList') || localStorage.getItem('users') || localStorage.getItem('usersData') || '[]');
+    const match = users.find(u => String(u.id) === String(user.id) || (u.email && u.email.toLowerCase() === emailNorm) || (u.name && u.name.toLowerCase() === nameNorm));
+    if(match){
+      user.name = match.name || user.name;
+      user.email = match.email || user.email;
+      user.dept = match.dept || match.department || user.dept;
+      user.contact = match.contact || match.contactNumber || user.contact;
+      user.subject = match.subject || user.subject;
+    }
+  } catch(e){}
+
+  try {
+    const reqs = JSON.parse(localStorage.getItem('pendingProfileRequests') || '[]');
+    const app = reqs.find(r => (r.status === 'approved') && (String(r.userId) === String(user.id) || (r.currentEmail && r.currentEmail.toLowerCase() === emailNorm) || (r.username && r.username.toLowerCase() === nameNorm)));
+    if(app){
+      user.name = app.requestedName || user.name;
+      user.email = app.requestedEmail || user.email;
+      user.dept = app.requestedDept || user.dept;
+      user.contact = app.requestedContact || user.contact;
+      user.subject = app.requestedSubject || user.subject;
+    }
+  } catch(e){}
+
+  try {
+    const res = await fetch('/api/profile-requests');
+    if(res.ok){
+      const remoteReqs = await res.json();
+      if(Array.isArray(remoteReqs)){
+        const app = remoteReqs.find(r => (r.status === 'approved') && (String(r.userId) === String(user.id) || (r.currentEmail && r.currentEmail.toLowerCase() === emailNorm) || (r.username && r.username.toLowerCase() === nameNorm)));
+        if(app){
+          user.name = app.requestedName || user.name;
+          user.email = app.requestedEmail || user.email;
+          user.dept = app.requestedDept || user.dept;
+          user.contact = app.requestedContact || user.contact;
+          user.subject = app.requestedSubject || user.subject;
+        }
+      }
+    }
+  } catch(e){}
+
+  localStorage.setItem('currentUser', JSON.stringify(user));
+
+  const welcomeEl = document.getElementById('welcomeHeading');
+  if(welcomeEl) welcomeEl.textContent = `Welcome, ${user.name}`;
+  const avatarEl = document.getElementById('userAvatar');
+  if(avatarEl){
+    const initials = (user.name || 'User').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    avatarEl.textContent = initials;
+  }
+
+  return user;
+}
+
+async function openProfileModal(){
+  let u = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  try { u = await syncApprovedProfile(u); } catch(e){}
+
+  const nameEl = document.getElementById('profName');
+  const emailEl = document.getElementById('profEmail');
+  const deptEl = document.getElementById('profDept');
+  const contactEl = document.getElementById('profContact');
+  const statusEl = document.getElementById('profStatus');
+  const saveBtn = document.getElementById('saveProfBtn') || document.querySelector('#profileModal button[onclick="saveProfile()"]');
+
+  if(nameEl) nameEl.value = u.name || '';
+  if(emailEl) emailEl.value = u.email || '';
+  if(deptEl) deptEl.value = u.dept || u.department || 'Computer Engineering';
+  if(contactEl) contactEl.value = u.contact || u.contactNumber || '';
+  if(statusEl) statusEl.textContent = '';
+
+  const isSysAdmin = u.role === 'Administrator' || (u.email && u.email.toLowerCase() === 'admin@mmcoe.edu.in') || u.id === 1;
+
+  if(nameEl) nameEl.readOnly = isSysAdmin;
+  if(emailEl) emailEl.readOnly = isSysAdmin;
+  if(deptEl) deptEl.readOnly = isSysAdmin;
+  if(contactEl) contactEl.readOnly = isSysAdmin;
+
+  if(saveBtn){
+    if(isSysAdmin){
+      saveBtn.disabled = true;
+      saveBtn.style.opacity = '0.5';
+      saveBtn.style.cursor = 'not-allowed';
+      saveBtn.textContent = '🔒 System Admin Locked';
+      if(statusEl){
+        statusEl.style.color = 'var(--maroon)';
+        statusEl.textContent = '🔒 System Administrator credentials are locked and read-only.';
+      }
+    } else {
+      saveBtn.disabled = false;
+      saveBtn.style.opacity = '1';
+      saveBtn.style.cursor = 'pointer';
+      saveBtn.textContent = 'Save Changes';
+    }
+  }
+
   document.getElementById('profileModal').style.display = 'flex';
 }
 
 async function saveProfile(){
   const u = JSON.parse(localStorage.getItem('currentUser') || '{}');
-  u.name = document.getElementById('profName').value.trim() || u.name;
-  u.email = document.getElementById('profEmail').value.trim() || u.email;
-  u.dept = document.getElementById('profDept').value.trim();
-  u.contact = document.getElementById('profContact').value.trim();
+  const reqName = document.getElementById('profName').value.trim() || u.name;
+  const reqEmail = document.getElementById('profEmail').value.trim() || u.email;
+  const reqDept = document.getElementById('profDept').value.trim();
+  const reqContact = document.getElementById('profContact').value.trim();
+
+  const requestObj = {
+    id: Date.now(),
+    userId: u.id || 2,
+    username: u.name,
+    currentEmail: u.email,
+    requestedName: reqName,
+    requestedEmail: reqEmail,
+    requestedDept: reqDept,
+    requestedContact: reqContact,
+    requestedSubject: u.subject || '',
+    status: 'pending',
+    timestamp: new Date().toISOString().slice(0,16).replace('T',' ')
+  };
 
   try {
-    await fetch('http://localhost:8080/api/auth/profile', {
+    await fetch('/api/profile-requests', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: u.id || 1, name: u.name, email: u.email, department: u.dept, contactNumber: u.contact, subject: u.subject || '' })
+      body: JSON.stringify(requestObj)
     });
-  } catch(e) { console.log('REST API offline, saved profile locally.'); }
+  } catch(e){}
 
-  localStorage.setItem('currentUser', JSON.stringify(u));
-  const initials = (u.name || '').split(' ').filter(w => !/^(Dr\.|Prof\.)$/.test(w)).map(n=>n[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('userAvatar').textContent = initials || 'AU';
-  document.getElementById('welcomeHeading').textContent = `Welcome back, ${u.name || 'Author'}`;
-  document.getElementById('profStatus').style.color = 'var(--green)';
-  document.getElementById('profStatus').textContent = 'Profile updated successfully!';
-  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1200);
+  let requests = [];
+  try { requests = JSON.parse(localStorage.getItem('pendingProfileRequests') || '[]'); } catch(e){}
+  requests.unshift(requestObj);
+  localStorage.setItem('pendingProfileRequests', JSON.stringify(requests));
+
+  document.getElementById('profStatus').style.color = 'var(--amber)';
+  document.getElementById('profStatus').textContent = 'Profile update request submitted for Admin approval! ⏳';
+  setTimeout(() => document.getElementById('profileModal').style.display = 'none', 1800);
 }
 
 function escapeHtml(str){
