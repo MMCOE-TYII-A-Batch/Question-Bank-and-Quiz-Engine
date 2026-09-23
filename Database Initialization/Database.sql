@@ -1,3 +1,14 @@
+alter table "user" add COLUMN if not exists division varchar(50);
+alter table "user" add COLUMN if not exists department varchar(100);
+alter table "user" add COLUMN if not exists contact_number varchar(20);
+
+alter table question add COLUMN if not exists explanation text;
+alter table question add COLUMN if not exists reference_text text;
+alter table question add COLUMN if not exists rejection_reason text;
+alter table question add COLUMN if not exists question_bank_id int;
+
+alter table question_bank add COLUMN if not exists rejection_reason text;
+alter table question add COLUMN if not exists target_division varchar(50);
 
 create table if not exists "user"(
 user_id serial primary key ,
@@ -7,12 +18,15 @@ password_hash text not null default 'Not Initialized',
 reset_token varchar(255),
 reset_token_expiry timestamp default now(),
 last_login timestamp default now(),
-status varchar(50) default 'Unverifed'
+status varchar(50) default 'Unverifed',
+division varchar(50),
+department varchar(100),
+contact_number varchar(20)
 );
 
 create table if not exists role(
 role_id serial primary key,
-role_name varchar(100) not null unique   -- "Roles:Teacher,Student,Admin"
+role_name varchar(100) not null unique   -- "Roles:Teacher,Student,Admin,Moderator,Author"
 );
 
 create table if not exists user_role(
@@ -27,7 +41,7 @@ create table if not exists audit_log(
 log_id serial primary key ,
 user_id int,
 action varchar(255),
-timestamp timestamp,
+timestamp timestamp default now(),
 foreign key (user_id) references "user"(user_id)
 );
 
@@ -66,6 +80,10 @@ question_type varchar(50),
 BTL_level varchar(50),
 default_marks float,
 status varchar(50),
+explanation text,
+reference_text text,
+rejection_reason text,
+question_bank_id int,
 create_time timestamp default now(),
 last_update timestamp default now(),
 foreign key (topic_id) references topic(topic_id),
@@ -79,6 +97,7 @@ question_bank_id serial primary key,
 question_bank_type varchar(255),
 status varchar(255) default 'DRAFT',
 acedemic_year varchar(50),
+rejection_reason text,
 create_time timestamp default now(),
 last_update timestamp default now(),
 subject_id int not null,
@@ -110,6 +129,7 @@ creator_id int not null,
 subject_id int not null,
 is_randomized boolean default false,
 duration_minutes int,
+target_division varchar(50),
 status varchar(50),
 create_time timestamp default now(),
 last_update timestamp default now(),
@@ -160,15 +180,3 @@ foreign key (selected_option_id) references question_option(option_id),
 foreign key (evaluator_id) references "user"(user_id),
 unique (attempt_id,question_id)
 );
-
-ALTER TABLE subject
-ADD COLUMN IF NOT EXISTS version VARCHAR(50);
-
-ALTER TABLE subject
-ADD COLUMN IF NOT EXISTS is_active BOOLEAN;
-
-ALTER TABLE unit
-ADD COLUMN IF NOT EXISTS question_quota INTEGER;
-
-ALTER TABLE topic
-ADD COLUMN IF NOT EXISTS question_quota INTEGER;
